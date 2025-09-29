@@ -22,4 +22,6 @@ class AppImage {
 
   //Background
   static const background = "assets/background.png";
+
+  static const placeHolder = "assets/place_holder.png";
 }

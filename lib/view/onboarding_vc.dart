@@ -5,6 +5,7 @@ import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
+import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 
 class OnboardingPage {
@@ -63,7 +64,7 @@ class _OnboardingVCState extends State<OnboardingVC> {
   }
 
   int get currentPage =>
-      pageController.hasClients ? pageController.page!.round() : 0;
+      pageController.hasClients ? (pageController.page?.round() ?? 0) : 0;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +76,9 @@ class _OnboardingVCState extends State<OnboardingVC> {
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                // signUp.go(context);
+              },
               child: Text(
                 "Skip",
                 style: AppTextStyle.buttonTextStyleNormal(color: AppColor.gray),
@@ -84,114 +87,115 @@ class _OnboardingVCState extends State<OnboardingVC> {
           ),
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(height: 20),
-          Expanded(
-            child: PageView.builder(
-              scrollDirection: Axis.horizontal,
-              controller: pageController,
-              itemCount: pages.length,
+      body: PageView.builder(
+        scrollDirection: Axis.horizontal,
+        controller: pageController,
+        itemCount: pages.length,
 
-              itemBuilder: (context, index) {
-                return SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Center(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(pages[index].imagePath, fit: BoxFit.fill),
-                          SizedBox(height: 50),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  pages[index].title,
-                                  style: AppTextStyle.onBoardingTitle,
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  pages[index].description,
-                                  textAlign: TextAlign.center,
-                                  style: AppTextStyle.onBoardingBody,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+        itemBuilder: (context, index) {
+          return ExpandedSingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(child: Container()),
+                Expanded(
+                  flex: 5,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(pages[index].imagePath),
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
-                );
-              },
-            ),
-          ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: List.generate(pages.length, (index) {
-              bool isSelected = index == currentPage;
-              return Container(
-                margin: EdgeInsets.symmetric(horizontal: 3),
-                height: 10,
-                width: 10,
-                decoration: BoxDecoration(
-                  color: isSelected ? AppColor.black : AppColor.gray,
-                  shape: BoxShape.circle,
                 ),
-              );
-            }),
-          ),
-          SizedBox(height: 30),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Row(
-              children: [
-                TextButton(
-                  onPressed: currentPage == 0
-                      ? null
-                      : () {
-                          if (currentPage > 0) {
-                            pageController.previousPage(
-                              duration: Durations.medium4,
-                              curve: Curves.easeOut,
-                            );
-                          }
-                        },
-                  child: Text(
-                    "Back",
-                    style: AppTextStyle.buttonTextStyleBold(
-                      color: currentPage == 0 ? AppColor.gray : AppColor.black,
-                    ),
+                SizedBox(height: 50),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        pages[index].title,
+                        style: AppTextStyle.onBoardingTitle,
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        pages[index].description,
+                        textAlign: TextAlign.center,
+                        style: AppTextStyle.onBoardingBody,
+                      ),
+                    ],
                   ),
                 ),
+                SizedBox(height: 20),
                 Expanded(child: Container()),
-                AppButton(
-                  label: Icons.arrow_forward,
-                  fontSize: 35,
-                  backgroundColor: AppColor.black,
-                  onTap: () {
-                    if (currentPage < 2) {
-                      pageController.nextPage(
-                        duration: Durations.medium4,
-                        curve: Curves.easeIn,
-                      );
-                    } else {
-                      signUp.go(context);
-                    }
-                  },
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(pages.length, (index) {
+                    bool isSelected = index == currentPage;
+                    return Container(
+                      margin: EdgeInsets.symmetric(horizontal: 3),
+                      height: 10,
+                      width: 10,
+                      decoration: BoxDecoration(
+                        color: isSelected ? AppColor.black : AppColor.gray,
+                        shape: BoxShape.circle,
+                      ),
+                    );
+                  }),
                 ),
+                SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Row(
+                    children: [
+                      TextButton(
+                        onPressed: currentPage == 0
+                            ? null
+                            : () {
+                                if (currentPage > 0) {
+                                  pageController.previousPage(
+                                    duration: Durations.medium4,
+                                    curve: Curves.easeOut,
+                                  );
+                                }
+                              },
+                        child: Text(
+                          "Back",
+                          style: AppTextStyle.buttonTextStyleBold(
+                            color: currentPage == 0
+                                ? AppColor.gray
+                                : AppColor.black,
+                          ),
+                        ),
+                      ),
+                      Expanded(child: Container()),
+                      AppButton(
+                        label: Icons.arrow_forward,
+                        fontSize: 35,
+                        backgroundColor: AppColor.black,
+                        onTap: () {
+                          if (currentPage < 2) {
+                            pageController.nextPage(
+                              duration: Durations.medium4,
+                              curve: Curves.easeIn,
+                            );
+                          } else {
+                            // signUp.go(context);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30),
               ],
             ),
-          ),
-          SizedBox(height: 30),
-        ],
+          );
+        },
       ),
     );
   }

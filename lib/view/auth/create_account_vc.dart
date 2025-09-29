@@ -5,10 +5,12 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/service/image_services.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
 import 'package:focus_tube_flutter/widget/checkbox_tile.dart';
+import 'package:focus_tube_flutter/widget/image_classes.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 
 class CreateAccountVC extends StatefulWidget {
@@ -50,6 +52,7 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
     super.dispose();
   }
 
+  var selectedImage;
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
@@ -66,49 +69,59 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
             ),
             SizedBox(height: 25),
             Center(
-              child: Stack(
-                children: [
-                  DottedBorder(
-                    options: CircularDottedBorderOptions(
-                      dashPattern: [12, 8],
-                      strokeWidth: 3,
-                      color: AppColor.textFieldBorder,
-                    ),
-                    child: Container(
-                      width: 140,
-                      height: 140,
-                      decoration: BoxDecoration(shape: BoxShape.circle),
-                      child: Icon(
-                        Icons.person,
-                        size: 110,
-                        color: AppColor.black.opacityToAlpha(.1),
+              child: InkWell(
+                onTap: () async {
+                  var image = await ImageService.pickImage(context);
+                  if (image != null) {
+                    selectedImage = image;
+                    setState(() {});
+                  }
+                },
+                child: Stack(
+                  children: [
+                    DottedBorder(
+                      options: CircularDottedBorderOptions(
+                        dashPattern: [12, 8],
+                        strokeWidth: 3,
+                        color: AppColor.textFieldBorder,
                       ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 5,
-                    bottom: 5,
-                    child: Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        color: AppColor.white,
+                      child: NetworkImageClass(
+                        width: 140,
+                        height: 140,
+                        image: selectedImage,
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColor.black, width: 2),
-                      ),
-                      child: Text(
-                        String.fromCharCode(Icons.add_rounded.codePoint),
-                        style: TextStyle(
-                          package: Icons.add_rounded.fontPackage,
-                          fontFamily: Icons.add_rounded.fontFamily,
-                          height: 1,
-                          fontSize: 26,
-                          fontWeight: FontWeight.w500,
+                        child: Icon(
+                          Icons.person,
+                          size: 110,
+                          color: AppColor.black.opacityToAlpha(.1),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    Positioned(
+                      right: 5,
+                      bottom: 5,
+                      child: Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          color: AppColor.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: AppColor.black, width: 2),
+                        ),
+                        child: Text(
+                          String.fromCharCode(Icons.add_rounded.codePoint),
+                          style: TextStyle(
+                            package: Icons.add_rounded.fontPackage,
+                            fontFamily: Icons.add_rounded.fontFamily,
+                            height: 1,
+                            fontSize: 26,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 20),
