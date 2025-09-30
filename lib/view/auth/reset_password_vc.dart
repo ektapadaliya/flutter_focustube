@@ -116,8 +116,8 @@ class _ResetPasswordVCState extends State<ResetPasswordVC> {
                       text: "Login",
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          AppNavigationModel.untilFirst(context);
-                          signIn.go(context);
+                          //  AppNavigationModel.untilFirst(context);
+                          //  signIn.go(context);
                         },
                       style: AppTextStyle.body16.copyWith(
                         color: AppColor.black,

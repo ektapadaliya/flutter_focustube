@@ -11,6 +11,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:focus_tube_flutter/view/onboarding_vc.dart';
 
+import 'view/content_vc.dart';
+
 //MARK: SCREEN ROUTES MODELS
 
 //Onboarding
@@ -48,12 +50,26 @@ AppNavigationModel emailVerification = AppNavigationModel(
   path: VerificationVC.id,
   child: (BuildContext context, GoRouterState state) => const VerificationVC(),
 );
-
+AppNavigationModel forgotPasswordVerification = AppNavigationModel(
+  label: "Forgot Password Verification",
+  path: VerificationVC.forgotPasswordId,
+  child: (BuildContext context, GoRouterState state) =>
+      const VerificationVC(isFromForgotPassword: true),
+);
 //Reset Password
 AppNavigationModel resetPassword = AppNavigationModel(
   label: "Reset Password",
   path: ResetPasswordVC.id,
   child: (BuildContext context, GoRouterState state) => const ResetPasswordVC(),
+);
+var content = AppNavigationModel(
+  label: "Content",
+  path: "${ContentVC.screenId}/:id",
+  child: (context, state) {
+    String id = state.pathParameters['id']!;
+
+    return ContentVC(type: id);
+  },
 );
 
 //MARK: ROUTER MODEL
@@ -202,6 +218,7 @@ GoRouter router = GoRouter(
       forgotPassword,
       emailVerification,
       resetPassword,
+      content,
     ].map((e) => e.toGoRoute()),
   ],
 );

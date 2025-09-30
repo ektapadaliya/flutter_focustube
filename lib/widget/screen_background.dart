@@ -38,3 +38,25 @@ class ScreenBackground extends StatelessWidget {
     );
   }
 }
+
+class FormScreenBoundries extends StatefulWidget {
+  const FormScreenBoundries({super.key, required this.child});
+  final Widget child;
+  @override
+  State<FormScreenBoundries> createState() => _FormScreenBoundriesState();
+}
+
+class _FormScreenBoundriesState extends State<FormScreenBoundries> {
+  @override
+  Widget build(BuildContext context) {
+    bool isLandScap =
+        MediaQuery.of(context).size.width > MediaQuery.of(context).size.height;
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        constraints: isLandScap ? BoxConstraints(maxWidth: 700) : null,
+        child: widget.child,
+      ),
+    );
+  }
+}
