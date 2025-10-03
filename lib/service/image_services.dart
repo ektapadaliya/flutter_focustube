@@ -58,10 +58,10 @@ class ImageService {
             CropAspectRatioPreset.ratio16x9,
           ],
           toolbarTitle: "Crop Image",
-          toolbarColor: const Color(0xFF20232C),
-          activeControlsWidgetColor: AppColor.black,
-          toolbarWidgetColor: AppColor.black,
-          statusBarColor: AppColor.white,
+          toolbarColor: AppColor.white,
+          activeControlsWidgetColor: AppColor.primary,
+          toolbarWidgetColor: AppColor.primary,
+          statusBarLight: true,
           lockAspectRatio: true,
         ),
         IOSUiSettings(
@@ -101,13 +101,13 @@ class ImageService {
           return CupertinoActionSheet(
             actions: <Widget>[
               CupertinoActionSheetAction(
-                child: Text("Camera", style: AppTextStyle.body16),
+                child: Text("Camera", style: AppTextStyle.body16()),
                 onPressed: () {
                   context.pop(0);
                 },
               ),
               CupertinoActionSheetAction(
-                child: Text("Photos", style: AppTextStyle.body16),
+                child: Text("Photos", style: AppTextStyle.body16()),
                 onPressed: () {
                   context.pop(1);
                 },
@@ -120,7 +120,7 @@ class ImageService {
               },
               child: Text(
                 "Cancel",
-                style: AppTextStyle.body16.copyWith(color: Colors.red),
+                style: AppTextStyle.body16(color: Colors.red),
               ),
             ),
           );

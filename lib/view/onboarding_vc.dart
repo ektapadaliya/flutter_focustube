@@ -81,7 +81,7 @@ class _OnboardingVCState extends State<OnboardingVC> {
               },
               child: Text(
                 "Skip",
-                style: AppTextStyle.buttonTextStyleNormal(color: AppColor.gray),
+                style: AppTextStyle.body20(color: AppColor.gray),
               ),
             ),
           ),
@@ -110,7 +110,7 @@ class _OnboardingVCState extends State<OnboardingVC> {
                     ),
                   ),
                 ),
-                SizedBox(height: 50),
+                SizedBox(height: 40),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Column(
@@ -118,14 +118,15 @@ class _OnboardingVCState extends State<OnboardingVC> {
                     children: [
                       Text(
                         pages[index].title,
-                        style: AppTextStyle.onBoardingTitle,
+                        style: AppTextStyle.title36(),
                         textAlign: TextAlign.center,
+                        maxLines: 2,
                       ),
                       SizedBox(height: 10),
                       Text(
                         pages[index].description,
                         textAlign: TextAlign.center,
-                        style: AppTextStyle.onBoardingBody,
+                        style: AppTextStyle.body22(),
                       ),
                     ],
                   ),
@@ -141,7 +142,7 @@ class _OnboardingVCState extends State<OnboardingVC> {
                       height: 10,
                       width: 10,
                       decoration: BoxDecoration(
-                        color: isSelected ? AppColor.black : AppColor.gray,
+                        color: isSelected ? AppColor.primary : AppColor.gray,
                         shape: BoxShape.circle,
                       ),
                     );
@@ -165,10 +166,10 @@ class _OnboardingVCState extends State<OnboardingVC> {
                               },
                         child: Text(
                           "Back",
-                          style: AppTextStyle.buttonTextStyleBold(
+                          style: AppTextStyle.title20(
                             color: currentPage == 0
                                 ? AppColor.gray
-                                : AppColor.black,
+                                : AppColor.primary,
                           ),
                         ),
                       ),
@@ -176,7 +177,7 @@ class _OnboardingVCState extends State<OnboardingVC> {
                       AppButton(
                         label: Icons.arrow_forward,
                         fontSize: 35,
-                        backgroundColor: AppColor.black,
+                        backgroundColor: AppColor.primary,
                         onTap: () {
                           if (currentPage < 2) {
                             pageController.nextPage(

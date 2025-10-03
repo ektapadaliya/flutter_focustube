@@ -45,6 +45,10 @@ dependencies:
   path_provider: ^2.1.5
   cached_network_image: ^3.4.1
   intl: ^0.20.2
+  auto_size_text: ^3.0.0
+  flutter_svg: ^2.2.1
+  syncfusion_flutter_sliders: ^31.1.22
+  syncfusion_flutter_core: ^31.1.22
 
 dev_dependencies:
   flutter_test:
@@ -75,8 +79,12 @@ flutter:
     # App Icon
     - assets/app_config/app_icon/dark/
     - assets/app_config/app_icon/light/
+    # User intenst
+    - assets/user_interest/
     # Onboarding
     - assets/onboarding/
+    # Root Navigation Icons
+    - assets/nav_icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

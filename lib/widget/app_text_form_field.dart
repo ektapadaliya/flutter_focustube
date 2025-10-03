@@ -72,7 +72,7 @@ class AppTextFormField extends StatelessWidget {
       data: ThemeData(useMaterial3: false, fontFamily: AppTextStyle.fontFamily)
           .copyWith(
             colorScheme: ThemeData().colorScheme.copyWith(
-              primary: AppColor.black,
+              primary: AppColor.primary,
               secondary: AppColor.gray,
             ),
           ),
@@ -80,10 +80,7 @@ class AppTextFormField extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (label != null) ...[
-            Text(
-              label!,
-              style: AppTextStyle.body16.copyWith(color: AppColor.gray),
-            ),
+            Text(label!, style: AppTextStyle.body16(color: AppColor.gray)),
             const SizedBox(height: 2),
           ],
           TextFormField(
@@ -103,11 +100,9 @@ class AppTextFormField extends StatelessWidget {
             validator: validator,
             onChanged: onChanged,
             maxLines: maxLines,
-            cursorColor: AppColor.black,
+            cursorColor: AppColor.primary,
             inputFormatters: inputFormatters,
-            style: AppTextStyle.body16.copyWith(
-              color: textColor ?? AppColor.black,
-            ),
+            style: AppTextStyle.body16(color: textColor ?? AppColor.primary),
             decoration: InputDecoration(
               fillColor: fillColor ?? AppColor.textFieldBackground,
               filled: true,
@@ -131,9 +126,7 @@ class AppTextFormField extends StatelessWidget {
                 vertical: 20,
                 horizontal: 24,
               ),
-              hintStyle: AppTextStyle.body16.copyWith(
-                color: textColor ?? AppColor.black,
-              ),
+              hintStyle: AppTextStyle.body16(color: textColor),
               focusedBorder: border,
               border: border,
               enabledBorder: border,

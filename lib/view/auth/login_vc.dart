@@ -43,88 +43,88 @@ class _LoginVCState extends State<LoginVC> {
       appBar: customAppBar(context, automaticallyImplyLeading: false),
       body: ExpandedSingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Welcome back to ${AppConst.appName}",
-              style: AppTextStyle.title40,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
-            AppTextFormField(
-              label: "Email",
-              hintText: "Enter your email",
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-            ),
-            SizedBox(height: 15),
-            AppTextFormField(
-              label: "Password",
-              controller: passwordController,
-              keyboardType: TextInputType.visiblePassword,
-              hintText: "Enter your password",
-              textInputAction: TextInputAction.done,
-              obscureText: !showPassword,
-              suffixIcon: InkWell(
-                onTap: () {
-                  setState(() {
-                    showPassword = !showPassword;
-                  });
-                },
-                child: Icon(
-                  showPassword
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
-                  size: 25,
-                  color: AppColor.black,
+        child: FormScreenBoundries(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Welcome back to ${AppConst.appName}",
+                style: AppTextStyle.title40(),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 20),
+              AppTextFormField(
+                label: "Email",
+                hintText: "Enter your email",
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+              ),
+              SizedBox(height: 15),
+              AppTextFormField(
+                label: "Password",
+                controller: passwordController,
+                keyboardType: TextInputType.visiblePassword,
+                hintText: "Enter your password",
+                textInputAction: TextInputAction.done,
+                obscureText: !showPassword,
+                suffixIcon: InkWell(
+                  onTap: () {
+                    setState(() {
+                      showPassword = !showPassword;
+                    });
+                  },
+                  child: Icon(
+                    showPassword
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                    size: 25,
+                    color: AppColor.primary,
+                  ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                child: Text(
-                  "Forgot password?",
-                  style: AppTextStyle.body16.copyWith(color: AppColor.gray),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  child: Text(
+                    "Forgot password?",
+                    style: AppTextStyle.body16(color: AppColor.gray),
+                  ),
+                  onPressed: () {
+                    forgotPassword.go(context);
+                  },
                 ),
-                onPressed: () {
-                  forgotPassword.go(context);
-                },
               ),
-            ),
-            Expanded(child: Container()),
-            SizedBox(height: 30),
-            AppButton(
-              label: "Sign in",
-              backgroundColor: AppColor.black,
-              onTap: () {},
-            ),
-            const SizedBox(height: 30),
-            Center(
-              child: Text.rich(
-                TextSpan(
-                  text: "New to ${AppConst.appName}? ",
-                  style: AppTextStyle.body16.copyWith(color: AppColor.gray),
-                  children: [
-                    TextSpan(
-                      text: "Sign up",
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          signUp.replace(context);
-                        },
-                      style: AppTextStyle.body16.copyWith(
-                        color: AppColor.black,
+              Expanded(child: Container()),
+              SizedBox(height: 30),
+              AppButton(
+                label: "Sign in",
+                backgroundColor: AppColor.primary,
+                onTap: () {},
+              ),
+              const SizedBox(height: 30),
+              Center(
+                child: Text.rich(
+                  TextSpan(
+                    text: "New to ${AppConst.appName}? ",
+                    style: AppTextStyle.body16(color: AppColor.gray),
+                    children: [
+                      TextSpan(
+                        text: "Sign up",
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            signUp.replace(context);
+                          },
+                        style: AppTextStyle.body16(),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            SizedBox(height: 30),
-          ],
+              SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );

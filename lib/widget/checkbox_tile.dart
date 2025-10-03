@@ -23,11 +23,11 @@ class AppCheckBoxTile extends StatelessWidget {
         child: Checkbox(
           visualDensity: const VisualDensity(horizontal: -4),
           value: isSelected,
-          activeColor: AppColor.black,
+          activeColor: AppColor.primary,
           side: BorderSide(color: AppColor.textFieldBorder, width: 1),
           onChanged: onChanged,
           shape: RoundedRectangleBorder(
-            side: const BorderSide(color: AppColor.black, width: 1),
+            side: const BorderSide(color: AppColor.primary, width: 1),
             borderRadius: BorderRadius.circular(4),
           ),
         ),

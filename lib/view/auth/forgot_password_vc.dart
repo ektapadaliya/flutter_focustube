@@ -38,56 +38,56 @@ class _ForgotPasswordVCState extends State<ForgotPasswordVC> {
       appBar: customAppBar(context),
       body: ExpandedSingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Forgot your password!", style: AppTextStyle.title28),
-            Text(
-              "Please enter your email to reset your password.",
-              style: AppTextStyle.body18.copyWith(color: AppColor.gray),
-            ),
-            SizedBox(height: 25),
-            Expanded(child: Container()),
-            AppTextFormField(
-              label: "Email",
-              hintText: "Enter your email",
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-            ),
-            Expanded(flex: 3, child: Container()),
-            SizedBox(height: 30),
-            AppButton(
-              label: "Continue",
-              backgroundColor: AppColor.black,
-              onTap: () {
-                emailVerification.go(context);
-              },
-            ),
-            const SizedBox(height: 30),
-            Center(
-              child: Text.rich(
-                TextSpan(
-                  text: "Part of ${AppConst.appName}? ",
-                  style: AppTextStyle.body16.copyWith(color: AppColor.gray),
-                  children: [
-                    TextSpan(
-                      text: "Login",
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          signIn.replace(context);
-                        },
-                      style: AppTextStyle.body16.copyWith(
-                        color: AppColor.black,
+        child: FormScreenBoundries(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Forgot your password!", style: AppTextStyle.title28()),
+              Text(
+                "Please enter your email to reset your password.",
+                style: AppTextStyle.body18(color: AppColor.gray),
+              ),
+              SizedBox(height: 25),
+              Expanded(child: Container()),
+              AppTextFormField(
+                label: "Email",
+                hintText: "Enter your email",
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+              ),
+              Expanded(flex: 3, child: Container()),
+              SizedBox(height: 30),
+              AppButton(
+                label: "Continue",
+                backgroundColor: AppColor.primary,
+                onTap: () {
+                  forgotPasswordVerification.go(context);
+                },
+              ),
+              const SizedBox(height: 30),
+              Center(
+                child: Text.rich(
+                  TextSpan(
+                    text: "Part of ${AppConst.appName}? ",
+                    style: AppTextStyle.body16(color: AppColor.gray),
+                    children: [
+                      TextSpan(
+                        text: "Login",
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            signIn.replace(context);
+                          },
+                        style: AppTextStyle.body16(color: AppColor.primary),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            SizedBox(height: 30),
-          ],
+              SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );

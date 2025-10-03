@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 class AppColor {
   static const gray = Color(0xFF808080);
   static const white = Color(0xFFFFFFFF);
-  static const black = Color(0xFF000000);
+  static const primary = Color(0xFF000000);
+  static const lightGray = Color(0xFFB3B3B3);
+  static const lightYellow = Color(0xFFFDE7C7);
 
-  static const lightOrange = Color(0xFFFDE7C7);
   static final textFieldBackground = white.opacityToAlpha(.3);
-  static final textFieldBorder = Color(0xFFB3B3B3).opacityToAlpha(.7);
+  static final textFieldBorder = lightGray.opacityToAlpha(.7);
 }
 
 extension ColorExtension on Color {

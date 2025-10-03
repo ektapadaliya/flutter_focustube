@@ -18,7 +18,6 @@ class NetworkImageClass extends StatefulWidget {
     this.shadow = const [],
     this.shape = BoxShape.rectangle,
     this.border,
-    required Icon child,
   });
   final dynamic image;
   final String placeHolder;

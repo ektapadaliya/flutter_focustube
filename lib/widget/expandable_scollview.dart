@@ -7,27 +7,31 @@ class ExpandedSingleChildScrollView extends StatelessWidget {
   ScrollController? controller;
   EdgeInsets? padding;
   bool reverse;
-  ExpandedSingleChildScrollView(
-      {super.key,
-      required this.child,
-      this.physics,
-      this.controller,
-      this.reverse = false,
-      this.padding});
+  ExpandedSingleChildScrollView({
+    super.key,
+    required this.child,
+    this.physics,
+    this.controller,
+    this.reverse = false,
+    this.padding,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constrains) {
-      return SingleChildScrollView(
-        controller: controller,
-        reverse: reverse,
-        physics: physics,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: constrains.maxHeight),
-          child:
-              IntrinsicHeight(child: Container(padding: padding, child: child)),
-        ),
-      );
-    });
+    return LayoutBuilder(
+      builder: (context, constrains) {
+        return SingleChildScrollView(
+          controller: controller,
+          reverse: reverse,
+          physics: physics,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constrains.maxHeight),
+            child: IntrinsicHeight(
+              child: Container(padding: padding, child: child),
+            ),
+          ),
+        );
+      },
+    );
   }
 }

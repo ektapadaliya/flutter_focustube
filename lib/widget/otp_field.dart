@@ -341,7 +341,7 @@ class _AnimatedOtpInputState extends State<AnimatedOtpInput>
                         ? TextInputAction.next
                         : TextInputAction.done,
                     maxLength: 1,
-                    cursorColor: AppColor.black,
+                    cursorColor: AppColor.primary,
                     textAlign: TextAlign.center,
                     style:
                         widget.theme.textStyle ??

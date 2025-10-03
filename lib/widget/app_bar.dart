@@ -10,7 +10,7 @@ PreferredSize sizeZeroAppBar(context, {Color? color}) {
   return PreferredSize(
     preferredSize: Size(MediaQuery.of(context).size.width, 0),
     child: AppBar(
-      backgroundColor: color ?? Colors.transparent,
+      backgroundColor: color ?? AppColor.white,
       systemOverlayStyle: kIsWeb
           ? null
           : SystemUiOverlayStyle(
@@ -56,7 +56,7 @@ AppBar customAppBar(
     backgroundColor: Colors.transparent,
     title: (title is Widget)
         ? title
-        : Text(title ?? "", style: AppTextStyle.appBarTitle),
+        : Text(title ?? "", style: AppTextStyle.title20()),
     scrolledUnderElevation: 0.0,
     elevation: 0,
     leadingWidth: leadingWidth,
@@ -69,6 +69,6 @@ AppBar customAppBar(
         : null,
     automaticallyImplyLeading: automaticallyImplyLeading,
     actions: actions,
-    iconTheme: const IconThemeData(color: AppColor.black),
+    iconTheme: const IconThemeData(color: AppColor.primary),
   );
 }

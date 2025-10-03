@@ -63,10 +63,10 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Create your account", style: AppTextStyle.title28),
+              Text("Create your account", style: AppTextStyle.title28()),
               Text(
                 "Please enter your details to continue.",
-                style: AppTextStyle.body18.copyWith(color: AppColor.gray),
+                style: AppTextStyle.body18(color: AppColor.gray),
               ),
               SizedBox(height: 25),
               Center(
@@ -91,11 +91,6 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                           height: 140,
                           image: selectedImage,
                           shape: BoxShape.circle,
-                          child: Icon(
-                            Icons.person,
-                            size: 110,
-                            color: AppColor.black.opacityToAlpha(.1),
-                          ),
                         ),
                       ),
                       Positioned(
@@ -107,7 +102,10 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                           decoration: BoxDecoration(
                             color: AppColor.white,
                             shape: BoxShape.circle,
-                            border: Border.all(color: AppColor.black, width: 2),
+                            border: Border.all(
+                              color: AppColor.primary,
+                              width: 2,
+                            ),
                           ),
                           child: Text(
                             String.fromCharCode(Icons.add_rounded.codePoint),
@@ -168,7 +166,7 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                         ? Icons.visibility_outlined
                         : Icons.visibility_off_outlined,
                     size: 25,
-                    color: AppColor.black,
+                    color: AppColor.primary,
                   ),
                 ),
               ),
@@ -191,7 +189,7 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                         ? Icons.visibility_outlined
                         : Icons.visibility_off_outlined,
                     size: 25,
-                    color: AppColor.black,
+                    color: AppColor.primary,
                   ),
                 ),
               ),
@@ -204,12 +202,11 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                 title: Text.rich(
                   TextSpan(
                     text: "By continuing your confirm that you agree with our ",
-                    style: AppTextStyle.body16.copyWith(color: AppColor.gray),
+                    style: AppTextStyle.body16(color: AppColor.gray),
                     children: [
                       TextSpan(
                         text: "Terms And Conditions",
-                        style: AppTextStyle.body16.copyWith(
-                          color: AppColor.black,
+                        style: AppTextStyle.body16().copyWith(
                           decoration: TextDecoration.underline,
                         ),
                         recognizer: TapGestureRecognizer()
@@ -217,16 +214,10 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                             content.go(context, id: 't');
                           },
                       ),
-                      TextSpan(
-                        text: " and ",
-                        style: AppTextStyle.body16.copyWith(
-                          color: AppColor.gray,
-                        ),
-                      ),
+                      TextSpan(text: " and ", style: AppTextStyle.body16()),
                       TextSpan(
                         text: "Privacy Policy",
-                        style: AppTextStyle.body16.copyWith(
-                          color: AppColor.black,
+                        style: AppTextStyle.body16().copyWith(
                           decoration: TextDecoration.underline,
                         ),
                         recognizer: TapGestureRecognizer()
@@ -241,7 +232,7 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
               SizedBox(height: 30),
               AppButton(
                 label: "Sign up",
-                backgroundColor: AppColor.black,
+                backgroundColor: AppColor.primary,
                 onTap: () {
                   emailVerification.go(context);
                 },
@@ -251,17 +242,15 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                 child: Text.rich(
                   TextSpan(
                     text: "Part of ${AppConst.appName}? ",
-                    style: AppTextStyle.body16.copyWith(color: AppColor.gray),
+                    style: AppTextStyle.body16(color: AppColor.gray),
                     children: [
                       TextSpan(
                         text: "Login",
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            //  signIn.replace(context);
+                            signIn.replace(context);
                           },
-                        style: AppTextStyle.body16.copyWith(
-                          color: AppColor.black,
-                        ),
+                        style: AppTextStyle.body16(),
                       ),
                     ],
                   ),

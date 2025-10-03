@@ -22,6 +22,40 @@ class AppImage {
 
   //Background
   static const background = "assets/background.png";
+  static const videoLimitBackground = "assets/video_limit_background.png";
 
+  //Placeholder
   static const placeHolder = "assets/place_holder.png";
+  static const videoPlaceHolder = "assets/video_placeholder.png";
+
+  //Navigation icon
+  //Non Selected Icon
+  static const home = "assets/nav_icons/home.png";
+  static const search = "assets/nav_icons/search.png";
+  static const playlist = "assets/nav_icons/playlist.png";
+  static const channles = "assets/nav_icons/channels.png";
+  static const settings = "assets/nav_icons/settings.png";
+  //Selected Icon
+  static const homeSelected = "assets/nav_icons/home_selected.png";
+  static const searchSelected = "assets/nav_icons/search_selected.png";
+  static const playlistSelected = "assets/nav_icons/playlist_selected.png";
+  static const channlesSelected = "assets/nav_icons/channels_selected.png";
+  static const settingsSelected = "assets/nav_icons/settings_selected.png";
+
+  //User Interest
+  static const art = "assets/user_interest/art.svg";
+  static const businessFinance = "assets/user_interest/business_finance.svg";
+  static const careerDevelopment =
+      "assets/user_interest/career_development.svg";
+  static const fashionStyle = "assets/user_interest/fashion_style.svg";
+  static const history = "assets/user_interest/history.svg";
+  static const mathematics = "assets/user_interest/mathematics.svg";
+  static const mindfullnessMeditation =
+      "assets/user_interest/mindfullness_meditation.svg";
+  static const music = "assets/user_interest/music.svg";
+  static const productivity = "assets/user_interest/productivity.svg";
+  static const reading = "assets/user_interest/reading.svg";
+  static const scienceTechnology =
+      "assets/user_interest/science_technology.svg";
+  static const selfImprovement = "assets/user_interest/self_improvement.svg";
 }

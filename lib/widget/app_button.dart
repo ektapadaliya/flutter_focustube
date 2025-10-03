@@ -57,12 +57,11 @@ class AppButton extends StatelessWidget {
             ? Text(
                 label,
                 textAlign: TextAlign.center,
-                style: AppTextStyle.buttonTextStyleBold(
-                  fontSize: fontSize,
+                style: AppTextStyle.title20(
                   color:
                       textColor ??
                       (isFilled ? AppColor.white : backgroundColor),
-                ),
+                ).copyWith(fontSize: fontSize),
               )
             : (label is IconData)
             ? Icon(
@@ -73,6 +72,30 @@ class AppButton extends StatelessWidget {
               )
             : label,
       ),
+    );
+  }
+}
+
+class AppTitle extends StatelessWidget {
+  const AppTitle({super.key, required this.title, this.onViewMore});
+  final String title;
+  final void Function()? onViewMore;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(child: Text(title, style: AppTextStyle.title20())),
+        if (onViewMore != null)
+          InkWell(
+            overlayColor: WidgetStatePropertyAll(Colors.transparent),
+            onTap: onViewMore,
+            child: Text(
+              "View More",
+              style: AppTextStyle.title16(color: AppColor.gray),
+            ),
+          ),
+      ],
     );
   }
 }

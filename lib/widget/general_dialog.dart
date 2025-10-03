@@ -22,13 +22,13 @@ Future<dynamic> generalDialog(
     barrierDismissible: barrierDismissible,
     context: context,
     builder: (context) {
-      Text titleText = Text(title, style: AppTextStyle.title20);
+      Text titleText = Text(title, style: AppTextStyle.title20());
       Text messageText = Text(message);
       List<Widget> actions = [
         if (onSubmit != null)
           TextButton(
             onPressed: onSubmit,
-            child: Text(submitText, style: AppTextStyle.body16),
+            child: Text(submitText, style: AppTextStyle.body16()),
           ),
         TextButton(
           onPressed: () {
@@ -38,7 +38,7 @@ Future<dynamic> generalDialog(
               Get.back();
             }
           },
-          child: Text(cancelText, style: AppTextStyle.body16),
+          child: Text(cancelText, style: AppTextStyle.body16()),
         ),
       ];
       dialog() {

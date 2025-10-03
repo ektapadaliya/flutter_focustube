@@ -9,32 +9,34 @@ class ScreenBackground extends StatelessWidget {
     this.isInSafeArea = true,
     required this.body,
     this.floatingActionButton,
+    this.bottomNavigationBar,
   });
   final Widget body;
   final bool isInSafeArea;
-  final Widget? floatingActionButton;
+
   final PreferredSizeWidget? appBar;
+  final Widget? floatingActionButton, bottomNavigationBar;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(AppImage.background),
-          fit: BoxFit.cover,
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppImage.background),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: SizedBox.fromSize(size: MediaQuery.sizeOf(context)),
         ),
-      ),
-      child: Scaffold(
-        body: SafeArea(
-          top: isInSafeArea,
-          bottom: isInSafeArea,
-          left: isInSafeArea,
-          right: isInSafeArea,
-          child: body,
+        Scaffold(
+          body: body,
+          floatingActionButton: floatingActionButton,
+          backgroundColor: Colors.transparent,
+          appBar: appBar ?? sizeZeroAppBar(context),
+          bottomNavigationBar: bottomNavigationBar,
         ),
-        floatingActionButton: floatingActionButton,
-        backgroundColor: Colors.transparent,
-        appBar: appBar ?? sizeZeroAppBar(context),
-      ),
+      ],
     );
   }
 }

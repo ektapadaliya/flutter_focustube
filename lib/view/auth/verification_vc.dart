@@ -53,25 +53,25 @@ class _VerificationVCState extends State<VerificationVC> {
                 widget.isFromForgotPassword
                     ? "Forgot your password!"
                     : "Verify email address!",
-                style: AppTextStyle.title28,
+                style: AppTextStyle.title28(),
               ),
               Text(
                 "Verify your OTP and ${widget.isFromForgotPassword ? 'reset your password' : 'confirm your email'}.",
-                style: AppTextStyle.body18.copyWith(color: AppColor.gray),
+                style: AppTextStyle.body18(color: AppColor.gray),
               ),
               SizedBox(height: 25),
               Expanded(child: Container()),
               Center(
                 child: Text(
                   "One-time Password (OTP)",
-                  style: AppTextStyle.title20,
+                  style: AppTextStyle.title20(),
                   textAlign: TextAlign.center,
                 ),
               ),
               Center(
                 child: Text(
                   "Please enter 4 digit number sent to your email",
-                  style: AppTextStyle.body16.copyWith(color: AppColor.gray),
+                  style: AppTextStyle.body16(color: AppColor.gray),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -91,7 +91,7 @@ class _VerificationVCState extends State<VerificationVC> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: AppColor.black, width: 2),
+                      borderSide: BorderSide(color: AppColor.primary, width: 2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
@@ -111,30 +111,23 @@ class _VerificationVCState extends State<VerificationVC> {
                   (timerTick > 0)
                       ? TextSpan(
                           text: "Resend OTP in ",
-                          style: AppTextStyle.body16.copyWith(
-                            color: AppColor.gray,
-                          ),
+                          style: AppTextStyle.body16(color: AppColor.gray),
                           children: [
                             TextSpan(
                               text: DateFormat(
                                 "mm:ss",
                               ).format(DateTime(1990, 1, 1, 0, 0, timerTick)),
-                              style: AppTextStyle.body16.copyWith(
-                                color: AppColor.black,
-                              ),
+                              style: AppTextStyle.body16(),
                             ),
                           ],
                         )
                       : TextSpan(
                           text: "Didn’t receive the OTP? ",
-                          style: AppTextStyle.body16.copyWith(
-                            color: AppColor.gray,
-                          ),
+                          style: AppTextStyle.body16(color: AppColor.gray),
                           children: [
                             TextSpan(
                               text: "Resend",
-                              style: AppTextStyle.body16.copyWith(
-                                color: AppColor.black,
+                              style: AppTextStyle.body16().copyWith(
                                 decoration: TextDecoration.underline,
                               ),
                               recognizer: TapGestureRecognizer()
@@ -152,9 +145,13 @@ class _VerificationVCState extends State<VerificationVC> {
               SizedBox(height: 30),
               AppButton(
                 label: "Verify and Continue",
-                backgroundColor: AppColor.black,
+                backgroundColor: AppColor.primary,
                 onTap: () {
-                  // resetPassword.replace(context);
+                  if (widget.isFromForgotPassword) {
+                    resetPassword.replace(context);
+                  } else {
+                    chooseYourInteres.go(context);
+                  }
                 },
               ),
 

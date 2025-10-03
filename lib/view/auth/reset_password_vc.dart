@@ -42,94 +42,94 @@ class _ResetPasswordVCState extends State<ResetPasswordVC> {
       appBar: customAppBar(context),
       body: ExpandedSingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Reset password!", style: AppTextStyle.title28),
-            Text(
-              "Create new password!",
-              style: AppTextStyle.body18.copyWith(color: AppColor.gray),
-            ),
-            SizedBox(height: 25),
-            Expanded(child: Container()),
-            AppTextFormField(
-              label: "Password",
-              controller: passwordController,
-              keyboardType: TextInputType.visiblePassword,
-              hintText: "Enter your password",
-              textInputAction: TextInputAction.next,
-              obscureText: !showPassword,
-              suffixIcon: InkWell(
-                onTap: () {
-                  setState(() {
-                    showPassword = !showPassword;
-                  });
-                },
-                child: Icon(
-                  showPassword
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
-                  size: 25,
-                  color: AppColor.black,
+        child: FormScreenBoundries(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Reset password!", style: AppTextStyle.title28()),
+              Text(
+                "Create new password!",
+                style: AppTextStyle.body18(color: AppColor.gray),
+              ),
+              SizedBox(height: 25),
+              Expanded(child: Container()),
+              AppTextFormField(
+                label: "Password",
+                controller: passwordController,
+                keyboardType: TextInputType.visiblePassword,
+                hintText: "Enter your password",
+                textInputAction: TextInputAction.next,
+                obscureText: !showPassword,
+                suffixIcon: InkWell(
+                  onTap: () {
+                    setState(() {
+                      showPassword = !showPassword;
+                    });
+                  },
+                  child: Icon(
+                    showPassword
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                    size: 25,
+                    color: AppColor.primary,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 15),
-            AppTextFormField(
-              label: "Confirm Password",
-              controller: confirmPasswordController,
-              keyboardType: TextInputType.visiblePassword,
-              textInputAction: TextInputAction.done,
-              hintText: "Enter your password",
-              obscureText: !showConfirmPassword,
-              suffixIcon: InkWell(
-                onTap: () {
-                  setState(() {
-                    showConfirmPassword = !showConfirmPassword;
-                  });
-                },
-                child: Icon(
-                  showConfirmPassword
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
-                  size: 25,
-                  color: AppColor.black,
+              SizedBox(height: 15),
+              AppTextFormField(
+                label: "Confirm Password",
+                controller: confirmPasswordController,
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.done,
+                hintText: "Enter your password",
+                obscureText: !showConfirmPassword,
+                suffixIcon: InkWell(
+                  onTap: () {
+                    setState(() {
+                      showConfirmPassword = !showConfirmPassword;
+                    });
+                  },
+                  child: Icon(
+                    showConfirmPassword
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                    size: 25,
+                    color: AppColor.primary,
+                  ),
                 ),
               ),
-            ),
 
-            Expanded(flex: 3, child: Container()),
-            SizedBox(height: 30),
-            AppButton(
-              label: "Continue",
-              backgroundColor: AppColor.black,
-              onTap: () {},
-            ),
-            const SizedBox(height: 30),
-            Center(
-              child: Text.rich(
-                TextSpan(
-                  text: "Part of ${AppConst.appName}? ",
-                  style: AppTextStyle.body16.copyWith(color: AppColor.gray),
-                  children: [
-                    TextSpan(
-                      text: "Login",
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          //  AppNavigationModel.untilFirst(context);
-                          //  signIn.go(context);
-                        },
-                      style: AppTextStyle.body16.copyWith(
-                        color: AppColor.black,
+              Expanded(flex: 3, child: Container()),
+              SizedBox(height: 30),
+              AppButton(
+                label: "Continue",
+                backgroundColor: AppColor.primary,
+                onTap: () {},
+              ),
+              const SizedBox(height: 30),
+              Center(
+                child: Text.rich(
+                  TextSpan(
+                    text: "Part of ${AppConst.appName}? ",
+                    style: AppTextStyle.body16(color: AppColor.gray),
+                    children: [
+                      TextSpan(
+                        text: "Login",
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            AppNavigationModel.untilFirst(context);
+                            signIn.go(context);
+                          },
+                        style: AppTextStyle.body16(color: AppColor.primary),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            SizedBox(height: 30),
-          ],
+              SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );

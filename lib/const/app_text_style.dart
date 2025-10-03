@@ -4,68 +4,36 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 class AppTextStyle {
   static const String fontFamily = "Rubik";
 
-  static TextStyle onBoardingTitle = const TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 36,
-    fontWeight: FontWeight.w500,
-    height: 1.1,
-    color: AppColor.black,
-  );
-  static TextStyle onBoardingBody = const TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 20,
-    fontWeight: FontWeight.w400,
-    color: AppColor.gray,
-  );
-  static TextStyle appBarTitle = const TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 20,
-    fontWeight: FontWeight.w500,
-    color: AppColor.black,
-  );
-  static TextStyle title40 = const TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 40,
-    fontWeight: FontWeight.w500,
-    color: AppColor.black,
-  );
-  static TextStyle title28 = const TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 28,
-    fontWeight: FontWeight.w500,
-    color: AppColor.black,
-  );
-  static TextStyle title20 = const TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 20,
-    fontWeight: FontWeight.w500,
-    color: AppColor.black,
-  );
-  static TextStyle body18 = const TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 18,
-    fontWeight: FontWeight.w400,
-    color: AppColor.black,
-  );
-  static TextStyle body16 = const TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 16,
-    fontWeight: FontWeight.w400,
-    color: AppColor.black,
-  );
-  static TextStyle buttonTextStyleBold({Color? color, double? fontSize}) =>
-      TextStyle(
-        fontFamily: fontFamily,
-        fontSize: fontSize ?? 20,
-        fontWeight: FontWeight.w500,
-        color: color ?? AppColor.white,
-      );
+  static TextStyle _h({required double fontSize, Color? color}) {
+    return TextStyle(
+      fontFamily: fontFamily,
+      fontSize: fontSize,
+      fontWeight: FontWeight.w500,
+      color: color ?? AppColor.primary,
+    );
+  }
 
-  static TextStyle buttonTextStyleNormal({Color? color, double? fontSize}) =>
-      TextStyle(
-        fontFamily: fontFamily,
-        fontSize: fontSize ?? 20,
-        fontWeight: FontWeight.w400,
-        color: color ?? AppColor.white,
-      );
+  static TextStyle title40({Color? color}) => _h(fontSize: 40, color: color);
+  static TextStyle title36({Color? color}) => _h(fontSize: 36, color: color);
+  static TextStyle title28({Color? color}) => _h(fontSize: 28, color: color);
+  static TextStyle title24({Color? color}) => _h(fontSize: 24, color: color);
+  static TextStyle title20({Color? color}) => _h(fontSize: 20, color: color);
+  static TextStyle title18({Color? color}) => _h(fontSize: 18, color: color);
+  static TextStyle title16({Color? color}) => _h(fontSize: 16, color: color);
+
+  static TextStyle _b({required double fontSize, Color? color}) {
+    return TextStyle(
+      fontFamily: fontFamily,
+      fontSize: fontSize,
+      fontWeight: FontWeight.w400,
+      color: color ?? AppColor.primary,
+    );
+  }
+
+  static TextStyle body22({Color? color}) => _b(fontSize: 22, color: color);
+  static TextStyle body20({Color? color}) => _b(fontSize: 20, color: color);
+  static TextStyle body18({Color? color}) => _b(fontSize: 18, color: color);
+  static TextStyle body16({Color? color}) => _b(fontSize: 16, color: color);
+  static TextStyle body14({Color? color}) => _b(fontSize: 14, color: color);
+  static TextStyle body12({Color? color}) => _b(fontSize: 12, color: color);
 }
