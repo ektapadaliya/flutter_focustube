@@ -75,27 +75,3 @@ class AppButton extends StatelessWidget {
     );
   }
 }
-
-class AppTitle extends StatelessWidget {
-  const AppTitle({super.key, required this.title, this.onViewMore});
-  final String title;
-  final void Function()? onViewMore;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(child: Text(title, style: AppTextStyle.title20())),
-        if (onViewMore != null)
-          InkWell(
-            overlayColor: WidgetStatePropertyAll(Colors.transparent),
-            onTap: onViewMore,
-            child: Text(
-              "View More",
-              style: AppTextStyle.title16(color: AppColor.gray),
-            ),
-          ),
-      ],
-    );
-  }
-}

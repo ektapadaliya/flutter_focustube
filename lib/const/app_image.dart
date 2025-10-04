@@ -58,4 +58,13 @@ class AppImage {
   static const scienceTechnology =
       "assets/user_interest/science_technology.svg";
   static const selfImprovement = "assets/user_interest/self_improvement.svg";
+
+  //Other Icons
+  static const noteIcon = "assets/icons/note.svg";
+  static const targetIcon = "assets/icons/target.svg";
+  static const historyIcon = "assets/icons/history.svg";
+  static const subjectIcon = "assets/icons/subject.svg";
+  static const bookmarkIcon = "assets/icons/bookmark.svg";
+  static const playListIcon = "assets/icons/playlist.svg";
+  static const bookmarkFillIcon = "assets/icons/bookmark_fill.svg";
 }

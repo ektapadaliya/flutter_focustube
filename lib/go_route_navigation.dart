@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/view/auth/choose_your_interest_vc.dart';
 import 'package:focus_tube_flutter/view/auth/daily_limit_vc.dart';
 import 'package:focus_tube_flutter/view/home/home_root.dart';
+import 'package:focus_tube_flutter/view/subject_detail_vc.dart';
+import 'package:focus_tube_flutter/view/subject_vc.dart';
+import 'package:focus_tube_flutter/view/video_detail_vc.dart';
 import 'package:focus_tube_flutter/view/video_list_vc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -173,6 +176,7 @@ final AppNavigationModel dailyLimit = AppNavigationModel(
   path: DailyLimitVC.id,
   builder: (context, state) => DailyLimitVC(),
 );
+
 final AppNavigationModel home = AppNavigationModel(
   label: "Home",
   path: HomeVC.id,
@@ -202,10 +206,25 @@ final AppNavigationModel settings = AppNavigationModel(
   path: SettingsVC.id,
   builder: (context, state) => const SettingsVC(),
 );
+final AppNavigationModel subjects = AppNavigationModel(
+  label: "Subjects",
+  path: SubjectVC.id,
+  builder: (context, state) => SubjectVC(),
+);
+final AppNavigationModel subjectsDetail = AppNavigationModel(
+  label: "Subject Details",
+  path: SubjectDetailVC.id,
+  builder: (context, state) => SubjectDetailVC(title: state.extra as String),
+);
 final AppNavigationModel videos = AppNavigationModel(
   label: "Videos",
   path: VideoListVC.id,
   builder: (context, state) => VideoListVC(title: state.extra as String),
+);
+final AppNavigationModel videoDetail = AppNavigationModel(
+  label: "Video Details",
+  path: VideoDetailVC.id,
+  builder: (context, state) => VideoDetailVC(),
 );
 // MARK: Router
 final GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();
@@ -226,6 +245,9 @@ final GoRouter router = GoRouter(
       chooseYourInteres,
       dailyLimit,
       videos,
+      subjects,
+      subjectsDetail,
+      videoDetail,
     ].map((routeElement) => routeElement.toGoRoute()),
     StatefulShellRoute.indexedStack(
       branches: [

@@ -52,7 +52,7 @@ class _VerificationVCState extends State<VerificationVC> {
               Text(
                 widget.isFromForgotPassword
                     ? "Forgot your password!"
-                    : "Verify email address!",
+                    : "Verify your email address!",
                 style: AppTextStyle.title28(),
               ),
               Text(

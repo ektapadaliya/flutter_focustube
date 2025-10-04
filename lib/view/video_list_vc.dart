@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:focus_tube_flutter/view/home/home_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
+import 'package:focus_tube_flutter/widget/video_widgets.dart';
 
 class VideoListVC extends StatefulWidget {
   static const id = "/videos";
