@@ -178,6 +178,7 @@ class _OnboardingVCState extends State<OnboardingVC> {
                         label: Icons.arrow_forward,
                         fontSize: 35,
                         backgroundColor: AppColor.primary,
+                        alignment: null,
                         onTap: () {
                           if (currentPage < 2) {
                             pageController.nextPage(

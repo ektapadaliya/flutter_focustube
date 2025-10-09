@@ -30,7 +30,7 @@ class _ChooseYourInterestVCState extends State<ChooseYourInterestVC> {
             SizedBox(height: 20),
             Text("Choose your Interests", style: AppTextStyle.title28()),
             Text(
-              "Get better recommendations",
+              "Get personalized recommendations",
               style: AppTextStyle.body18(color: AppColor.gray),
             ),
             SizedBox(height: 20),
@@ -56,7 +56,8 @@ class _ChooseYourInterestVCState extends State<ChooseYourInterestVC> {
             ),
             SizedBox(height: 30),
             Expanded(child: Container()),
-            Padding(
+            Container(
+              alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(vertical: 30),
               child: AppButton(
                 label: "Continue",

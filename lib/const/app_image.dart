@@ -59,12 +59,24 @@ class AppImage {
       "assets/user_interest/science_technology.svg";
   static const selfImprovement = "assets/user_interest/self_improvement.svg";
 
+  //Feedback Icons
+  static const cool = "assets/feedback/cool.svg";
+  static const happy = "assets/feedback/happy.svg";
+  static const loved = "assets/feedback/loved.svg";
+  static const bored = "assets/feedback/bored.svg";
+  static const unclear = "assets/feedback/unclear.svg";
+  static const horrible = "assets/feedback/horrible.svg";
+
   //Other Icons
+  static const editIcon = "assets/icons/edit.svg";
+  static const userIcon = "assets/icons/user.svg";
   static const noteIcon = "assets/icons/note.svg";
+  static const videoIcon = "assets/icons/video.svg";
   static const targetIcon = "assets/icons/target.svg";
   static const historyIcon = "assets/icons/history.svg";
   static const subjectIcon = "assets/icons/subject.svg";
   static const bookmarkIcon = "assets/icons/bookmark.svg";
   static const playListIcon = "assets/icons/playlist.svg";
+  static const calendarIcon = "assets/icons/calendar.svg";
   static const bookmarkFillIcon = "assets/icons/bookmark_fill.svg";
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
@@ -7,8 +8,6 @@ import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
-import 'package:syncfusion_flutter_sliders/sliders.dart';
-import 'package:syncfusion_flutter_core/theme.dart';
 
 class DailyLimitVC extends StatefulWidget {
   static const id = "/daily-limit";
@@ -19,7 +18,10 @@ class DailyLimitVC extends StatefulWidget {
 }
 
 class _DailyLimitVCState extends State<DailyLimitVC> {
-  int selectedVideo = 10;
+  //int selectedVideo = 10;
+  TextEditingController videoSelectionController = TextEditingController(
+    text: "10",
+  );
   List<int> videoSelectionOption = [10, 20, 50, 100, 200];
   @override
   Widget build(BuildContext context) {
@@ -41,79 +43,73 @@ class _DailyLimitVCState extends State<DailyLimitVC> {
                   ),
                 ),
                 alignment: Alignment.center,
-                child: Text.rich(
-                  TextSpan(
-                    text: "$selectedVideo",
-                    style: AppTextStyle.title40(
-                      color: AppColor.white,
-                    ).copyWith(fontStyle: FontStyle.italic),
-                    children: [
-                      TextSpan(
-                        text: " Videos",
-                        style: AppTextStyle.body22(color: AppColor.white)
-                            .copyWith(
-                              fontStyle: FontStyle.normal,
-                              fontFeatures: [FontFeature.subscripts()],
-                            ),
-                      ),
-                    ],
+                child: Center(
+                  child: TextFormField(
+                    autofocus: true,
+                    controller: videoSelectionController,
+                    expands: false,
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      isDense: true,
+                    ),
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    style: AppTextStyle.title40(color: AppColor.white),
+                    cursorColor: AppColor.white,
                   ),
                 ),
               ),
             ),
             SizedBox(height: 20),
             Text(
-              "Select the maximum videos per day.",
+              "Enter the maximum amount of videos you want to watch per day",
               style: AppTextStyle.title20(),
             ),
-            SizedBox(height: 70),
-
-            Wrap(
-              runSpacing: 20,
-              spacing: 20,
-              alignment: WrapAlignment.center,
-              children: List.generate(
-                videoSelectionOption.length,
-                (index) => VideoSelectionTile(
-                  onTap: () {
-                    selectedVideo = videoSelectionOption[index];
-                    setState(() {});
-                  },
-                  videos: videoSelectionOption[index],
-                  isSelected: selectedVideo == videoSelectionOption[index],
-                ),
-              ),
-            ),
-            SizedBox(height: 50),
-            SizedBox(
-              height: 30,
-              child: SfSliderTheme(
-                data: SfSliderThemeData(
-                  thumbRadius: 19,
-                  trackCornerRadius: 33,
-                  activeTrackHeight: 20,
-                  inactiveTrackHeight: 20,
-                  thumbColor: AppColor.primary,
-                  activeTrackColor: AppColor.primary,
-                  inactiveTrackColor: AppColor.lightGray.opacityToAlpha(.5),
-                  tooltipBackgroundColor: AppColor.primary,
-                  tooltipTextStyle: AppTextStyle.title28(
-                    color: AppColor.white,
-                  ).copyWith(fontStyle: FontStyle.italic),
-                ),
-                child: SfSlider(
-                  min: 10,
-                  max: 200,
-                  interval: 1,
-                  value: selectedVideo,
-                  enableTooltip: true,
-                  onChanged: (value) {
-                    selectedVideo = value.round();
-                    setState(() {});
-                  },
-                ),
-              ),
-            ),
+            // SizedBox(height: 70),
+            // Wrap(
+            //   runSpacing: 20,
+            //   spacing: 20,
+            //   alignment: WrapAlignment.center,
+            //   children: List.generate(
+            //     videoSelectionOption.length,
+            //     (index) => VideoSelectionTile(
+            //       onTap: () {
+            //         selectedVideo = videoSelectionOption[index];
+            //         setState(() {});
+            //       },
+            //       videos: videoSelectionOption[index],
+            //       isSelected: selectedVideo == videoSelectionOption[index],
+            //     ),
+            //   ),
+            // ),
+            // SizedBox(height: 50),
+            // SizedBox(
+            //   height: 30,
+            //   child: SfSliderTheme(
+            //     data: SfSliderThemeData(
+            //       thumbRadius: 19,
+            //       trackCornerRadius: 33,
+            //       activeTrackHeight: 20,
+            //       inactiveTrackHeight: 20,
+            //       thumbColor: AppColor.primary,
+            //       activeTrackColor: AppColor.primary,
+            //       inactiveTrackColor: AppColor.lightGray.opacityToAlpha(.5),
+            //       tooltipBackgroundColor: AppColor.primary,
+            //       tooltipTextStyle: AppTextStyle.title28(color: AppColor.white),
+            //     ),
+            //     child: SfSlider(
+            //       min: 10,
+            //       max: 200,
+            //       interval: 1,
+            //       value: selectedVideo,
+            //       enableTooltip: true,
+            //       onChanged: (value) {
+            //         selectedVideo = value.round();
+            //         setState(() {});
+            //       },
+            //     ),
+            //   ),
+            // ),
             Expanded(child: Container()),
             SizedBox(height: 20),
             Text(
@@ -166,17 +162,13 @@ class VideoSelectionTile extends StatelessWidget {
             text: "$videos",
             style: AppTextStyle.title24(
               color: isSelected ? AppColor.white : null,
-            ).copyWith(fontStyle: FontStyle.italic),
+            ),
             children: [
               TextSpan(
                 text: " Videos",
-                style:
-                    AppTextStyle.body16(
-                      color: isSelected ? AppColor.white : null,
-                    ).copyWith(
-                      fontStyle: FontStyle.normal,
-                      fontFeatures: [FontFeature.subscripts()],
-                    ),
+                style: AppTextStyle.body16(
+                  color: isSelected ? AppColor.white : null,
+                ).copyWith(fontFeatures: [FontFeature.subscripts()]),
               ),
             ],
           ),
@@ -185,3 +177,12 @@ class VideoSelectionTile extends StatelessWidget {
     );
   }
 }
+/* 
+
+My Channels – How to display a list of videos instead of channels?
+
+Channel Details – In the Playlist tab, when a playlist is selected, videos are shown. How to switch back to select another playlist?
+
+Settings – How to change “Edit Profile” option to “Profile”?
+
+ */

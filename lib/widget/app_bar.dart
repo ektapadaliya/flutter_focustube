@@ -10,19 +10,18 @@ PreferredSize sizeZeroAppBar(context, {Color? color}) {
   return PreferredSize(
     preferredSize: Size(MediaQuery.of(context).size.width, 0),
     child: AppBar(
-      backgroundColor: color ?? AppColor.white,
-      systemOverlayStyle: kIsWeb
-          ? null
-          : SystemUiOverlayStyle(
-              statusBarIconBrightness: io.Platform.isAndroid
-                  ? Brightness.dark
-                  : Brightness.light,
-              statusBarBrightness: Brightness.light,
-              statusBarColor: color ?? Colors.transparent,
-              systemStatusBarContrastEnforced: false,
-              systemNavigationBarColor: AppColor.white,
-              systemNavigationBarContrastEnforced: false,
-            ),
+      backgroundColor: Colors.transparent,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarIconBrightness: io.Platform.isAndroid
+            ? Brightness.dark
+            : Brightness.light,
+        statusBarBrightness: Brightness.light,
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: AppColor.white,
+        systemStatusBarContrastEnforced: false,
+        systemNavigationBarContrastEnforced: false,
+      ),
+      scrolledUnderElevation: 0.0,
       elevation: 0,
     ),
   );

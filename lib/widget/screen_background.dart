@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 
@@ -51,12 +52,12 @@ class FormScreenBoundries extends StatefulWidget {
 class _FormScreenBoundriesState extends State<FormScreenBoundries> {
   @override
   Widget build(BuildContext context) {
-    bool isLandScap =
-        MediaQuery.of(context).size.width > MediaQuery.of(context).size.height;
     return Align(
       alignment: Alignment.center,
       child: Container(
-        constraints: isLandScap ? BoxConstraints(maxWidth: 700) : null,
+        constraints: AppConst.isLandscape(context)
+            ? BoxConstraints(maxWidth: AppConst.kMaxLandscapeFormWidth)
+            : null,
         child: widget.child,
       ),
     );

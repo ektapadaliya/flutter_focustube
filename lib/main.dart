@@ -23,7 +23,11 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp.router(
       title: AppConst.appName,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primary),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColor.primary,
+          primary: AppColor.primary,
+          secondary: AppColor.lightYellow,
+        ),
         fontFamily: AppTextStyle.fontFamily,
       ),
       debugShowCheckedModeBanner: false,

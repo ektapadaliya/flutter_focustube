@@ -84,7 +84,7 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                         options: CircularDottedBorderOptions(
                           dashPattern: [12, 8],
                           strokeWidth: 3,
-                          color: AppColor.textFieldBorder,
+                          color: AppColor.borderColor,
                         ),
                         child: NetworkImageClass(
                           width: 140,

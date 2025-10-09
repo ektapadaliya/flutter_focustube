@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
+import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
@@ -37,7 +39,7 @@ class PopularVideoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        videoDetail.go(context);
+        //videoDetail.go(context);
       },
       overlayColor: WidgetStatePropertyAll(Colors.transparent),
       child: SizedBox(
@@ -111,7 +113,7 @@ class SubjectVideoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        videoDetail.go(context);
+        //videoDetail.go(context);
       },
       overlayColor: WidgetStatePropertyAll(Colors.transparent),
       child: SizedBox(
@@ -174,11 +176,16 @@ class BookmarkVideoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        videoDetail.go(context);
+        //videoDetail.go(context);
       },
       overlayColor: WidgetStatePropertyAll(Colors.transparent),
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 390, maxHeight: 230),
+        constraints: BoxConstraints(
+          maxWidth: AppConst.maxWidth(context) > 450
+              ? 390
+              : AppConst.maxWidth(context) - 60,
+          maxHeight: 230,
+        ),
         child: Stack(
           children: [
             NetworkImageClass(
@@ -240,8 +247,8 @@ class BookmarkVideoTile extends StatelessWidget {
 }
 
 class VideoTile extends StatefulWidget {
-  const VideoTile({super.key});
-
+  final bool isSlidable;
+  const VideoTile({super.key, this.isSlidable = false});
   @override
   State<VideoTile> createState() => _VideoTileState();
 }
@@ -249,76 +256,121 @@ class VideoTile extends StatefulWidget {
 class _VideoTileState extends State<VideoTile> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        videoDetail.go(context);
-      },
-      overlayColor: WidgetStatePropertyAll(Colors.transparent),
-      child: SizedBox(
-        height: 110,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    if (widget.isSlidable) {
+      return Slidable(
+        key: UniqueKey(),
+        endActionPane: ActionPane(
+          motion: const DrawerMotion(),
+          dragDismissible: true,
+          dismissible: DismissiblePane(onDismissed: () {}),
           children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                NetworkImageClass(
-                  height: 110,
-                  width: 168,
-                  borderRadius: BorderRadius.circular(12),
-                  placeHolder: AppImage.videoPlaceHolder,
-                ),
-                PlayPauseIcon(),
-                Positioned(
-                  top: 8,
-                  left: 8,
-                  child: SvgPicture.asset(
-                    AppImage.bookmarkIcon,
-                    height: 25,
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
+            CustomSlidableAction(
+              backgroundColor: Colors.transparent,
+              onPressed: (context) {
+                setState(() {});
+                Slidable.of(context)?.close();
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 8),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColor.lightYellow.opacityToAlpha(0),
+                      AppColor.lightYellow.opacityToAlpha(.1),
+                      AppColor.red.opacityToAlpha(.1),
+                      AppColor.red.opacityToAlpha(.3),
+                      AppColor.red.opacityToAlpha(.5),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.horizontal(
+                    right: Radius.circular(12),
                   ),
                 ),
-              ],
-            ),
-            SizedBox(width: 15),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Chemical Bonding: Crash Course",
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyle.title18().copyWith(height: 1.2),
-                    ),
-                    Expanded(child: Container()),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.visibility_outlined, color: AppColor.gray),
-                        SizedBox(width: 5),
-                        Text(
-                          "1423 Views",
-                          style: AppTextStyle.body12(color: AppColor.gray),
-                        ),
-                      ],
-                    ),
-                  ],
+                child: Icon(
+                  Icons.delete_outline,
+                  color: AppColor.red,
+                  size: 30,
                 ),
               ),
             ),
           ],
         ),
-      ),
-    );
+        child: child,
+      );
+    } else {
+      return child;
+    }
   }
+
+  Widget get child => InkWell(
+    onTap: () {
+      //videoDetail.go(context);
+    },
+    overlayColor: WidgetStatePropertyAll(Colors.transparent),
+    child: SizedBox(
+      height: 110,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              NetworkImageClass(
+                height: 110,
+                width: 168,
+                borderRadius: BorderRadius.circular(12),
+                placeHolder: AppImage.videoPlaceHolder,
+              ),
+              PlayPauseIcon(),
+              Positioned(
+                top: 8,
+                left: 8,
+                child: SvgPicture.asset(
+                  AppImage.bookmarkIcon,
+                  height: 25,
+                  colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(width: 15),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Chemical Bonding: Crash Course",
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyle.title18().copyWith(height: 1.2),
+                  ),
+                  Expanded(child: Container()),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.visibility_outlined, color: AppColor.gray),
+                      SizedBox(width: 5),
+                      Text(
+                        "1423 Views",
+                        style: AppTextStyle.body12(color: AppColor.gray),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class PlayPauseIcon extends StatefulWidget {
@@ -341,3 +393,99 @@ class _PlayPauseIconState extends State<PlayPauseIcon> {
     );
   }
 }
+/* 
+Container(
+      margin: EdgeInsets.symmetric(vertical: 7),
+      decoration: BoxDecoration(
+        color: AppColors.red.opacityToAlpha(0.14),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Slidable(
+        key: ValueKey(widget.value),
+        endActionPane: ActionPane(
+          motion: const DrawerMotion(),
+          dragDismissible: true,
+          dismissible: DismissiblePane(onDismissed: widget.onDismissed),
+          children: [
+            CustomSlidableAction(
+              backgroundColor: Colors.transparent,
+              onPressed: (context) {
+                widget.onDismissed();
+                setState(() {});
+                Slidable.of(context)?.close();
+              },
+              child: Container(
+                width: 150,
+                margin: EdgeInsets.symmetric(vertical: 8),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.horizontal(
+                    right: Radius.circular(12),
+                  ),
+                ),
+                child: Icon(
+                  Icons.delete_outline,
+                  color: AppColors.red,
+                  size: 30,
+                ),
+              ),
+            ),
+          ],
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            border: Border.all(color: AppColors.grey.opacityToAlpha(.08)),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Opacity(
+            opacity: widget.isRead ? 0.5 : 1,
+            child: Container(
+              padding: EdgeInsets.all(15),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 54,
+                    width: 54,
+                    decoration: BoxDecoration(
+                      color: AppColors.black.opacityToAlpha(.04),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.asset(widget.badgePath, height: 45),
+                        Image.asset(widget.iconPath, height: 25),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(widget.title, style: AppTextStyles.bold70014()),
+                        SizedBox(height: 3),
+                        Text(
+                          widget.description,
+                          style: AppTextStyles.bold40012(color: AppColors.grey),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 3),
+                        Text(
+                          widget.timeAgo,
+                          style: AppTextStyles.bold40012(color: AppColors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+ */

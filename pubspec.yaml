@@ -49,6 +49,7 @@ dependencies:
   flutter_svg: ^2.2.1
   syncfusion_flutter_sliders: ^31.1.22
   syncfusion_flutter_core: ^31.1.22
+  flutter_slidable: ^4.0.3
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +88,8 @@ flutter:
     - assets/nav_icons/
     # Other Icons
     - assets/icons/
+    # Feedback Icons
+    - assets/feedback/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

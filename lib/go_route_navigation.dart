@@ -2,7 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/view/auth/choose_your_interest_vc.dart';
 import 'package:focus_tube_flutter/view/auth/daily_limit_vc.dart';
+import 'package:focus_tube_flutter/view/channel_detail_vc.dart';
 import 'package:focus_tube_flutter/view/home/home_root.dart';
+import 'package:focus_tube_flutter/view/note_detail_vc.dart';
+import 'package:focus_tube_flutter/view/note_list_vc.dart';
+import 'package:focus_tube_flutter/view/playlist_detail_vc.dart';
 import 'package:focus_tube_flutter/view/subject_detail_vc.dart';
 import 'package:focus_tube_flutter/view/subject_vc.dart';
 import 'package:focus_tube_flutter/view/video_detail_vc.dart';
@@ -194,13 +198,23 @@ final AppNavigationModel playlists = AppNavigationModel(
   path: PlaylistVC.id,
   builder: (context, state) => const PlaylistVC(),
 );
-
+final AppNavigationModel playListDetail = AppNavigationModel(
+  label: "Playlist Detail",
+  path: "${PlaylistVC.id}${PlayListDetailVC.id}",
+  builder: (context, state) =>
+      PlayListDetailVC(playListId: state.pathParameters['id'] ?? ""),
+);
 final AppNavigationModel channels = AppNavigationModel(
   label: "Channels",
   path: ChannelsVC.id,
   builder: (context, state) => const ChannelsVC(),
 );
-
+final AppNavigationModel channelDetail = AppNavigationModel(
+  label: "Playlist Detail",
+  path: "${ChannelsVC.id}${ChannelDetailVC.id}",
+  builder: (context, state) =>
+      ChannelDetailVC(channelId: state.pathParameters['id'] ?? ""),
+);
 final AppNavigationModel settings = AppNavigationModel(
   label: "Settings",
   path: SettingsVC.id,
@@ -226,6 +240,22 @@ final AppNavigationModel videoDetail = AppNavigationModel(
   path: VideoDetailVC.id,
   builder: (context, state) => VideoDetailVC(),
 );
+final AppNavigationModel notes = AppNavigationModel(
+  label: "Notes",
+  path: NoteListVC.id,
+  builder: (context, state) => NoteListVC(),
+);
+final AppNavigationModel addNote = AppNavigationModel(
+  label: "Add Note",
+  path: "${NoteListVC.id}${NoteDetailVC.addId}",
+  builder: (context, state) => NoteDetailVC(),
+);
+final AppNavigationModel detailsNote = AppNavigationModel(
+  label: "Add Note",
+  path: "${NoteListVC.id}${NoteDetailVC.detailId}",
+  builder: (context, state) => NoteDetailVC(id: state.pathParameters['id']),
+);
+
 // MARK: Router
 final GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();
 
@@ -248,6 +278,11 @@ final GoRouter router = GoRouter(
       subjects,
       subjectsDetail,
       videoDetail,
+      notes,
+      addNote,
+      detailsNote,
+      playListDetail,
+      channelDetail,
     ].map((routeElement) => routeElement.toGoRoute()),
     StatefulShellRoute.indexedStack(
       branches: [

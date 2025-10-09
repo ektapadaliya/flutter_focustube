@@ -4,6 +4,8 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/view/dialog/feedback_vc.dart';
+import 'package:focus_tube_flutter/view/dialog/save_playlist_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/image_classes.dart';
@@ -35,9 +37,15 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
         context,
         title: "Lesson",
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 30),
-            child: SvgPicture.asset(AppImage.noteIcon, height: 20),
+          InkWell(
+            overlayColor: WidgetStatePropertyAll(Colors.transparent),
+            onTap: () {
+              notes.go(context);
+            },
+            child: Container(
+              padding: const EdgeInsets.only(right: 30),
+              child: SvgPicture.asset(AppImage.noteIcon, height: 20),
+            ),
           ),
         ],
       ),
@@ -88,15 +96,29 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
                       style: AppTextStyle.body16(color: AppColor.gray),
                     ),
                   ),
-                  SvgPicture.asset(AppImage.playListIcon),
+                  InkWell(
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) => SavePlaylistVC(),
+                    ),
+                    child: SvgPicture.asset(AppImage.playListIcon),
+                  ),
                 ],
               ),
               SizedBox(height: 20),
-              AppButton(
-                label: "Rate This Lesson",
-                backgroundColor: AppColor.primary,
-                isFilled: false,
-                fontSize: 18,
+              Center(
+                child: AppButton(
+                  label: "Rate This Lesson",
+                  backgroundColor: AppColor.primary,
+                  isFilled: false,
+                  fontSize: 18,
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => FeedbackVC(),
+                    );
+                  },
+                ),
               ),
               SizedBox(height: 20),
               AppTitle(

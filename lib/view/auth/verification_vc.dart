@@ -82,10 +82,10 @@ class _VerificationVCState extends State<VerificationVC> {
                   length: 4,
                   fieldWidth: 60,
                   theme: OtpInputTheme(
-                    fillColor: AppColor.textFieldBackground,
+                    fillColor: AppColor.tileBackground,
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: AppColor.textFieldBorder,
+                        color: AppColor.borderColor,
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(12),

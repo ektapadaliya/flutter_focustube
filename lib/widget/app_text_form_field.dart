@@ -27,7 +27,9 @@ class AppTextFormField extends StatelessWidget {
     this.maxLength,
     this.onChanged,
     this.suffixIconSize = 60,
+    this.radius = 50,
     this.textColor,
+    this.hintTextColor,
     this.isFieldDisable = false,
     this.textCapitalization = TextCapitalization.none,
     this.inputFormatters,
@@ -35,33 +37,26 @@ class AppTextFormField extends StatelessWidget {
   });
   TextEditingController? controller;
   FocusNode? focusNode;
-  String? hintText;
-  String? label;
-  Color? fillColor;
-  Color? borderColor;
-  final int maxLines;
-  final int? minLines;
-  int? maxLength;
+  String? label, hintText;
+  Color? fillColor, borderColor;
+  int maxLines;
+  int? minLines, maxLength;
   bool? obscureText;
-  Widget? prefixIcon;
-  Widget? suffixIcon;
-  double suffixIconSize;
-  Color? textColor;
-  bool isFieldDisable;
+  Widget? prefixIcon, suffixIcon, prefix;
+  double suffixIconSize, radius;
+  Color? textColor, hintTextColor;
+  bool isFieldDisable, readOnly;
   TextInputType? keyboardType;
   TextInputAction? textInputAction;
   void Function()? onTap;
-  void Function(String)? onFieldSubmitted;
+  void Function(String)? onFieldSubmitted, onChanged;
   String? Function(String?)? validator;
-  bool readOnly;
-  Widget? prefix;
   List<TextInputFormatter>? inputFormatters;
-  void Function(String)? onChanged;
   TextCapitalization textCapitalization;
   get border => OutlineInputBorder(
-    borderRadius: BorderRadius.circular(50),
+    borderRadius: BorderRadius.circular(radius),
     borderSide: BorderSide(
-      color: borderColor ?? AppColor.textFieldBorder,
+      color: borderColor ?? AppColor.borderColor,
       width: 1,
     ),
     gapPadding: 8,
@@ -104,7 +99,7 @@ class AppTextFormField extends StatelessWidget {
             inputFormatters: inputFormatters,
             style: AppTextStyle.body16(color: textColor ?? AppColor.primary),
             decoration: InputDecoration(
-              fillColor: fillColor ?? AppColor.textFieldBackground,
+              fillColor: fillColor ?? AppColor.tileBackground,
               filled: true,
               prefix: prefix,
               prefixIcon: prefixIcon != null
@@ -126,7 +121,7 @@ class AppTextFormField extends StatelessWidget {
                 vertical: 20,
                 horizontal: 24,
               ),
-              hintStyle: AppTextStyle.body16(color: textColor),
+              hintStyle: AppTextStyle.body16(color: hintTextColor ?? textColor),
               focusedBorder: border,
               border: border,
               enabledBorder: border,
@@ -134,7 +129,7 @@ class AppTextFormField extends StatelessWidget {
               errorMaxLines: 2,
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Colors.red, width: 1.2),
+                borderSide: const BorderSide(color: AppColor.red, width: 1.2),
                 gapPadding: 0,
               ),
             ),

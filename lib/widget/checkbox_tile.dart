@@ -24,7 +24,7 @@ class AppCheckBoxTile extends StatelessWidget {
           visualDensity: const VisualDensity(horizontal: -4),
           value: isSelected,
           activeColor: AppColor.primary,
-          side: BorderSide(color: AppColor.textFieldBorder, width: 1),
+          side: BorderSide(color: AppColor.borderColor, width: 1),
           onChanged: onChanged,
           shape: RoundedRectangleBorder(
             side: const BorderSide(color: AppColor.primary, width: 1),
@@ -44,6 +44,70 @@ class AppCheckBoxTile extends StatelessWidget {
         children: align == AppCheckBoxTileAlign.right
             ? children.reversed.toList()
             : children,
+      ),
+    );
+  }
+}
+
+class AppRadioButton<T> extends StatelessWidget {
+  final T value;
+  final T groupValue;
+  final void Function(T) onChanged;
+  final double size;
+  final double borderWidth;
+  final Color selectedColor;
+  final Color unselectedColor;
+  final double innerPadding;
+  final Widget? child;
+
+  const AppRadioButton({
+    super.key,
+    required this.value,
+    required this.groupValue,
+    required this.onChanged,
+    this.size = 18,
+    this.borderWidth = 1.5,
+    this.selectedColor = AppColor.primary,
+    this.unselectedColor = AppColor.gray,
+    this.innerPadding = 2.0,
+    this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var isSelected = value == groupValue;
+    return InkWell(
+      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+      onTap: () {
+        onChanged(value);
+      },
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: isSelected ? selectedColor : unselectedColor,
+                width: borderWidth,
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(innerPadding),
+              child: isSelected
+                  ? Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: selectedColor,
+                      ),
+                    )
+                  : null,
+            ),
+          ),
+          if (child != null) ...[SizedBox(width: 8), child!],
+        ],
       ),
     );
   }

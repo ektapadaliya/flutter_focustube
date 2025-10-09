@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
+import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 
 class AppButton extends StatelessWidget {
@@ -16,18 +17,18 @@ class AppButton extends StatelessWidget {
     this.alignment = Alignment.center,
     this.fontSize,
     this.height = 70,
+    this.radius = 50,
     this.padding,
+    this.maxWidth = AppConst.kMaxLandscapeFormWidth,
   });
   final dynamic label;
-  final bool isFilled;
-  final bool isDisable;
-  final Color? textColor, borderColor;
+  final bool isFilled, isDisable;
+  final Color? textColor, borderColor, disableBackgroundColor;
   final Color backgroundColor;
-  final Color? disableBackgroundColor;
   final void Function()? onTap;
   final AlignmentGeometry? alignment;
   final double? fontSize;
-  final double height;
+  final double height, maxWidth, radius;
   final EdgeInsetsGeometry? padding;
   @override
   Widget build(BuildContext context) {
@@ -36,13 +37,15 @@ class AppButton extends StatelessWidget {
       overlayColor: WidgetStatePropertyAll(Colors.transparent),
       child: Container(
         height: height,
-
+        constraints: AppConst.isLandscape(context)
+            ? BoxConstraints(maxWidth: maxWidth)
+            : null,
         padding: padding ?? const EdgeInsets.symmetric(horizontal: 47.5),
         decoration: BoxDecoration(
           color: isFilled
               ? (isDisable ? disableBackgroundColor : backgroundColor)
               : Colors.transparent,
-          borderRadius: BorderRadius.circular(50),
+          borderRadius: BorderRadius.circular(radius),
           border: Border.all(
             width: 1.5,
             color:

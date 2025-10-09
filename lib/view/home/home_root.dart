@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
+import 'package:focus_tube_flutter/view/dialog/add_channel_vc.dart';
+import 'package:focus_tube_flutter/view/dialog/add_edit_playlist_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 import 'package:go_router/go_router.dart';
@@ -33,7 +35,30 @@ class HomeRootState extends State<HomeRoot> {
           : customAppBar(
               context,
               centerTitle: true,
+              //title: _itemLable(currentIndex),
               automaticallyImplyLeading: false,
+              // actions: [
+              //   if ([2, 3].contains(currentIndex))
+              //     Padding(
+              //       padding: const EdgeInsets.only(right: 30),
+              //       child: InkWell(
+              //         onTap: () {
+              //           if (currentIndex == 2) {
+              //             showDialog(
+              //               context: context,
+              //               builder: (context) => AddEditPlaylistVC(),
+              //             );
+              //           } else if (currentIndex == 3) {
+              //             showDialog(
+              //               context: context,
+              //               builder: (context) => AddChannelVC(),
+              //             );
+              //           }
+              //         },
+              //         child: Icon(Icons.add, size: 25, color: AppColor.primary),
+              //       ),
+              //     ),
+              // ],
             ),
       body: widget.navigationShell,
       bottomNavigationBar: _HomeBottomNavigationBar(
@@ -94,11 +119,11 @@ class _HomeBottomNavigationBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Image.asset(
-            isSelected ? selectedItemImage(index) : itemImage(index),
+            isSelected ? _selectedItemImage(index) : _itemImage(index),
             height: 36,
           ),
           Text(
-            itemLable(index),
+            _itemLable(index),
             style: AppTextStyle.body12(
               color: !isSelected ? AppColor.gray : null,
             ),
@@ -107,37 +132,37 @@ class _HomeBottomNavigationBar extends StatelessWidget {
       ),
     );
   }
+}
 
-  String itemLable(int index) {
-    return switch (index) {
-      0 => "Home",
-      1 => "Search",
-      2 => "Playlist",
-      3 => "Channels",
-      4 => "Settings",
-      _ => "",
-    };
-  }
+String _itemLable(int index) {
+  return switch (index) {
+    0 => "Home",
+    1 => "Search",
+    2 => "Playlist",
+    3 => "Channels",
+    4 => "Settings",
+    _ => "",
+  };
+}
 
-  String itemImage(int index) {
-    return switch (index) {
-      0 => AppImage.home,
-      1 => AppImage.search,
-      2 => AppImage.playlist,
-      3 => AppImage.channles,
-      4 => AppImage.settings,
-      _ => "",
-    };
-  }
+String _itemImage(int index) {
+  return switch (index) {
+    0 => AppImage.home,
+    1 => AppImage.search,
+    2 => AppImage.playlist,
+    3 => AppImage.channles,
+    4 => AppImage.settings,
+    _ => "",
+  };
+}
 
-  String selectedItemImage(int index) {
-    return switch (index) {
-      0 => AppImage.homeSelected,
-      1 => AppImage.searchSelected,
-      2 => AppImage.playlistSelected,
-      3 => AppImage.channlesSelected,
-      4 => AppImage.settingsSelected,
-      _ => "",
-    };
-  }
+String _selectedItemImage(int index) {
+  return switch (index) {
+    0 => AppImage.homeSelected,
+    1 => AppImage.searchSelected,
+    2 => AppImage.playlistSelected,
+    3 => AppImage.channlesSelected,
+    4 => AppImage.settingsSelected,
+    _ => "",
+  };
 }

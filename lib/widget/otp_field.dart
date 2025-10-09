@@ -328,10 +328,6 @@ class _AnimatedOtpInputState extends State<AnimatedOtpInput>
                         final pasted = newValue.text;
                         if (pasted.length == widget.length) {
                           _handlePaste(pasted);
-                          // return TextEditingValue(
-                          //   text: pasted[i],
-                          //   selection: TextSelection.collapsed(offset: i),
-                          // );
                         }
                         return newValue;
                       }),

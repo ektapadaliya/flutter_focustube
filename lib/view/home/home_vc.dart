@@ -30,9 +30,9 @@ class _HomeVCState extends State<HomeVC> {
                 children: [
                   SizedBox(height: 10),
                   AppTitle(
-                    title: "Bookmarked video",
+                    title: "Bookmarked videos",
                     onViewMore: () {
-                      videos.go(context, extra: "Bookmarked");
+                      // videos.go(context, extra: "Bookmarked");
                     },
                   ),
                   SizedBox(height: 10),
@@ -47,14 +47,14 @@ class _HomeVCState extends State<HomeVC> {
                   ),
                   SizedBox(height: 30),
                   AppTitle(
-                    title: "Popular Videos",
+                    title: "Popular videos",
                     onViewMore: () {
                       videos.go(context, extra: "Popular");
                     },
                   ),
                   SizedBox(height: 10),
                   SizedBox(
-                    height: 210,
+                    height: 220,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) => PopularVideoTile(),
@@ -125,9 +125,9 @@ class _HomeVCState extends State<HomeVC> {
                 ),
                 onItemPressed: (String item) {
                   if (item == "bookmarks") {
-                    videos.go(context, extra: "Bookmarked");
+                    //  videos.go(context, extra: "Bookmarked");
                   } else if (item == "subjects") {
-                    subjects.go(context);
+                    // subjects.go(context);
                   }
                 },
                 child: Icon(Icons.more_vert),
