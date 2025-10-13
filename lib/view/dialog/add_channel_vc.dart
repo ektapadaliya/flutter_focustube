@@ -27,52 +27,57 @@ class AddChannelVC extends StatelessWidget {
             color: AppColor.white,
             borderRadius: BorderRadius.circular(24),
           ),
-          padding: EdgeInsets.all(20),
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Row(
-                children: [
-                  Text("Add channel", style: AppTextStyle.title20()),
-                  Expanded(child: Container(width: 10)),
-                  InkWell(
-                    onTap: context.pop,
-                    overlayColor: WidgetStatePropertyAll(Colors.transparent),
-                    child: Icon(Icons.close, color: AppColor.primary, size: 20),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              AppTextFormField(
-                hintText: "Search Channel",
-                prefixIcon: Image.asset(AppImage.search, height: 35),
-                hintTextColor: AppColor.gray,
-              ),
-              SizedBox(height: 15),
-              AppTextFormField(label: "Channel name", hintText: "Enter name"),
-              SizedBox(height: 20),
-              Center(
-                child: Text(
-                  "OR",
-                  style: AppTextStyle.body16(color: AppColor.gray),
+          padding: EdgeInsets.all(25),
+          child: SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text("Add channel", style: AppTextStyle.title20()),
+                    Expanded(child: Container(width: 10)),
+                    InkWell(
+                      onTap: context.pop,
+                      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                      child: Icon(
+                        Icons.close,
+                        color: AppColor.primary,
+                        size: 20,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(height: 30),
-              AppTextFormField(
-                hintText: "Search subject",
-                prefixIcon: Image.asset(AppImage.search, height: 35),
-                hintTextColor: AppColor.gray,
-              ),
-              SizedBox(height: 15),
-              AppTextFormField(label: "Subject name", hintText: "Enter name"),
-
-              SizedBox(height: 30),
-              AppButton(
-                label: "Add channel",
-                backgroundColor: AppColor.primary,
-              ),
-              SizedBox(height: 20),
-            ],
+                SizedBox(height: 20),
+                AppTextFormField(
+                  hintText: "Search Channel",
+                  prefixIcon: Image.asset(AppImage.search, height: 35),
+                  hintTextColor: AppColor.gray,
+                ),
+                SizedBox(height: 15),
+                AppTextFormField(label: "Channel name", hintText: "Enter name"),
+                SizedBox(height: 20),
+                Center(
+                  child: Text(
+                    "OR",
+                    style: AppTextStyle.body16(color: AppColor.gray),
+                  ),
+                ),
+                SizedBox(height: 30),
+                AppTextFormField(
+                  hintText: "Search subject",
+                  prefixIcon: Image.asset(AppImage.search, height: 35),
+                  hintTextColor: AppColor.gray,
+                ),
+                SizedBox(height: 15),
+                AppTextFormField(label: "Subject name", hintText: "Enter name"),
+                SizedBox(height: 30),
+                AppButton(
+                  label: "Add channel",
+                  backgroundColor: AppColor.primary,
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),

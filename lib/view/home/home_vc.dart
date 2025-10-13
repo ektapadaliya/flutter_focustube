@@ -32,7 +32,7 @@ class _HomeVCState extends State<HomeVC> {
                   AppTitle(
                     title: "Bookmarked videos",
                     onViewMore: () {
-                      // videos.go(context, extra: "Bookmarked");
+                      videos.go(context, extra: "Bookmarked");
                     },
                   ),
                   SizedBox(height: 10),
@@ -94,7 +94,7 @@ class _HomeVCState extends State<HomeVC> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Good Morning!",
+            getTimeBasedGreeting(),
             style: AppTextStyle.body18(color: AppColor.gray),
           ),
           Row(
@@ -125,9 +125,9 @@ class _HomeVCState extends State<HomeVC> {
                 ),
                 onItemPressed: (String item) {
                   if (item == "bookmarks") {
-                    //  videos.go(context, extra: "Bookmarked");
+                    videos.go(context, extra: "Bookmarked");
                   } else if (item == "subjects") {
-                    // subjects.go(context);
+                    subjects.go(context);
                   }
                 },
                 child: Icon(Icons.more_vert),
@@ -157,5 +157,19 @@ class _HomeVCState extends State<HomeVC> {
       "history" => "History",
       _ => "",
     };
+  }
+
+  String getTimeBasedGreeting() {
+    final hour = DateTime.now().hour;
+
+    if (hour >= 4 && hour < 12) {
+      return "Good Morning!";
+    } else if (hour >= 12 && hour < 17) {
+      return "Good Afternoon!";
+    } else if (hour >= 17 && hour < 21) {
+      return "Good Evening!";
+    } else {
+      return "Good Night!";
+    }
   }
 }

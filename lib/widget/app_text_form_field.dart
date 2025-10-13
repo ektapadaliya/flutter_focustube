@@ -140,6 +140,131 @@ class AppTextFormField extends StatelessWidget {
   }
 }
 
+class AutoCompleteField extends StatefulWidget {
+  const AutoCompleteField({
+    super.key,
+    this.label,
+    this.hintText,
+    this.textColor,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.radius = 50,
+    this.onValueSelect,
+    this.hintTextColor,
+    required this.suggestions,
+  });
+  final double radius;
+  final String? label, hintText;
+  final List<String> suggestions;
+  final Color? textColor, hintTextColor;
+  final Widget? prefixIcon, suffixIcon;
+  final void Function(String?)? onValueSelect;
+
+  @override
+  State<AutoCompleteField> createState() => _AutoCompleteFieldState();
+}
+
+class _AutoCompleteFieldState extends State<AutoCompleteField> {
+  RenderBox? get renderBox => context.findRenderObject() as RenderBox?;
+  Size? get size => renderBox?.size;
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Autocomplete<String>(
+      optionsBuilder: (textValue) {
+        var value = textValue.text.trim().isEmpty
+            ? <String>[]
+            : widget.suggestions.where((option) {
+                return option.toLowerCase().contains(
+                  textValue.text.toLowerCase(),
+                );
+              });
+        if (value.isEmpty) {
+          return widget.suggestions;
+        } else {
+          return value;
+        }
+      },
+      optionsViewBuilder: (contxet, onSelect, list) => Align(
+        alignment: Alignment.topLeft,
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: 250,
+            maxWidth: size?.width ?? double.infinity,
+          ),
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColor.gray, width: 0.5),
+            color: AppColor.white,
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.gray.opacityToAlpha(.4),
+                offset: const Offset(1, 1),
+
+                blurRadius: 2,
+              ),
+            ],
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: list
+                  .map(
+                    (e) => ListTile(
+                      onTap: () {
+                        if (widget.onValueSelect != null) {
+                          widget.onValueSelect!(e);
+                        }
+                        onSelect(e);
+
+                        setState(() {});
+                      },
+                      title: Text(
+                        e,
+                        style: AppTextStyle.body16(color: AppColor.gray),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ),
+      ),
+      fieldViewBuilder: (context, controller, focusNode, onTap) {
+        return AppTextFormField(
+          controller: controller,
+          focusNode: focusNode,
+          label: widget.label,
+          textColor: widget.textColor,
+          hintTextColor: widget.hintTextColor,
+          prefixIcon: widget.prefixIcon,
+          suffixIcon: widget.suffixIcon != null
+              ? InkWell(
+                  overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                  onTap: () {
+                    controller.clear();
+                    widget.onValueSelect!(null);
+                  },
+                  child: widget.suffixIcon,
+                )
+              : null,
+          radius: widget.radius,
+          onFieldSubmitted: (value) {
+            widget.onValueSelect!(value);
+          },
+          hintText: widget.hintText,
+        );
+      },
+    );
+  }
+}
+
 class FirstLatterUpperCaseTextFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(

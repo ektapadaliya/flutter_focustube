@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:focus_tube_flutter/const/app_image.dart';
-import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
+import 'package:focus_tube_flutter/const/app_color.dart';
+import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/widget/channel_widgets.dart';
-import 'package:focus_tube_flutter/widget/screen_background.dart';
 
 class ChannelsVC extends StatefulWidget {
   static const id = "/channles";
@@ -14,19 +12,26 @@ class ChannelsVC extends StatefulWidget {
 }
 
 class _ChannelsVCState extends State<ChannelsVC> {
+  int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Container(); /* Padding(
+    return Container(); /*Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30).copyWith(top: 15),
 
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppTextFormField(
-            hintText: "Search here...",
-
-            prefixIcon: Image.asset(AppImage.search, height: 35),
-            radius: 6,
+          SizedBox(
+            height: 40,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) => buildCategoryTile(index),
+              separatorBuilder: (context, index) => SizedBox(width: 10),
+              itemCount: 4,
+            ),
           ),
+          SizedBox(height: 20),
+          Text(_channelsType(selectedIndex), style: AppTextStyle.title20()),
           SizedBox(height: 20),
           Expanded(
             child: ListView.separated(
@@ -37,6 +42,44 @@ class _ChannelsVCState extends State<ChannelsVC> {
           ),
         ],
       ),
-    ); */
+    );
+  }
+
+  buildCategoryTile(int index) {
+    bool isSelected = selectedIndex == index;
+    return InkWell(
+      onTap: () {
+        selectedIndex = index;
+        setState(() {});
+      },
+      child: Container(
+        height: 40,
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          color: isSelected ? AppColor.primary : null,
+          border: Border.all(
+            color: isSelected ? AppColor.primary : AppColor.gray,
+          ),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          _channelsType(index),
+          style: AppTextStyle.title16(
+            color: isSelected ? AppColor.white : AppColor.gray,
+          ),
+        ),
+      ),
+    );*/
+  }
+
+  _channelsType(int index) {
+    return switch (index) {
+      0 => "Channels",
+      1 => "My Channels",
+      2 => "Curated Channels",
+      3 => "Scholar Tube",
+      _ => "",
+    };
   }
 }

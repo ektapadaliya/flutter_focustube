@@ -39,7 +39,7 @@ class PopularVideoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        //videoDetail.go(context);
+        videoDetail.go(context);
       },
       overlayColor: WidgetStatePropertyAll(Colors.transparent),
       child: SizedBox(
@@ -113,7 +113,7 @@ class SubjectVideoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        //videoDetail.go(context);
+        videoDetail.go(context);
       },
       overlayColor: WidgetStatePropertyAll(Colors.transparent),
       child: SizedBox(
@@ -176,7 +176,7 @@ class BookmarkVideoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        //videoDetail.go(context);
+        videoDetail.go(context);
       },
       overlayColor: WidgetStatePropertyAll(Colors.transparent),
       child: ConstrainedBox(
@@ -226,16 +226,16 @@ class BookmarkVideoTile extends StatelessWidget {
                       PlayPauseIcon(),
                     ],
                   ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    height: 6,
-                    child: LinearProgressIndicator(
-                      borderRadius: BorderRadius.circular(12),
-                      backgroundColor: AppColor.white.opacityToAlpha(.3),
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColor.white),
-                      value: .5,
-                    ),
-                  ),
+                  // SizedBox(height: 10),
+                  // SizedBox(
+                  //   height: 6,
+                  //   child: LinearProgressIndicator(
+                  //     borderRadius: BorderRadius.circular(12),
+                  //     backgroundColor: AppColor.white.opacityToAlpha(.3),
+                  //     valueColor: AlwaysStoppedAnimation<Color>(AppColor.white),
+                  //     value: .5,
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -307,7 +307,7 @@ class _VideoTileState extends State<VideoTile> {
 
   Widget get child => InkWell(
     onTap: () {
-      //videoDetail.go(context);
+      videoDetail.go(context);
     },
     overlayColor: WidgetStatePropertyAll(Colors.transparent),
     child: SizedBox(

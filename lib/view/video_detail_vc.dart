@@ -40,7 +40,7 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
           InkWell(
             overlayColor: WidgetStatePropertyAll(Colors.transparent),
             onTap: () {
-              notes.go(context);
+              // notes.go(context);
             },
             child: Container(
               padding: const EdgeInsets.only(right: 30),
@@ -97,10 +97,10 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
                     ),
                   ),
                   InkWell(
-                    onTap: () => showDialog(
-                      context: context,
-                      builder: (context) => SavePlaylistVC(),
-                    ),
+                    // onTap: () => showDialog(
+                    //   context: context,
+                    //   builder: (context) => SavePlaylistVC(),
+                    // ),
                     child: SvgPicture.asset(AppImage.playListIcon),
                   ),
                 ],
@@ -113,10 +113,10 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
                   isFilled: false,
                   fontSize: 18,
                   onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => FeedbackVC(),
-                    );
+                    // showDialog(
+                    //   context: context,
+                    //   builder: (context) => FeedbackVC(),
+                    // );
                   },
                 ),
               ),

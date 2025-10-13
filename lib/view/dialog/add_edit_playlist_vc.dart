@@ -43,39 +43,45 @@ class _AddEditPlaylistVCState extends State<AddEditPlaylistVC> {
             color: AppColor.white,
             borderRadius: BorderRadius.circular(24),
           ),
-          padding: EdgeInsets.all(20),
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    widget.playlist != null
-                        ? "Rename playlist"
-                        : "Create playlist",
-                    style: AppTextStyle.title20(),
-                  ),
-                  Expanded(child: Container(width: 10)),
-                  InkWell(
-                    onTap: context.pop,
-                    overlayColor: WidgetStatePropertyAll(Colors.transparent),
-                    child: Icon(Icons.close, color: AppColor.primary, size: 20),
-                  ),
-                ],
-              ),
-              SizedBox(height: 40),
-              AppTextFormField(
-                label: "Playlist",
-                hintText: "Enter name",
-                controller: playListNameController,
-              ),
-              SizedBox(height: 40),
-              AppButton(
-                label: widget.playlist != null ? "Change" : "Create",
-                backgroundColor: AppColor.primary,
-              ),
-              SizedBox(height: 20),
-            ],
+          padding: EdgeInsets.all(25),
+          child: SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      widget.playlist != null
+                          ? "Rename playlist"
+                          : "Create playlist",
+                      style: AppTextStyle.title20(),
+                    ),
+                    Expanded(child: Container(width: 10)),
+                    InkWell(
+                      onTap: context.pop,
+                      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                      child: Icon(
+                        Icons.close,
+                        color: AppColor.primary,
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 40),
+                AppTextFormField(
+                  label: "Playlist",
+                  hintText: "Enter name",
+                  controller: playListNameController,
+                ),
+                SizedBox(height: 40),
+                AppButton(
+                  label: widget.playlist != null ? "Change" : "Create",
+                  backgroundColor: AppColor.primary,
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
