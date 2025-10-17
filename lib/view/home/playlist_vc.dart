@@ -17,7 +17,7 @@ class _PlaylistVCState extends State<PlaylistVC> {
   TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Container(); /* Padding(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30).copyWith(top: 15),
 
       child: Column(
@@ -43,6 +43,6 @@ class _PlaylistVCState extends State<PlaylistVC> {
           ),
         ],
       ),
-    ); */
+    );
   }
 }

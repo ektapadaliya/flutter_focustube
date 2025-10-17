@@ -8,11 +8,14 @@ import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
+import 'package:go_router/go_router.dart';
 
 class DailyLimitVC extends StatefulWidget {
   static const id = "/daily-limit";
-  const DailyLimitVC({super.key});
+  static const editId = "$id/edit";
 
+  const DailyLimitVC({super.key, this.isFromEdit = false});
+  final bool isFromEdit;
   @override
   State<DailyLimitVC> createState() => _DailyLimitVCState();
 }
@@ -48,6 +51,8 @@ class _DailyLimitVCState extends State<DailyLimitVC> {
                     autofocus: true,
                     controller: videoSelectionController,
                     expands: false,
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
                       border: InputBorder.none,
@@ -119,10 +124,14 @@ class _DailyLimitVCState extends State<DailyLimitVC> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 30),
               child: AppButton(
-                label: "Continue",
+                label: widget.isFromEdit ? "Save" : "Continue",
                 backgroundColor: AppColor.primary,
                 onTap: () {
-                  home.go(context);
+                  if (widget.isFromEdit) {
+                    context.pop();
+                  } else {
+                    home.go(context);
+                  }
                 },
               ),
             ),

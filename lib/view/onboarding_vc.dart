@@ -1,11 +1,12 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
+import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
-import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 
 class OnboardingPage {
@@ -87,117 +88,127 @@ class _OnboardingVCState extends State<OnboardingVC> {
           ),
         ],
       ),
-      body: PageView.builder(
-        scrollDirection: Axis.horizontal,
-        controller: pageController,
-        itemCount: pages.length,
+      body: Column(
+        children: [
+          Flexible(
+            child: Center(
+              child: PageView.builder(
+                scrollDirection: Axis.horizontal,
+                controller: pageController,
+                itemCount: pages.length,
 
-        itemBuilder: (context, index) {
-          return ExpandedSingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(child: Container()),
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(pages[index].imagePath),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 40),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Column(
+                itemBuilder: (context, index) {
+                  return Column(
                     mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        pages[index].title,
-                        style: AppTextStyle.title36(),
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        pages[index].description,
-                        textAlign: TextAlign.center,
-                        style: AppTextStyle.body22(),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20),
-                Expanded(child: Container()),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(pages.length, (index) {
-                    bool isSelected = index == currentPage;
-                    return Container(
-                      margin: EdgeInsets.symmetric(horizontal: 3),
-                      height: 10,
-                      width: 10,
-                      decoration: BoxDecoration(
-                        color: isSelected ? AppColor.primary : AppColor.gray,
-                        shape: BoxShape.circle,
-                      ),
-                    );
-                  }),
-                ),
-                SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Row(
-                    children: [
-                      TextButton(
-                        onPressed: currentPage == 0
-                            ? null
-                            : () {
-                                if (currentPage > 0) {
-                                  pageController.previousPage(
-                                    duration: Durations.medium4,
-                                    curve: Curves.easeOut,
-                                  );
-                                }
-                              },
-                        child: Text(
-                          "Back",
-                          style: AppTextStyle.title20(
-                            color: currentPage == 0
-                                ? AppColor.gray
-                                : AppColor.primary,
+                      Expanded(flex: 7, child: Container()),
+                      Expanded(
+                        flex: AppConst.isLandscape(context) ? 27 : 22,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(pages[index].imagePath),
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                       ),
-                      Expanded(child: Container()),
-                      AppButton(
-                        label: Icons.arrow_forward,
-                        fontSize: 35,
-                        backgroundColor: AppColor.primary,
-                        alignment: null,
-                        onTap: () {
-                          if (currentPage < 2) {
-                            pageController.nextPage(
+                      Expanded(flex: 3, child: Container()),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AutoSizeText(
+                              pages[index].title,
+                              style: AppTextStyle.title36(),
+                              textAlign: TextAlign.center,
+                              maxFontSize: 36,
+                              minFontSize: 24,
+                              maxLines: 2,
+                            ),
+                            SizedBox(height: 10),
+                            AutoSizeText(
+                              pages[index].description,
+                              textAlign: TextAlign.center,
+                              maxFontSize: 22,
+                              minFontSize: 16,
+                              maxLines: 3,
+                              style: AppTextStyle.body22(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(flex: 7, child: Container()),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(pages.length, (index) {
+              bool isSelected = index == currentPage;
+              return Container(
+                margin: EdgeInsets.symmetric(horizontal: 3),
+                height: 10,
+                width: 10,
+                decoration: BoxDecoration(
+                  color: isSelected ? AppColor.primary : AppColor.gray,
+                  shape: BoxShape.circle,
+                ),
+              );
+            }),
+          ),
+          SizedBox(height: 30),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Row(
+              children: [
+                TextButton(
+                  onPressed: currentPage == 0
+                      ? null
+                      : () {
+                          if (currentPage > 0) {
+                            pageController.previousPage(
                               duration: Durations.medium4,
-                              curve: Curves.easeIn,
+                              curve: Curves.easeOut,
                             );
-                          } else {
-                            signUp.go(context);
                           }
                         },
-                      ),
-                    ],
+                  child: Text(
+                    "Back",
+                    style: AppTextStyle.title20(
+                      color: currentPage == 0
+                          ? AppColor.gray
+                          : AppColor.primary,
+                    ),
                   ),
                 ),
-                SizedBox(height: 30),
+                Expanded(child: Container()),
+                AppButton(
+                  label: Icons.arrow_forward,
+                  fontSize: 35,
+                  backgroundColor: AppColor.primary,
+                  alignment: null,
+                  onTap: () {
+                    if (currentPage < 2) {
+                      pageController.nextPage(
+                        duration: Durations.medium4,
+                        curve: Curves.easeIn,
+                      );
+                    } else {
+                      signUp.go(context);
+                    }
+                  },
+                ),
               ],
             ),
-          );
-        },
+          ),
+          SizedBox(height: 30),
+        ],
       ),
     );
   }

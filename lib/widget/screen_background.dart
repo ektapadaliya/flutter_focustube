@@ -7,14 +7,13 @@ class ScreenBackground extends StatelessWidget {
   const ScreenBackground({
     super.key,
     this.appBar,
-    this.isInSafeArea = true,
+    this.noAppBar = false,
     required this.body,
     this.floatingActionButton,
     this.bottomNavigationBar,
   });
   final Widget body;
-  final bool isInSafeArea;
-
+  final bool noAppBar;
   final PreferredSizeWidget? appBar;
   final Widget? floatingActionButton, bottomNavigationBar;
   @override
@@ -34,7 +33,7 @@ class ScreenBackground extends StatelessWidget {
           body: body,
           floatingActionButton: floatingActionButton,
           backgroundColor: Colors.transparent,
-          appBar: appBar ?? sizeZeroAppBar(context),
+          appBar: appBar ?? (noAppBar ? null : sizeZeroAppBar(context)),
           bottomNavigationBar: bottomNavigationBar,
         ),
       ],

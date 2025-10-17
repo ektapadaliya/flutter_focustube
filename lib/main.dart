@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
           primary: AppColor.primary,
           secondary: AppColor.lightYellow,
         ),
+        dialogTheme: DialogThemeData(backgroundColor: AppColor.white), // Back
         fontFamily: AppTextStyle.fontFamily,
       ),
       debugShowCheckedModeBanner: false,

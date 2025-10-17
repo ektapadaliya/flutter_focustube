@@ -51,12 +51,9 @@ class PlayListTile extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: tileType == PlayListTileType.selection
-                  ? AppRadioButton(
-                      value: value,
-                      innerPadding: 4,
-                      size: 25,
-                      groupValue: selectedValue,
-                      onChanged: onTap,
+                  ? AppCheckBoxButton(
+                      isSelected: selectedValue == value,
+                      onChanged: (isSelected) => onTap(value),
                     )
                   : tileType == PlayListTileType.edit
                   ? InkWell(

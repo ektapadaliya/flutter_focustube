@@ -35,29 +35,29 @@ class HomeRootState extends State<HomeRoot> {
           : customAppBar(
               context,
               centerTitle: true,
-              // title: _itemLable(currentIndex),
+              title: _itemLable(currentIndex),
               automaticallyImplyLeading: false,
               actions: [
-                // if ([2, 3].contains(currentIndex))
-                //   Padding(
-                //     padding: const EdgeInsets.only(right: 30),
-                //     child: InkWell(
-                //       onTap: () {
-                //         if (currentIndex == 2) {
-                //           showDialog(
-                //             context: context,
-                //             builder: (context) => AddEditPlaylistVC(),
-                //           );
-                //         } else if (currentIndex == 3) {
-                //           showDialog(
-                //             context: context,
-                //             builder: (context) => AddChannelVC(),
-                //           );
-                //         }
-                //       },
-                //       child: Icon(Icons.add, size: 25, color: AppColor.primary),
-                //     ),
-                //   ),
+                if ([2, 3].contains(currentIndex))
+                  Padding(
+                    padding: const EdgeInsets.only(right: 30),
+                    child: InkWell(
+                      onTap: () {
+                        if (currentIndex == 2) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AddEditPlaylistVC(),
+                          );
+                        } else if (currentIndex == 3) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AddChannelVC(),
+                          );
+                        }
+                      },
+                      child: Icon(Icons.add, size: 25, color: AppColor.primary),
+                    ),
+                  ),
               ],
             ),
       body: widget.navigationShell,

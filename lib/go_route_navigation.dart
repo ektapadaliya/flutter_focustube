@@ -4,9 +4,11 @@ import 'package:focus_tube_flutter/view/auth/choose_your_interest_vc.dart';
 import 'package:focus_tube_flutter/view/auth/daily_limit_vc.dart';
 import 'package:focus_tube_flutter/view/channel_detail_vc.dart';
 import 'package:focus_tube_flutter/view/home/home_root.dart';
+import 'package:focus_tube_flutter/view/my_channels_vc.dart';
 import 'package:focus_tube_flutter/view/note_detail_vc.dart';
 import 'package:focus_tube_flutter/view/note_list_vc.dart';
 import 'package:focus_tube_flutter/view/playlist_detail_vc.dart';
+import 'package:focus_tube_flutter/view/profile_vc.dart';
 import 'package:focus_tube_flutter/view/subject_detail_vc.dart';
 import 'package:focus_tube_flutter/view/subject_vc.dart';
 import 'package:focus_tube_flutter/view/video_detail_vc.dart';
@@ -180,7 +182,11 @@ final AppNavigationModel dailyLimit = AppNavigationModel(
   path: DailyLimitVC.id,
   builder: (context, state) => DailyLimitVC(),
 );
-
+final AppNavigationModel editDailyLimit = AppNavigationModel(
+  label: "Daily Limit",
+  path: DailyLimitVC.editId,
+  builder: (context, state) => DailyLimitVC(isFromEdit: true),
+);
 final AppNavigationModel home = AppNavigationModel(
   label: "Home",
   path: HomeVC.id,
@@ -208,6 +214,11 @@ final AppNavigationModel channels = AppNavigationModel(
   label: "Channels",
   path: ChannelsVC.id,
   builder: (context, state) => const ChannelsVC(),
+);
+final AppNavigationModel myChannels = AppNavigationModel(
+  label: "My Channels",
+  path: MyChannelsVC.id,
+  builder: (context, state) => const MyChannelsVC(),
 );
 final AppNavigationModel channelDetail = AppNavigationModel(
   label: "Playlist Detail",
@@ -255,7 +266,16 @@ final AppNavigationModel detailsNote = AppNavigationModel(
   path: "${NoteListVC.id}${NoteDetailVC.detailId}",
   builder: (context, state) => NoteDetailVC(id: state.pathParameters['id']),
 );
-
+final AppNavigationModel profile = AppNavigationModel(
+  label: "Profile",
+  path: ProfileVC.id,
+  builder: (context, state) => ProfileVC(),
+);
+final AppNavigationModel editProfile = AppNavigationModel(
+  label: "Edit Profile",
+  path: ProfileVC.editid,
+  builder: (context, state) => ProfileVC(isFromEdit: true),
+);
 // MARK: Router
 final GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();
 
@@ -283,6 +303,10 @@ final GoRouter router = GoRouter(
       detailsNote,
       playListDetail,
       channelDetail,
+      profile,
+      editProfile,
+      myChannels,
+      editDailyLimit,
     ].map((routeElement) => routeElement.toGoRoute()),
     StatefulShellRoute.indexedStack(
       branches: [

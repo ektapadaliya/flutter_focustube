@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
-import 'package:focus_tube_flutter/const/app_image.dart';
+import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
@@ -17,11 +17,10 @@ class ChooseYourInterestVC extends StatefulWidget {
 }
 
 class _ChooseYourInterestVCState extends State<ChooseYourInterestVC> {
-  List<int> selectedItems = [];
+  List<UserInterestModel> selectedItems = [];
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
-      isInSafeArea: false,
       body: ExpandedSingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         child: Column(
@@ -37,17 +36,20 @@ class _ChooseYourInterestVCState extends State<ChooseYourInterestVC> {
             Wrap(
               runSpacing: 20,
               spacing: 15,
-              children: List.generate(12, (index) {
-                var isSelected = selectedItems.contains(index);
+              children: List.generate(AppConst.userInterests.length, (index) {
+                var interest = AppConst.userInterests[index];
+                var isSelected = selectedItems
+                    .where((e) => e.id == interest.id)
+                    .isNotEmpty;
                 return InterestTile(
-                  title: interentTitle(index),
-                  image: interentImage(index),
+                  title: interest.title,
+                  image: interest.image,
                   isSelected: isSelected,
                   onTap: () {
                     if (isSelected) {
-                      selectedItems.remove(index);
+                      selectedItems.removeWhere((e) => e.id == interest.id);
                     } else {
-                      selectedItems.add(index);
+                      selectedItems.add(interest);
                     }
                     setState(() {});
                   },
@@ -71,42 +73,6 @@ class _ChooseYourInterestVCState extends State<ChooseYourInterestVC> {
         ),
       ),
     );
-  }
-
-  String interentImage(int index) {
-    return switch (index) {
-      0 => AppImage.history,
-      1 => AppImage.mathematics,
-      2 => AppImage.fashionStyle,
-      3 => AppImage.reading,
-      4 => AppImage.careerDevelopment,
-      5 => AppImage.art,
-      6 => AppImage.mindfullnessMeditation,
-      7 => AppImage.scienceTechnology,
-      8 => AppImage.music,
-      9 => AppImage.selfImprovement,
-      10 => AppImage.productivity,
-      11 => AppImage.businessFinance,
-      _ => "",
-    };
-  }
-
-  String interentTitle(int index) {
-    return switch (index) {
-      0 => "History",
-      1 => "Mathematics",
-      2 => "Fashion & Style",
-      3 => "Reading",
-      4 => "Career Development",
-      5 => "Art",
-      6 => "Mindfulness & Meditation",
-      7 => "Science & Technology",
-      8 => "Music",
-      9 => "Self-Improvement",
-      10 => "Productivity",
-      11 => "Business & Finance",
-      _ => "",
-    };
   }
 }
 

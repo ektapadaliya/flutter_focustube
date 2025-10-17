@@ -18,20 +18,7 @@ class AppCheckBoxTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var children = [
-      Transform.scale(
-        scale: 1.3,
-        child: Checkbox(
-          visualDensity: const VisualDensity(horizontal: -4),
-          value: isSelected,
-          activeColor: AppColor.primary,
-          side: BorderSide(color: AppColor.borderColor, width: 1),
-          onChanged: onChanged,
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(color: AppColor.primary, width: 1),
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
-      ),
+      AppCheckBoxButton(isSelected: isSelected, onChanged: onChanged),
       const SizedBox(width: 7),
       Flexible(child: title),
     ];
@@ -44,6 +31,33 @@ class AppCheckBoxTile extends StatelessWidget {
         children: align == AppCheckBoxTileAlign.right
             ? children.reversed.toList()
             : children,
+      ),
+    );
+  }
+}
+
+class AppCheckBoxButton extends StatelessWidget {
+  const AppCheckBoxButton({
+    super.key,
+    required this.onChanged,
+    required this.isSelected,
+  });
+  final bool isSelected;
+  final void Function(bool?) onChanged;
+  @override
+  Widget build(BuildContext context) {
+    return Transform.scale(
+      scale: 1.3,
+      child: Checkbox(
+        visualDensity: const VisualDensity(horizontal: -4),
+        value: isSelected,
+        activeColor: AppColor.primary,
+        side: BorderSide(color: AppColor.borderColor, width: 1),
+        onChanged: onChanged,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: AppColor.primary, width: 1),
+          borderRadius: BorderRadius.circular(4),
+        ),
       ),
     );
   }

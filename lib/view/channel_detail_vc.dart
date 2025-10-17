@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
@@ -20,7 +21,7 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
   late TabController _tabController;
   @override
   void initState() {
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -33,7 +34,7 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
           children: [
             SizedBox(height: 15),
             Container(
-              height: 120,
+              height: 140,
               padding: EdgeInsetsGeometry.symmetric(horizontal: 30),
               child: Row(
                 children: [
@@ -49,9 +50,12 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                            "Science Academy",
+                          AutoSizeText(
+                            "Science Academy, Science Academy",
+                            maxFontSize: 24,
+                            minFontSize: 18,
                             style: AppTextStyle.title24(),
+                            maxLines: 2,
                           ),
                           Text(
                             "124k Followers",
@@ -89,14 +93,17 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
               unselectedLabelColor: AppColor.gray,
               tabs: [
                 Tab(text: "Videos"),
-                Tab(text: "Playlist"),
+                // Tab(text: "Playlist"),
                 Tab(text: "About"),
               ],
             ),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: [ChannelVideos(), ChannelPlaylist(), ChannelAbout()],
+                children: [
+                  ChannelVideos(),
+                  /* ChannelPlaylist(), */ ChannelAbout(),
+                ],
               ),
             ),
           ],

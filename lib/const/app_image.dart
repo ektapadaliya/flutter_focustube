@@ -22,6 +22,7 @@ class AppImage {
 
   //Background
   static const background = "assets/background.png";
+  static const profileBackground = "assets/profile_background.png";
   static const videoLimitBackground = "assets/video_limit_background.png";
 
   //Placeholder
@@ -43,21 +44,36 @@ class AppImage {
   static const settingsSelected = "assets/nav_icons/settings_selected.png";
 
   //User Interest
-  static const art = "assets/user_interest/art.svg";
-  static const businessFinance = "assets/user_interest/business_finance.svg";
-  static const careerDevelopment =
-      "assets/user_interest/career_development.svg";
-  static const fashionStyle = "assets/user_interest/fashion_style.svg";
-  static const history = "assets/user_interest/history.svg";
-  static const mathematics = "assets/user_interest/mathematics.svg";
-  static const mindfullnessMeditation =
-      "assets/user_interest/mindfullness_meditation.svg";
-  static const music = "assets/user_interest/music.svg";
-  static const productivity = "assets/user_interest/productivity.svg";
-  static const reading = "assets/user_interest/reading.svg";
+  static const educationKnowledge =
+      "assets/user_interest/education_knowledge.svg";
   static const scienceTechnology =
       "assets/user_interest/science_technology.svg";
-  static const selfImprovement = "assets/user_interest/self_improvement.svg";
+  static const businessFinance = "assets/user_interest/business_finance.svg";
+  static const societyPolitics = "assets/user_interest/society_politics.svg";
+  static const healthWellness = "assets/user_interest/health_wellness.svg";
+  static const artsCreativity = "assets/user_interest/arts_creativity.svg";
+  static const musicPerformance = "assets/user_interest/music_performance.svg";
+  static const philosophyCulture =
+      "assets/user_interest/philosophy_culture.svg";
+  static const mindSpirit = "assets/user_interest/mind_spirit.svg";
+  static const travelExploration =
+      "assets/user_interest/travel_exploration.svg";
+  static const lifestyleHome = "assets/user_interest/lifestyle_home.svg";
+  static const foodCooking = "assets/user_interest/food_cooking.svg";
+  static const fashionBeauty = "assets/user_interest/fashion_beauty.svg";
+  static const gamingEsports = "assets/user_interest/gaming_esports.svg";
+  static const filmEntertainment =
+      "assets/user_interest/film_entertainment.svg";
+  static const mediaStorytelling =
+      "assets/user_interest/media_storytelling.svg";
+  static const vehiclesEngineering =
+      "assets/user_interest/vehicles_engineering.svg";
+  static const natureEnvironment =
+      "assets/user_interest/nature_environment.svg";
+  static const socialMediaPeople =
+      "assets/user_interest/social_media_people.svg";
+  static const experimentalFuture =
+      "assets/user_interest/experimental_future.svg";
 
   //Feedback Icons
   static const cool = "assets/feedback/cool.svg";
@@ -71,6 +87,7 @@ class AppImage {
   static const editIcon = "assets/icons/edit.svg";
   static const userIcon = "assets/icons/user.svg";
   static const noteIcon = "assets/icons/note.svg";
+  static const limitIcon = "assets/icons/limit.svg";
   static const videoIcon = "assets/icons/video.svg";
   static const targetIcon = "assets/icons/target.svg";
   static const historyIcon = "assets/icons/history.svg";
@@ -78,5 +95,8 @@ class AppImage {
   static const bookmarkIcon = "assets/icons/bookmark.svg";
   static const playListIcon = "assets/icons/playlist.svg";
   static const calendarIcon = "assets/icons/calendar.svg";
+  static const notificationIcon = "assets/icons/notification.svg";
   static const bookmarkFillIcon = "assets/icons/bookmark_fill.svg";
+  static const privacyPolicyIcon = "assets/icons/privacy_policy.svg";
+  static const termsConditionsIcon = "assets/icons/terms_conditions.svg";
 }

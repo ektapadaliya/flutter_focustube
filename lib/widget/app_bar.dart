@@ -6,17 +6,17 @@ import 'package:flutter/services.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 
-PreferredSize sizeZeroAppBar(context, {Color? color}) {
+PreferredSize sizeZeroAppBar(context, {Color? color, Brightness? brightness}) {
   return PreferredSize(
     preferredSize: Size(MediaQuery.of(context).size.width, 0),
     child: AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: color ?? Colors.transparent,
       systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarIconBrightness: io.Platform.isAndroid
-            ? Brightness.dark
-            : Brightness.light,
-        statusBarBrightness: Brightness.light,
-        statusBarColor: Colors.transparent,
+        statusBarIconBrightness:
+            brightness ??
+            (io.Platform.isAndroid ? Brightness.dark : Brightness.light),
+        statusBarBrightness: brightness ?? Brightness.light,
+        statusBarColor: color ?? Colors.transparent,
         systemNavigationBarColor: AppColor.white,
         systemStatusBarContrastEnforced: false,
         systemNavigationBarContrastEnforced: false,

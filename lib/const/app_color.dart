@@ -8,7 +8,7 @@ class AppColor {
   static const primary = Color(0xFF000000);
   static const lightGray = Color(0xFFB3B3B3);
   static const lightYellow = Color(0xFFFDE7C7);
-
+  static const profileBackground = Color(0xFF2E2E2E);
   static final tileBackground = white.opacityToAlpha(.3);
   static final borderColor = lightGray.opacityToAlpha(.7);
 }

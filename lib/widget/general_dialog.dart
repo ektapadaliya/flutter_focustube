@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 
-import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 Future<dynamic> generalDialog(
   BuildContext context, {
@@ -17,6 +17,7 @@ Future<dynamic> generalDialog(
   String cancelText = "Cancel",
   void Function()? onSubmit,
   void Function()? onCancel,
+  Color? submitColor,
 }) async {
   return await showDialog(
     barrierDismissible: barrierDismissible,
@@ -28,17 +29,20 @@ Future<dynamic> generalDialog(
         if (onSubmit != null)
           TextButton(
             onPressed: onSubmit,
-            child: Text(submitText, style: AppTextStyle.body16()),
+            child: Text(
+              submitText,
+              style: AppTextStyle.title16(color: submitColor),
+            ),
           ),
         TextButton(
           onPressed: () {
             if (onCancel != null) {
               onCancel();
             } else {
-              Get.back();
+              context.pop();
             }
           },
-          child: Text(cancelText, style: AppTextStyle.body16()),
+          child: Text(cancelText, style: AppTextStyle.title16()),
         ),
       ];
       dialog() {
