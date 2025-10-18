@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:focus_tube_flutter/view/add_channels_vc.dart';
 import 'package:focus_tube_flutter/view/auth/choose_your_interest_vc.dart';
 import 'package:focus_tube_flutter/view/auth/daily_limit_vc.dart';
 import 'package:focus_tube_flutter/view/channel_detail_vc.dart';
+import 'package:focus_tube_flutter/view/daily_goal_vc.dart';
 import 'package:focus_tube_flutter/view/home/home_root.dart';
 import 'package:focus_tube_flutter/view/my_channels_vc.dart';
 import 'package:focus_tube_flutter/view/note_detail_vc.dart';
@@ -276,6 +278,16 @@ final AppNavigationModel editProfile = AppNavigationModel(
   path: ProfileVC.editid,
   builder: (context, state) => ProfileVC(isFromEdit: true),
 );
+final AppNavigationModel addChannels = AppNavigationModel(
+  label: "Add Channels",
+  path: AddChannelsVC.id,
+  builder: (context, state) => AddChannelsVC(),
+);
+final AppNavigationModel dailyGoal = AppNavigationModel(
+  label: "Daily Goal",
+  path: DailyGoalVC.id,
+  builder: (context, state) => DailyGoalVC(),
+);
 // MARK: Router
 final GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();
 
@@ -307,6 +319,8 @@ final GoRouter router = GoRouter(
       editProfile,
       myChannels,
       editDailyLimit,
+      addChannels,
+      dailyGoal,
     ].map((routeElement) => routeElement.toGoRoute()),
     StatefulShellRoute.indexedStack(
       branches: [

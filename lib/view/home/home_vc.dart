@@ -128,6 +128,8 @@ class _HomeVCState extends State<HomeVC> {
                     videos.go(context, extra: "Bookmarked");
                   } else if (item == "subjects") {
                     subjects.go(context);
+                  } else if (item == "daily_goals") {
+                    dailyGoal.go(context);
                   }
                 },
                 child: Icon(Icons.more_vert),

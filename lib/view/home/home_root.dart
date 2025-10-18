@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
-import 'package:focus_tube_flutter/view/dialog/add_channel_vc.dart';
+import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/view/dialog/add_edit_playlist_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
@@ -49,10 +49,7 @@ class HomeRootState extends State<HomeRoot> {
                             builder: (context) => AddEditPlaylistVC(),
                           );
                         } else if (currentIndex == 3) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AddChannelVC(),
-                          );
+                          addChannels.go(context);
                         }
                       },
                       child: Icon(Icons.add, size: 25, color: AppColor.primary),
