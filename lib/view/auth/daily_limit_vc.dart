@@ -186,12 +186,3 @@ class VideoSelectionTile extends StatelessWidget {
     );
   }
 }
-/* 
-
-My Channels – How to display a list of videos instead of channels?
-
-Channel Details – In the Playlist tab, when a playlist is selected, videos are shown. How to switch back to select another playlist?
-
-Settings – How to change “Edit Profile” option to “Profile”?
-
- */

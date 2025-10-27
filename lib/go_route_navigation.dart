@@ -1,20 +1,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:focus_tube_flutter/view/add_channels_vc.dart';
+import 'package:focus_tube_flutter/view/channels/add_channels_vc.dart';
 import 'package:focus_tube_flutter/view/auth/choose_your_interest_vc.dart';
 import 'package:focus_tube_flutter/view/auth/daily_limit_vc.dart';
-import 'package:focus_tube_flutter/view/channel_detail_vc.dart';
-import 'package:focus_tube_flutter/view/daily_goal_vc.dart';
+import 'package:focus_tube_flutter/view/channels/channel_detail_vc.dart';
+import 'package:focus_tube_flutter/view/goals/daily_goal_vc.dart';
+import 'package:focus_tube_flutter/view/goals/set_daily_goal_vc.dart';
 import 'package:focus_tube_flutter/view/home/home_root.dart';
-import 'package:focus_tube_flutter/view/my_channels_vc.dart';
-import 'package:focus_tube_flutter/view/note_detail_vc.dart';
-import 'package:focus_tube_flutter/view/note_list_vc.dart';
-import 'package:focus_tube_flutter/view/playlist_detail_vc.dart';
+import 'package:focus_tube_flutter/view/channels/my_channels_vc.dart';
+import 'package:focus_tube_flutter/view/notes/note_detail_vc.dart';
+import 'package:focus_tube_flutter/view/notes/note_list_vc.dart';
+import 'package:focus_tube_flutter/view/playlists/playlist_detail_vc.dart';
 import 'package:focus_tube_flutter/view/profile_vc.dart';
-import 'package:focus_tube_flutter/view/subject_detail_vc.dart';
-import 'package:focus_tube_flutter/view/subject_vc.dart';
-import 'package:focus_tube_flutter/view/video_detail_vc.dart';
-import 'package:focus_tube_flutter/view/video_list_vc.dart';
+import 'package:focus_tube_flutter/view/subjects/subject_detail_vc.dart';
+import 'package:focus_tube_flutter/view/subjects/subject_vc.dart';
+import 'package:focus_tube_flutter/view/videos/video_detail_vc.dart';
+import 'package:focus_tube_flutter/view/videos/video_list_vc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:focus_tube_flutter/view/onboarding_vc.dart';
@@ -288,6 +289,11 @@ final AppNavigationModel dailyGoal = AppNavigationModel(
   path: DailyGoalVC.id,
   builder: (context, state) => DailyGoalVC(),
 );
+final AppNavigationModel setDailyGoal = AppNavigationModel(
+  label: "Set Daily Goal",
+  path: SetDailyGoalVC.id,
+  builder: (context, state) => SetDailyGoalVC(),
+);
 // MARK: Router
 final GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();
 
@@ -321,6 +327,7 @@ final GoRouter router = GoRouter(
       editDailyLimit,
       addChannels,
       dailyGoal,
+      setDailyGoal,
     ].map((routeElement) => routeElement.toGoRoute()),
     StatefulShellRoute.indexedStack(
       branches: [

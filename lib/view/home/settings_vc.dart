@@ -69,6 +69,14 @@ class _SettingsVCState extends State<SettingsVC> {
             ),
             SizedBox(height: 15),
             SettingsTile(
+              icon: AppImage.targetIcon,
+              label: "Set Daily Goal",
+              onTap: () {
+                setDailyGoal.go(context);
+              },
+            ),
+            SizedBox(height: 15),
+            SettingsTile(
               icon: AppImage.limitIcon,
               label: "Daily Limit",
               onTap: () {

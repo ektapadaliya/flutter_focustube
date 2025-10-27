@@ -4,9 +4,8 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
-import 'package:focus_tube_flutter/widget/playlist_widgets.dart';
+import 'package:focus_tube_flutter/widget/channel_widgets.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
-import 'package:focus_tube_flutter/widget/video_widgets.dart';
 
 class ChannelDetailVC extends StatefulWidget {
   static const id = "/detail/:id";
@@ -108,90 +107,6 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ChannelPlaylist extends StatelessWidget {
-  const ChannelPlaylist({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 20),
-          Text("Playlist", style: AppTextStyle.title20()),
-          SizedBox(height: 15),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) =>
-                PlayListTile(value: index, onTap: (_) {}),
-            separatorBuilder: (context, index) => SizedBox(height: 15),
-            itemCount: 10,
-          ),
-          SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
-}
-
-class ChannelVideos extends StatelessWidget {
-  const ChannelVideos({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 20),
-          Text("Videos", style: AppTextStyle.title20()),
-          SizedBox(height: 15),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) => VideoTile(),
-            separatorBuilder: (context, index) => SizedBox(height: 15),
-            itemCount: 10,
-          ),
-          SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
-}
-
-class ChannelAbout extends StatelessWidget {
-  const ChannelAbout({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 20),
-          Text("About", style: AppTextStyle.title20()),
-          SizedBox(height: 5),
-          Text(
-            """Lorem ipsum dolor sit amet consectetur. Ph asellus nisl mi feugiat orci nunc mauris nulla varius. Facilisis porttitor diam risus eu erat tempor. Viverra phasellus quis dignissim adipiscing aenean arcu. Non aliquam laoreet viverra nulla ornare. Et eget laoreet ultrices eu risus.
-
-Lorem ipsum dolor sit amet consectetur. Ph asellus nisl mi feugiat orci nunc mauris nulla varius. Facilisis porttitor diam risus eu erat tempor. Viverra phasellus quis dignissim adipiscing aenean arcu. Non aliquam laoreet viverra nulla ornare. Et eget laoreet ultrices eu risus.
-
-Lorem ipsum dolor sit amet consectetur. Ph asellus nisl mi feugiat orci nunc mauris nulla varius. Facilisis porttitor diam risus eu erat tempor. Viverra phasellus quis dignissim adipiscing aenean arcu. Non aliquam laoreet viverra nulla ornare. Et eget laoreet ultrices eu risus.
-""",
-            style: AppTextStyle.body18(color: AppColor.gray),
-          ),
-          SizedBox(height: 20),
-        ],
       ),
     );
   }
