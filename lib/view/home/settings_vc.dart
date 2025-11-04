@@ -21,7 +21,8 @@ class _SettingsVCState extends State<SettingsVC> {
   bool isNotificationOn = false;
   @override
   Widget build(BuildContext context) {
-    return ExpandedSingleChildScrollView(
+    return Container();
+    /* return ExpandedSingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: FormScreenBoundries(
         child: Column(
@@ -138,7 +139,7 @@ class _SettingsVCState extends State<SettingsVC> {
           ],
         ),
       ),
-    );
+    ); */
   }
 }
 

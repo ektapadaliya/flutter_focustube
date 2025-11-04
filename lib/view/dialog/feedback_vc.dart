@@ -65,11 +65,10 @@ class _FeedbackVCState extends State<FeedbackVC> {
                   style: AppTextStyle.body18(color: AppColor.gray),
                 ),
                 SizedBox(height: 20),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 25,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(
-                    6,
+                    3,
                     (index) => InkWell(
                       onTap: () {
                         setState(() {
@@ -103,6 +102,44 @@ class _FeedbackVCState extends State<FeedbackVC> {
                     ),
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(3, (index) {
+                    var tIndex = index + 3;
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = tIndex;
+                        });
+                      },
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(
+                            feedbackImage(tIndex),
+                            width: AppConst.maxWidth(context) < 450
+                                ? AppConst.maxWidth(context) / 6
+                                : 100,
+                            colorFilter: selectedIndex == tIndex
+                                ? ColorFilter.mode(
+                                    Colors.amberAccent.shade100,
+                                    BlendMode.modulate,
+                                  )
+                                : null,
+                          ),
+                          Text(
+                            feedbackTitle(tIndex),
+                            style: AppTextStyle.body20(),
+                          ),
+                          Text(
+                            "${feedbackRating(tIndex)}/10",
+                            style: AppTextStyle.body12(color: AppColor.gray),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+
                 SizedBox(height: 20),
                 AppButton(label: "Submit", backgroundColor: AppColor.primary),
                 SizedBox(height: 20),

@@ -14,6 +14,7 @@ class PlayListDetailVC extends StatefulWidget {
 }
 
 class _PlayListDetailVCState extends State<PlayListDetailVC> {
+  List videos = List.generate(10, (index) => index + 1);
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
@@ -24,13 +25,13 @@ class _PlayListDetailVCState extends State<PlayListDetailVC> {
           children: [
             PlayListTile(
               onTap: (_) {
-                showDialog(
-                  context: context,
-                  builder: (context) => AddEditPlaylistVC(
-                    playlist:
-                        "PlayList ${(int.tryParse(widget.playListId) ?? 0) + 1}",
-                  ),
-                );
+                // showDialog(
+                //   context: context,
+                //   builder: (context) => AddEditPlaylistVC(
+                //     playlist:
+                //         "PlayList ${(int.tryParse(widget.playListId) ?? 0) + 1}",
+                //   ),
+                // );
               },
               value: int.tryParse(widget.playListId) ?? 0,
               tileType: PlayListTileType.edit,
@@ -41,9 +42,15 @@ class _PlayListDetailVCState extends State<PlayListDetailVC> {
             Expanded(
               child: ListView.separated(
                 shrinkWrap: true,
-                itemBuilder: (context, index) => VideoTile(isSlidable: true),
+                itemBuilder: (context, index) => VideoTile(
+                  isSlidable: true,
+                  onRemoved: () {
+                    videos.removeAt(index);
+                    setState(() {});
+                  },
+                ),
                 separatorBuilder: (context, index) => SizedBox(height: 15),
-                itemCount: 10,
+                itemCount: videos.length,
               ),
             ),
           ],

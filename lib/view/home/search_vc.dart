@@ -18,7 +18,8 @@ class _SearchVCState extends State<SearchVC> {
   String? selectValue;
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container();
+    /*  return Padding(
       padding: EdgeInsetsGeometry.symmetric(horizontal: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,6 +56,6 @@ class _SearchVCState extends State<SearchVC> {
           ),
         ],
       ),
-    );
+    ); */
   }
 }

@@ -44,12 +44,12 @@ class HomeRootState extends State<HomeRoot> {
                     child: InkWell(
                       onTap: () {
                         if (currentIndex == 2) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AddEditPlaylistVC(),
-                          );
+                          // showDialog(
+                          //   context: context,
+                          //   builder: (context) => AddEditPlaylistVC(),
+                          // );
                         } else if (currentIndex == 3) {
-                          addChannels.go(context);
+                          // addChannels.go(context);
                         }
                       },
                       child: Icon(Icons.add, size: 25, color: AppColor.primary),

@@ -15,7 +15,8 @@ class _ChannelsVCState extends State<ChannelsVC> {
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container();
+    /*     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30).copyWith(top: 15),
 
       child: Column(
@@ -42,7 +43,7 @@ class _ChannelsVCState extends State<ChannelsVC> {
           ),
         ],
       ),
-    );
+    ); */
   }
 
   buildCategoryTile(int index) {

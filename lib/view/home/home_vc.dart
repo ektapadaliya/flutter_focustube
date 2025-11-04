@@ -129,9 +129,9 @@ class _HomeVCState extends State<HomeVC> {
                   } else if (item == "subjects") {
                     subjects.go(context);
                   } else if (item == "daily_goals") {
-                    dailyGoal.go(context);
+                    //  dailyGoal.go(context);
                   } else if (item == "history") {
-                    videos.go(context, extra: "History");
+                    // videos.go(context, extra: "History");
                   }
                 },
                 child: Icon(Icons.more_vert),

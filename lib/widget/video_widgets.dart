@@ -248,7 +248,8 @@ class BookmarkVideoTile extends StatelessWidget {
 
 class VideoTile extends StatefulWidget {
   final bool isSlidable;
-  const VideoTile({super.key, this.isSlidable = false});
+  final void Function()? onRemoved;
+  const VideoTile({super.key, this.isSlidable = false, this.onRemoved});
   @override
   State<VideoTile> createState() => _VideoTileState();
 }
@@ -262,13 +263,16 @@ class _VideoTileState extends State<VideoTile> {
         endActionPane: ActionPane(
           motion: const DrawerMotion(),
           dragDismissible: true,
-          dismissible: DismissiblePane(onDismissed: () {}),
+          dismissible: DismissiblePane(onDismissed: widget.onRemoved ?? () {}),
           children: [
             CustomSlidableAction(
               backgroundColor: Colors.transparent,
               onPressed: (context) {
                 setState(() {});
                 Slidable.of(context)?.close();
+                if (widget.onRemoved != null) {
+                  widget.onRemoved!();
+                }
               },
               child: Container(
                 margin: EdgeInsets.symmetric(vertical: 8),

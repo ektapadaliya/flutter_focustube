@@ -3,7 +3,9 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
+import 'package:focus_tube_flutter/widget/general_dialog.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
+import 'package:go_router/go_router.dart';
 
 class NoteDetailVC extends StatefulWidget {
   static const addId = "/add";
@@ -38,9 +40,23 @@ class _NoteDetailVCState extends State<NoteDetailVC> {
         title: isAdd ? "Add note" : "Note",
         actions: [
           if (!isAdd)
-            Padding(
-              padding: const EdgeInsets.only(right: 30),
-              child: Icon(Icons.delete_outlined, color: AppColor.primary),
+            InkWell(
+              onTap: () {
+                generalDialog(
+                  context,
+                  title: "Delete note?",
+                  message: "Are you sure you want to delete this note?",
+                  onSubmit: () {
+                    context.pop();
+                  },
+                  submitText: "Delete",
+                  submitColor: AppColor.red,
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.only(right: 30),
+                child: Icon(Icons.delete_outlined, color: AppColor.primary),
+              ),
             ),
         ],
       ),
