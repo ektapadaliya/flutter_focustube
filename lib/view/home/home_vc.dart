@@ -125,7 +125,7 @@ class _HomeVCState extends State<HomeVC> {
                 ),
                 onItemPressed: (String item) {
                   if (item == "bookmarks") {
-                    videos.go(context, extra: "Bookmarked");
+                    videos.go(context, extra: "Bookmarks");
                   } else if (item == "subjects") {
                     subjects.go(context);
                   } else if (item == "daily_goals") {

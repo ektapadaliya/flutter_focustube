@@ -52,7 +52,7 @@ class _SettingsVCState extends State<SettingsVC> {
             ),
             SizedBox(height: 15),
             SettingsTile(
-              icon: AppImage.channles,
+              icon: AppImage.channels,
               label: "My Channels",
               onTap: () {
                 myChannels.go(context);

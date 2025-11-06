@@ -25,13 +25,13 @@ class _PlayListDetailVCState extends State<PlayListDetailVC> {
           children: [
             PlayListTile(
               onTap: (_) {
-                // showDialog(
-                //   context: context,
-                //   builder: (context) => AddEditPlaylistVC(
-                //     playlist:
-                //         "PlayList ${(int.tryParse(widget.playListId) ?? 0) + 1}",
-                //   ),
-                // );
+                showDialog(
+                  context: context,
+                  builder: (context) => AddEditPlaylistVC(
+                    playlist:
+                        "PlayList ${(int.tryParse(widget.playListId) ?? 0) + 1}",
+                  ),
+                );
               },
               value: int.tryParse(widget.playListId) ?? 0,
               tileType: PlayListTileType.edit,

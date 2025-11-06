@@ -34,13 +34,13 @@ class AppImage {
   static const home = "assets/nav_icons/home.png";
   static const search = "assets/nav_icons/search.png";
   static const playlist = "assets/nav_icons/playlist.png";
-  static const channles = "assets/nav_icons/channels.png";
+  static const channels = "assets/nav_icons/channels.png";
   static const settings = "assets/nav_icons/settings.png";
   //Selected Icon
   static const homeSelected = "assets/nav_icons/home_selected.png";
   static const searchSelected = "assets/nav_icons/search_selected.png";
   static const playlistSelected = "assets/nav_icons/playlist_selected.png";
-  static const channlesSelected = "assets/nav_icons/channels_selected.png";
+  static const channelsSelected = "assets/nav_icons/channels_selected.png";
   static const settingsSelected = "assets/nav_icons/settings_selected.png";
 
   //User Interest

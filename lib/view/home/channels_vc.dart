@@ -4,7 +4,7 @@ import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/widget/channel_widgets.dart';
 
 class ChannelsVC extends StatefulWidget {
-  static const id = "/channles";
+  static const id = "/channels";
   const ChannelsVC({super.key});
 
   @override
@@ -15,8 +15,7 @@ class _ChannelsVCState extends State<ChannelsVC> {
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Container();
-    /*     return Padding(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30).copyWith(top: 15),
 
       child: Column(
@@ -32,18 +31,20 @@ class _ChannelsVCState extends State<ChannelsVC> {
             ),
           ),
           SizedBox(height: 20),
-          Text(_channelsType(selectedIndex), style: AppTextStyle.title20()),
-          SizedBox(height: 20),
-          Expanded(
-            child: ListView.separated(
-              itemBuilder: (context, index) => ChannelTile(value: index),
-              separatorBuilder: (context, index) => ChannelDivider(),
-              itemCount: 10,
+          if (selectedIndex < 2) ...[
+            Text(_channelsType(selectedIndex), style: AppTextStyle.title20()),
+            SizedBox(height: 20),
+            Expanded(
+              child: ListView.separated(
+                itemBuilder: (context, index) => ChannelTile(value: index),
+                separatorBuilder: (context, index) => ChannelDivider(),
+                itemCount: 10,
+              ),
             ),
-          ),
+          ],
         ],
       ),
-    ); */
+    );
   }
 
   buildCategoryTile(int index) {

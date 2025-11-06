@@ -15,7 +15,7 @@ class ChannelTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        channelDetail.go(context, id: value.toString());
+        //  channelDetail.go(context, id: value.toString());
       },
       overlayColor: WidgetStatePropertyAll(Colors.transparent),
       child: Row(
@@ -26,7 +26,7 @@ class ChannelTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Channle ${value + 1}", style: AppTextStyle.title20()),
+                Text("Channel ${value + 1}", style: AppTextStyle.title20()),
                 Wrap(
                   spacing: 15,
                   children: [

@@ -21,7 +21,7 @@ class HomeRootState extends State<HomeRoot> {
     precacheImage(AssetImage(AppImage.home), context);
     precacheImage(AssetImage(AppImage.searchSelected), context);
     precacheImage(AssetImage(AppImage.playlistSelected), context);
-    precacheImage(AssetImage(AppImage.channlesSelected), context);
+    precacheImage(AssetImage(AppImage.channelsSelected), context);
     precacheImage(AssetImage(AppImage.searchSelected), context);
     super.didChangeDependencies();
   }
@@ -44,12 +44,12 @@ class HomeRootState extends State<HomeRoot> {
                     child: InkWell(
                       onTap: () {
                         if (currentIndex == 2) {
-                          // showDialog(
-                          //   context: context,
-                          //   builder: (context) => AddEditPlaylistVC(),
-                          // );
+                          showDialog(
+                            context: context,
+                            builder: (context) => AddEditPlaylistVC(),
+                          );
                         } else if (currentIndex == 3) {
-                          // addChannels.go(context);
+                          addChannels.go(context);
                         }
                       },
                       child: Icon(Icons.add, size: 25, color: AppColor.primary),
@@ -147,7 +147,7 @@ String _itemImage(int index) {
     0 => AppImage.home,
     1 => AppImage.search,
     2 => AppImage.playlist,
-    3 => AppImage.channles,
+    3 => AppImage.channels,
     4 => AppImage.settings,
     _ => "",
   };
@@ -158,7 +158,7 @@ String _selectedItemImage(int index) {
     0 => AppImage.homeSelected,
     1 => AppImage.searchSelected,
     2 => AppImage.playlistSelected,
-    3 => AppImage.channlesSelected,
+    3 => AppImage.channelsSelected,
     4 => AppImage.settingsSelected,
     _ => "",
   };
