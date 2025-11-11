@@ -21,8 +21,7 @@ class _SettingsVCState extends State<SettingsVC> {
   bool isNotificationOn = false;
   @override
   Widget build(BuildContext context) {
-    return Container();
-    /* return ExpandedSingleChildScrollView(
+    return ExpandedSingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: FormScreenBoundries(
         child: Column(
@@ -73,7 +72,7 @@ class _SettingsVCState extends State<SettingsVC> {
               icon: AppImage.targetIcon,
               label: "Set Daily Goal",
               onTap: () {
-                setDailyGoal.go(context);
+                dailyGoal.go(context);
               },
             ),
             SizedBox(height: 15),
@@ -86,6 +85,14 @@ class _SettingsVCState extends State<SettingsVC> {
             ),
             SizedBox(height: 15),
             SettingsTile(
+              icon: AppImage.userIntrestIcon,
+              label: "Your interest",
+              iconSize: 20,
+              onTap: () {},
+            ),
+
+            SizedBox(height: 15),
+            SettingsTile(
               icon: AppImage.privacyPolicyIcon,
               label: "Privacy & Legal",
               iconSize: 20,
@@ -93,6 +100,7 @@ class _SettingsVCState extends State<SettingsVC> {
                 content.go(context, id: 'p');
               },
             ),
+
             SizedBox(height: 15),
             SettingsTile(
               icon: AppImage.termsConditionsIcon,
@@ -139,7 +147,7 @@ class _SettingsVCState extends State<SettingsVC> {
           ],
         ),
       ),
-    ); */
+    );
   }
 }
 

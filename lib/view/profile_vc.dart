@@ -6,6 +6,7 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/service/image_services.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
@@ -21,6 +22,7 @@ class ProfileVC extends StatefulWidget {
 }
 
 class _ProfileVCState extends State<ProfileVC> {
+  File? image;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,37 +90,51 @@ class _ProfileVCState extends State<ProfileVC> {
                   Positioned(
                     top: -65,
                     left: (MediaQuery.of(context).size.width / 2) - 65,
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: 130,
-                          width: 130,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColor.lightGray,
-                            border: Border.all(color: AppColor.white, width: 5),
-                          ),
-                        ),
-                        if (widget.isFromEdit)
-                          Positioned(
-                            bottom: 2,
-                            right: 2,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColor.primary,
+                    child: InkWell(
+                      onTap: () async {
+                        image = await ImageService.pickImage(context);
+                      },
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 130,
+                            width: 130,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColor.lightGray,
+                              border: Border.all(
+                                color: AppColor.white,
+                                width: 5,
                               ),
-                              padding: EdgeInsets.all(10),
-                              child: SvgPicture.asset(
-                                AppImage.editIcon,
-                                colorFilter: ColorFilter.mode(
-                                  AppColor.white,
-                                  BlendMode.srcIn,
+                              image: image != null
+                                  ? DecorationImage(
+                                      image: FileImage(image!),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : null,
+                            ),
+                          ),
+                          if (widget.isFromEdit)
+                            Positioned(
+                              bottom: 2,
+                              right: 2,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColor.primary,
+                                ),
+                                padding: EdgeInsets.all(10),
+                                child: SvgPicture.asset(
+                                  AppImage.editIcon,
+                                  colorFilter: ColorFilter.mode(
+                                    AppColor.white,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],

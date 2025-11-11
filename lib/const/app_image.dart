@@ -95,6 +95,7 @@ class AppImage {
   static const bookmarkIcon = "assets/icons/bookmark.svg";
   static const playListIcon = "assets/icons/playlist.svg";
   static const calendarIcon = "assets/icons/calendar.svg";
+  static const userIntrestIcon = "assets/icons/user_intrest.svg";
   static const notificationIcon = "assets/icons/notification.svg";
   static const bookmarkFillIcon = "assets/icons/bookmark_fill.svg";
   static const privacyPolicyIcon = "assets/icons/privacy_policy.svg";

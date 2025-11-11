@@ -15,7 +15,7 @@ class ChannelTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        //  channelDetail.go(context, id: value.toString());
+        channelDetail.go(context, id: value.toString());
       },
       overlayColor: WidgetStatePropertyAll(Colors.transparent),
       child: Row(

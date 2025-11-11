@@ -31,17 +31,16 @@ class _ChannelsVCState extends State<ChannelsVC> {
             ),
           ),
           SizedBox(height: 20),
-          if (selectedIndex < 2) ...[
-            Text(_channelsType(selectedIndex), style: AppTextStyle.title20()),
-            SizedBox(height: 20),
-            Expanded(
-              child: ListView.separated(
-                itemBuilder: (context, index) => ChannelTile(value: index),
-                separatorBuilder: (context, index) => ChannelDivider(),
-                itemCount: 10,
-              ),
+
+          Text(_channelsType(selectedIndex), style: AppTextStyle.title20()),
+          SizedBox(height: 20),
+          Expanded(
+            child: ListView.separated(
+              itemBuilder: (context, index) => ChannelTile(value: index),
+              separatorBuilder: (context, index) => ChannelDivider(),
+              itemCount: 10,
             ),
-          ],
+          ),
         ],
       ),
     );
