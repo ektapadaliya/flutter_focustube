@@ -4,14 +4,17 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
+import 'package:go_router/go_router.dart';
 
 class ChooseYourInterestVC extends StatefulWidget {
-  static const id = "/choose-your-Interest";
-  const ChooseYourInterestVC({super.key});
-
+  static const id = "/choose-your-interest";
+  static const editId = "/edit-your-interest";
+  const ChooseYourInterestVC({super.key, this.isFromEdit = false});
+  final bool isFromEdit;
   @override
   State<ChooseYourInterestVC> createState() => _ChooseYourInterestVCState();
 }
@@ -21,18 +24,24 @@ class _ChooseYourInterestVCState extends State<ChooseYourInterestVC> {
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
+      appBar: widget.isFromEdit
+          ? customAppBar(context, title: "Edit your Interests")
+          : null,
       body: ExpandedSingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
-            Text("Choose your Interests", style: AppTextStyle.title28()),
-            Text(
-              "Get personalized recommendations",
-              style: AppTextStyle.body18(color: AppColor.gray),
-            ),
-            SizedBox(height: 20),
+            if (!widget.isFromEdit) ...[
+              Text("Choose your Interests", style: AppTextStyle.title28()),
+              Text(
+                "Get personalized recommendations",
+                style: AppTextStyle.body18(color: AppColor.gray),
+              ),
+              SizedBox(height: 20),
+            ],
+
             Wrap(
               runSpacing: 20,
               spacing: 15,
@@ -62,10 +71,14 @@ class _ChooseYourInterestVCState extends State<ChooseYourInterestVC> {
               alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(vertical: 30),
               child: AppButton(
-                label: "Continue",
+                label: widget.isFromEdit ? "Save" : "Continue",
                 backgroundColor: AppColor.primary,
                 onTap: () {
-                  dailyLimit.go(context);
+                  if (widget.isFromEdit) {
+                    context.pop();
+                  } else {
+                    dailyLimit.go(context);
+                  }
                 },
               ),
             ),

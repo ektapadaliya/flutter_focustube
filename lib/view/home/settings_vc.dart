@@ -34,7 +34,7 @@ class _SettingsVCState extends State<SettingsVC> {
             SizedBox(height: 15),
             SettingsTile(
               icon: AppImage.notificationIcon,
-              label: "Notification",
+              label: "Notifications",
               isSelected: isNotificationOn,
               onTap: () {
                 isNotificationOn = !isNotificationOn;
@@ -88,7 +88,9 @@ class _SettingsVCState extends State<SettingsVC> {
               icon: AppImage.userIntrestIcon,
               label: "Your interest",
               iconSize: 20,
-              onTap: () {},
+              onTap: () {
+                editYourInteres.go(context);
+              },
             ),
 
             SizedBox(height: 15),
@@ -130,16 +132,16 @@ class _SettingsVCState extends State<SettingsVC> {
               onTap: () {
                 generalDialog(
                   context,
-                  title: "Deactivate account",
-                  message: "Are you sure you want to deactivate your account?",
-                  submitText: "Deactivate",
+                  title: "Delete account",
+                  message: "Are you sure you want to Delete your account?",
+                  submitText: "Delete",
                   submitColor: AppColor.red,
                   onSubmit: () {},
                 );
               },
               overlayColor: WidgetStatePropertyAll(Colors.transparent),
               child: Text(
-                "Deactivate account",
+                "Delete account",
                 style: AppTextStyle.title16(color: AppColor.red),
               ),
             ),

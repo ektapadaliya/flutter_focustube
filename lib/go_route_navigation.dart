@@ -180,13 +180,18 @@ final AppNavigationModel chooseYourInteres = AppNavigationModel(
   path: ChooseYourInterestVC.id,
   builder: (context, state) => ChooseYourInterestVC(),
 );
+final AppNavigationModel editYourInteres = AppNavigationModel(
+  label: "Edit Your Interest",
+  path: ChooseYourInterestVC.editId,
+  builder: (context, state) => ChooseYourInterestVC(isFromEdit: true),
+);
 final AppNavigationModel dailyLimit = AppNavigationModel(
   label: "Daily Limit",
   path: DailyLimitVC.id,
   builder: (context, state) => DailyLimitVC(),
 );
 final AppNavigationModel editDailyLimit = AppNavigationModel(
-  label: "Daily Limit",
+  label: "Edit Daily Limit",
   path: DailyLimitVC.editId,
   builder: (context, state) => DailyLimitVC(isFromEdit: true),
 );
@@ -311,6 +316,7 @@ final GoRouter router = GoRouter(
       resetPassword,
       content,
       chooseYourInteres,
+      editYourInteres,
       dailyLimit,
       videos,
       subjects,
