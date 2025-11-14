@@ -86,7 +86,7 @@ class _SettingsVCState extends State<SettingsVC> {
             SizedBox(height: 15),
             SettingsTile(
               icon: AppImage.userIntrestIcon,
-              label: "Your interest",
+              label: "Your Interest",
               iconSize: 20,
               onTap: () {
                 editYourInteres.go(context);

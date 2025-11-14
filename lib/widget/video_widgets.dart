@@ -247,9 +247,14 @@ class BookmarkVideoTile extends StatelessWidget {
 }
 
 class VideoTile extends StatefulWidget {
-  final bool isSlidable;
+  final bool isSlidable, isFromYoutube;
   final void Function()? onRemoved;
-  const VideoTile({super.key, this.isSlidable = false, this.onRemoved});
+  const VideoTile({
+    super.key,
+    this.onRemoved,
+    this.isSlidable = false,
+    this.isFromYoutube = false,
+  });
   @override
   State<VideoTile> createState() => _VideoTileState();
 }
@@ -311,7 +316,11 @@ class _VideoTileState extends State<VideoTile> {
 
   Widget get child => InkWell(
     onTap: () {
-      videoDetail.go(context);
+      if (widget.isFromYoutube) {
+        youtubeVideoDetail.go(context);
+      } else {
+        videoDetail.go(context);
+      }
     },
     overlayColor: WidgetStatePropertyAll(Colors.transparent),
     child: SizedBox(

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
-import 'package:focus_tube_flutter/widget/filter_pop_up.dart';
+import 'package:focus_tube_flutter/view/home/home_root.dart';
 import 'package:focus_tube_flutter/widget/video_widgets.dart';
 
 class HomeVC extends StatefulWidget {
@@ -113,54 +112,12 @@ class _HomeVCState extends State<HomeVC> {
                 ),
               ),
               SizedBox(width: 10),
-              AppPopupOverlay(
-                items: ["subjects", "bookmarks", "daily_goals", "history"],
-                itemBuilder: (String item) => Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SvgPicture.asset(popUpImages(item), height: 20),
-                    SizedBox(width: 5),
-                    Text(popUpLable(item), style: AppTextStyle.body16()),
-                  ],
-                ),
-                onItemPressed: (String item) {
-                  if (item == "bookmarks") {
-                    videos.go(context, extra: "Bookmarks");
-                  } else if (item == "subjects") {
-                    subjects.go(context);
-                  } else if (item == "daily_goals") {
-                    dailyGoal.go(context);
-                  } else if (item == "history") {
-                    videos.go(context, extra: "History");
-                  }
-                },
-                child: Icon(Icons.more_vert),
-              ),
+              HomePopupMenu(),
             ],
           ),
         ],
       ),
     );
-  }
-
-  String popUpImages(String value) {
-    return switch (value) {
-      "subjects" => AppImage.subjectIcon,
-      "bookmarks" => AppImage.bookmarkIcon,
-      "daily_goals" => AppImage.targetIcon,
-      "history" => AppImage.historyIcon,
-      _ => "",
-    };
-  }
-
-  String popUpLable(String value) {
-    return switch (value) {
-      "subjects" => "Subjects",
-      "bookmarks" => "Bookmarks",
-      "daily_goals" => "Daily Goals",
-      "history" => "History",
-      _ => "",
-    };
   }
 
   String getTimeBasedGreeting() {

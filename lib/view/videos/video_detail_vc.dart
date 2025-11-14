@@ -14,8 +14,9 @@ import 'package:focus_tube_flutter/widget/video_widgets.dart';
 
 class VideoDetailVC extends StatefulWidget {
   static const id = "/video/:id";
-  const VideoDetailVC({super.key});
-
+  static const youtubeId = "/youtube-video/:id";
+  const VideoDetailVC({super.key, this.isFromYoutube = false});
+  final bool isFromYoutube;
   @override
   State<VideoDetailVC> createState() => _VideoDetailVCState();
 }
@@ -36,18 +37,20 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
       appBar: customAppBar(
         context,
         title: "Lesson",
-        actions: [
-          InkWell(
-            overlayColor: WidgetStatePropertyAll(Colors.transparent),
-            onTap: () {
-              notes.go(context);
-            },
-            child: Container(
-              padding: const EdgeInsets.only(right: 30),
-              child: SvgPicture.asset(AppImage.noteIcon, height: 20),
-            ),
-          ),
-        ],
+        actions: widget.isFromYoutube
+            ? null
+            : [
+                InkWell(
+                  overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                  onTap: () {
+                    notes.go(context);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.only(right: 30),
+                    child: SvgPicture.asset(AppImage.noteIcon, height: 20),
+                  ),
+                ),
+              ],
       ),
       body: SafeArea(
         minimum: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
@@ -67,18 +70,19 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     PlayPauseIcon(),
-                    Positioned(
-                      top: 15,
-                      left: 15,
-                      child: SvgPicture.asset(
-                        AppImage.bookmarkIcon,
-                        height: 30,
-                        colorFilter: ColorFilter.mode(
-                          Colors.white,
-                          BlendMode.srcIn,
+                    if (!widget.isFromYoutube)
+                      Positioned(
+                        top: 15,
+                        left: 15,
+                        child: SvgPicture.asset(
+                          AppImage.bookmarkIcon,
+                          height: 30,
+                          colorFilter: ColorFilter.mode(
+                            Colors.white,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -96,45 +100,48 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
                       style: AppTextStyle.body16(color: AppColor.gray),
                     ),
                   ),
-                  InkWell(
-                    onTap: () => showDialog(
-                      context: context,
-                      builder: (context) => SavePlaylistVC(),
+                  if (!widget.isFromYoutube)
+                    InkWell(
+                      onTap: () => showDialog(
+                        context: context,
+                        builder: (context) => SavePlaylistVC(),
+                      ),
+                      child: SvgPicture.asset(AppImage.playListIcon),
                     ),
-                    child: SvgPicture.asset(AppImage.playListIcon),
-                  ),
                 ],
               ),
-              SizedBox(height: 20),
-              Center(
-                child: AppButton(
-                  label: "Rate This Lesson",
-                  backgroundColor: AppColor.primary,
-                  isFilled: false,
-                  fontSize: 18,
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => FeedbackVC(),
-                    );
+              if (!widget.isFromYoutube) ...[
+                SizedBox(height: 20),
+                Center(
+                  child: AppButton(
+                    label: "Rate This Lesson",
+                    backgroundColor: AppColor.primary,
+                    isFilled: false,
+                    fontSize: 18,
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => FeedbackVC(),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 20),
+                AppTitle(
+                  title: "Recommended video",
+                  onViewMore: () {
+                    videos.go(context, extra: "Recommended");
                   },
                 ),
-              ),
-              SizedBox(height: 20),
-              AppTitle(
-                title: "Recommended video",
-                onViewMore: () {
-                  videos.go(context, extra: "Recommended");
-                },
-              ),
-              SizedBox(height: 10),
-              ListView.separated(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) => VideoTile(),
-                separatorBuilder: (context, index) => SizedBox(height: 15),
-                itemCount: 5,
-              ),
+                SizedBox(height: 10),
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) => VideoTile(),
+                  separatorBuilder: (context, index) => SizedBox(height: 15),
+                  itemCount: 5,
+                ),
+              ],
             ],
           ),
         ),

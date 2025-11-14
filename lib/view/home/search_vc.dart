@@ -48,7 +48,7 @@ class _SearchVCState extends State<SearchVC> {
           SizedBox(height: 10),
           Expanded(
             child: ListView.separated(
-              itemBuilder: (context, index) => VideoTile(),
+              itemBuilder: (context, index) => VideoTile(isFromYoutube: true),
               separatorBuilder: (context, index) => SizedBox(height: 15),
               itemCount: 10,
             ),

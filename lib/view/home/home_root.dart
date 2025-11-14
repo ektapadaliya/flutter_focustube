@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/view/dialog/add_edit_playlist_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
+import 'package:focus_tube_flutter/widget/filter_pop_up.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 import 'package:go_router/go_router.dart';
 
@@ -40,7 +42,7 @@ class HomeRootState extends State<HomeRoot> {
               actions: [
                 if ([2, 3].contains(currentIndex))
                   Padding(
-                    padding: const EdgeInsets.only(right: 30),
+                    padding: const EdgeInsets.only(right: 10),
                     child: InkWell(
                       onTap: () {
                         if (currentIndex == 2) {
@@ -54,6 +56,11 @@ class HomeRootState extends State<HomeRoot> {
                       },
                       child: Icon(Icons.add, size: 25, color: AppColor.primary),
                     ),
+                  ),
+                if ([1, 2, 3].contains(currentIndex))
+                  Padding(
+                    padding: const EdgeInsets.only(right: 30),
+                    child: HomePopupMenu(),
                   ),
               ],
             ),
@@ -162,4 +169,55 @@ String _selectedItemImage(int index) {
     4 => AppImage.settingsSelected,
     _ => "",
   };
+}
+
+class HomePopupMenu extends StatelessWidget {
+  const HomePopupMenu({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppPopupOverlay(
+      items: ["subjects", "bookmarks", "daily_goals", "history"],
+      itemBuilder: (String item) => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SvgPicture.asset(popUpImages(item), height: 20),
+          SizedBox(width: 5),
+          Text(popUpLable(item), style: AppTextStyle.body16()),
+        ],
+      ),
+      onItemPressed: (String item) {
+        if (item == "bookmarks") {
+          videos.go(context, extra: "Bookmarks");
+        } else if (item == "subjects") {
+          subjects.go(context);
+        } else if (item == "daily_goals") {
+          dailyGoal.go(context);
+        } else if (item == "history") {
+          videos.go(context, extra: "History");
+        }
+      },
+      child: Icon(Icons.more_vert),
+    );
+  }
+
+  String popUpImages(String value) {
+    return switch (value) {
+      "subjects" => AppImage.subjectIcon,
+      "bookmarks" => AppImage.bookmarkIcon,
+      "daily_goals" => AppImage.targetIcon,
+      "history" => AppImage.historyIcon,
+      _ => "",
+    };
+  }
+
+  String popUpLable(String value) {
+    return switch (value) {
+      "subjects" => "Subjects",
+      "bookmarks" => "Bookmarks",
+      "daily_goals" => "Daily Goals",
+      "history" => "History",
+      _ => "",
+    };
+  }
 }

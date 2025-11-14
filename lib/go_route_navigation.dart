@@ -206,7 +206,6 @@ final AppNavigationModel search = AppNavigationModel(
   path: SearchVC.id,
   builder: (context, state) => const SearchVC(),
 );
-
 final AppNavigationModel playlists = AppNavigationModel(
   label: "Playlists",
   path: PlaylistVC.id,
@@ -258,6 +257,11 @@ final AppNavigationModel videoDetail = AppNavigationModel(
   label: "Video Details",
   path: VideoDetailVC.id,
   builder: (context, state) => VideoDetailVC(),
+);
+final AppNavigationModel youtubeVideoDetail = AppNavigationModel(
+  label: "Youtube Video Details",
+  path: VideoDetailVC.youtubeId,
+  builder: (context, state) => VideoDetailVC(isFromYoutube: true),
 );
 final AppNavigationModel notes = AppNavigationModel(
   label: "Notes",
@@ -333,7 +337,9 @@ final GoRouter router = GoRouter(
       editDailyLimit,
       addChannels,
       dailyGoal,
+      youtubeVideoDetail,
       setDailyGoal,
+      youtubeVideoDetail,
     ].map((routeElement) => routeElement.toGoRoute()),
     StatefulShellRoute.indexedStack(
       branches: [
