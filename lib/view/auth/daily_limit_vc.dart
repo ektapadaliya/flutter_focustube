@@ -29,7 +29,10 @@ class _DailyLimitVCState extends State<DailyLimitVC> {
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
-      appBar: customAppBar(context, title: "Daily Limit"),
+      appBar: customAppBar(
+        context,
+        title: widget.isFromEdit ? "Set My Daily Limit" : "Daily Limit",
+      ),
       body: ExpandedSingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         child: Column(

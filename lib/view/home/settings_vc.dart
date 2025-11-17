@@ -28,7 +28,7 @@ class _SettingsVCState extends State<SettingsVC> {
           children: [
             SettingsTile(
               icon: AppImage.userIcon,
-              label: "Profile",
+              label: "My Profile",
               onTap: () => profile.go(context),
             ),
             SizedBox(height: 15),
@@ -44,9 +44,9 @@ class _SettingsVCState extends State<SettingsVC> {
             SizedBox(height: 15),
             SettingsTile(
               icon: AppImage.historyIcon,
-              label: "History",
+              label: "My History",
               onTap: () {
-                videos.go(context, extra: "History");
+                videos.go(context, extra: "My History");
               },
             ),
             SizedBox(height: 15),
@@ -70,7 +70,7 @@ class _SettingsVCState extends State<SettingsVC> {
             SizedBox(height: 15),
             SettingsTile(
               icon: AppImage.targetIcon,
-              label: "Set Daily Goal",
+              label: "Daily Goals",
               onTap: () {
                 dailyGoal.go(context);
               },
@@ -78,7 +78,7 @@ class _SettingsVCState extends State<SettingsVC> {
             SizedBox(height: 15),
             SettingsTile(
               icon: AppImage.limitIcon,
-              label: "Daily Limit",
+              label: "Set My Daily Limit",
               onTap: () {
                 editDailyLimit.go(context);
               },
@@ -86,7 +86,7 @@ class _SettingsVCState extends State<SettingsVC> {
             SizedBox(height: 15),
             SettingsTile(
               icon: AppImage.userIntrestIcon,
-              label: "Your Interest",
+              label: "Choose My Interest",
               iconSize: 20,
               onTap: () {
                 editYourInteres.go(context);

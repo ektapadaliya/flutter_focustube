@@ -228,7 +228,7 @@ final AppNavigationModel myChannels = AppNavigationModel(
   builder: (context, state) => const MyChannelsVC(),
 );
 final AppNavigationModel channelDetail = AppNavigationModel(
-  label: "Playlist Detail",
+  label: "Channel Detail",
   path: "${ChannelsVC.id}${ChannelDetailVC.id}",
   builder: (context, state) =>
       ChannelDetailVC(channelId: state.pathParameters['id'] ?? ""),
@@ -279,7 +279,7 @@ final AppNavigationModel detailsNote = AppNavigationModel(
   builder: (context, state) => NoteDetailVC(id: state.pathParameters['id']),
 );
 final AppNavigationModel profile = AppNavigationModel(
-  label: "Profile",
+  label: "My Profile",
   path: ProfileVC.id,
   builder: (context, state) => ProfileVC(),
 );

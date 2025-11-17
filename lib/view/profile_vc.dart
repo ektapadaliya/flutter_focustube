@@ -53,7 +53,7 @@ class _ProfileVCState extends State<ProfileVC> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 60),
                         child: Text(
-                          widget.isFromEdit ? "Edit Profile" : "Profile",
+                          widget.isFromEdit ? "Edit My Profile" : "My Profile",
                           textAlign: TextAlign.center,
                           style: AppTextStyle.title20(color: AppColor.white),
                         ),

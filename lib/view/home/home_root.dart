@@ -188,13 +188,13 @@ class HomePopupMenu extends StatelessWidget {
       ),
       onItemPressed: (String item) {
         if (item == "bookmarks") {
-          videos.go(context, extra: "Bookmarks");
+          videos.go(context, extra: popUpLable(item));
         } else if (item == "subjects") {
           subjects.go(context);
         } else if (item == "daily_goals") {
           dailyGoal.go(context);
         } else if (item == "history") {
-          videos.go(context, extra: "History");
+          videos.go(context, extra: popUpLable(item));
         }
       },
       child: Icon(Icons.more_vert),
@@ -216,7 +216,7 @@ class HomePopupMenu extends StatelessWidget {
       "subjects" => "Subjects",
       "bookmarks" => "Bookmarks",
       "daily_goals" => "Daily Goals",
-      "history" => "History",
+      "history" => "My History",
       _ => "",
     };
   }

@@ -25,7 +25,7 @@ class _ChooseYourInterestVCState extends State<ChooseYourInterestVC> {
   Widget build(BuildContext context) {
     return ScreenBackground(
       appBar: widget.isFromEdit
-          ? customAppBar(context, title: "Edit your Interests")
+          ? customAppBar(context, title: "Choose My Interests")
           : null,
       body: ExpandedSingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),

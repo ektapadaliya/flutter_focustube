@@ -31,7 +31,6 @@ class ChannelTile extends StatelessWidget {
                   spacing: 15,
                   children: [
                     infoIconText(AppImage.userIcon, "124k Followers"),
-
                     infoIconText(AppImage.videoIcon, "120 Videos"),
                   ],
                 ),
