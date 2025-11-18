@@ -8,10 +8,12 @@ class AppCheckBoxTile extends StatelessWidget {
     super.key,
     required this.isSelected,
     required this.title,
+    this.isExpaned = false,
     this.align = AppCheckBoxTileAlign.left,
     required this.onChanged,
   });
-  final bool isSelected;
+  final bool isSelected, isExpaned;
+
   final void Function(bool?) onChanged;
   final Widget title;
   final AppCheckBoxTileAlign align;
@@ -20,7 +22,7 @@ class AppCheckBoxTile extends StatelessWidget {
     var children = [
       AppCheckBoxButton(isSelected: isSelected, onChanged: onChanged),
       const SizedBox(width: 7),
-      Flexible(child: title),
+      if (isExpaned) Expanded(child: title) else Flexible(child: title),
     ];
     return InkWell(
       overlayColor: WidgetStateProperty.all(Colors.transparent),

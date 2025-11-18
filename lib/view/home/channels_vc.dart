@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
+import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/channel_widgets.dart';
 
 class ChannelsVC extends StatefulWidget {
@@ -12,12 +13,12 @@ class ChannelsVC extends StatefulWidget {
 }
 
 class _ChannelsVCState extends State<ChannelsVC> {
+  String? selectValue;
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30).copyWith(top: 15),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -27,16 +28,18 @@ class _ChannelsVCState extends State<ChannelsVC> {
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) => buildCategoryTile(index),
               separatorBuilder: (context, index) => SizedBox(width: 10),
-              itemCount: 4,
+              itemCount: 5,
             ),
           ),
           SizedBox(height: 20),
-
           Text(_channelsType(selectedIndex), style: AppTextStyle.title20()),
           SizedBox(height: 20),
           Expanded(
             child: ListView.separated(
-              itemBuilder: (context, index) => ChannelTile(value: index),
+              itemBuilder: (context, index) => ChannelTile(
+                value: index,
+                showAddChannels: selectedIndex != 0 && selectedIndex != 1,
+              ),
               separatorBuilder: (context, index) => ChannelDivider(),
               itemCount: 10,
             ),
@@ -50,8 +53,12 @@ class _ChannelsVCState extends State<ChannelsVC> {
     bool isSelected = selectedIndex == index;
     return InkWell(
       onTap: () {
-        selectedIndex = index;
-        setState(() {});
+        if (index == 4) {
+          selectChannels.go(context);
+        } else {
+          selectedIndex = index;
+          setState(() {});
+        }
       },
       child: Container(
         height: 40,
@@ -80,6 +87,7 @@ class _ChannelsVCState extends State<ChannelsVC> {
       1 => "My Channels",
       2 => "Curated Channels",
       3 => "Scholar Tube",
+      4 => "Select Channels",
       _ => "",
     };
   }

@@ -31,7 +31,7 @@ class _DailyLimitVCState extends State<DailyLimitVC> {
     return ScreenBackground(
       appBar: customAppBar(
         context,
-        title: widget.isFromEdit ? "Set My Daily Limit" : "Daily Limit",
+        title: widget.isFromEdit ? "Set Daily Limits" : "Daily Limits",
       ),
       body: ExpandedSingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),

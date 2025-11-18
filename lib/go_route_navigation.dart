@@ -12,6 +12,7 @@ import 'package:focus_tube_flutter/view/notes/note_detail_vc.dart';
 import 'package:focus_tube_flutter/view/notes/note_list_vc.dart';
 import 'package:focus_tube_flutter/view/playlists/playlist_detail_vc.dart';
 import 'package:focus_tube_flutter/view/profile_vc.dart';
+import 'package:focus_tube_flutter/view/subjects/select_subject_vc.dart';
 import 'package:focus_tube_flutter/view/subjects/subject_detail_vc.dart';
 import 'package:focus_tube_flutter/view/subjects/subject_vc.dart';
 import 'package:focus_tube_flutter/view/videos/video_detail_vc.dart';
@@ -186,12 +187,12 @@ final AppNavigationModel editYourInteres = AppNavigationModel(
   builder: (context, state) => ChooseYourInterestVC(isFromEdit: true),
 );
 final AppNavigationModel dailyLimit = AppNavigationModel(
-  label: "Daily Limit",
+  label: "Daily Limits",
   path: DailyLimitVC.id,
   builder: (context, state) => DailyLimitVC(),
 );
 final AppNavigationModel editDailyLimit = AppNavigationModel(
-  label: "Edit Daily Limit",
+  label: "Edit Daily Limits",
   path: DailyLimitVC.editId,
   builder: (context, state) => DailyLimitVC(isFromEdit: true),
 );
@@ -243,6 +244,16 @@ final AppNavigationModel subjects = AppNavigationModel(
   path: SubjectVC.id,
   builder: (context, state) => SubjectVC(),
 );
+final AppNavigationModel mySubjects = AppNavigationModel(
+  label: "My Subjects",
+  path: SubjectVC.mySubjectId,
+  builder: (context, state) => SubjectVC(isMySubjects: true),
+);
+final AppNavigationModel selectSubjects = AppNavigationModel(
+  label: "Select Subjects",
+  path: SelectSubjectVC.id,
+  builder: (context, state) => SelectSubjectVC(),
+);
 final AppNavigationModel subjectsDetail = AppNavigationModel(
   label: "Subject Details",
   path: SubjectDetailVC.id,
@@ -274,7 +285,7 @@ final AppNavigationModel addNote = AppNavigationModel(
   builder: (context, state) => NoteDetailVC(),
 );
 final AppNavigationModel detailsNote = AppNavigationModel(
-  label: "Add Note",
+  label: "Note Detail",
   path: "${NoteListVC.id}${NoteDetailVC.detailId}",
   builder: (context, state) => NoteDetailVC(id: state.pathParameters['id']),
 );
@@ -288,18 +299,19 @@ final AppNavigationModel editProfile = AppNavigationModel(
   path: ProfileVC.editid,
   builder: (context, state) => ProfileVC(isFromEdit: true),
 );
-final AppNavigationModel addChannels = AppNavigationModel(
-  label: "Add Channels",
+
+final AppNavigationModel selectChannels = AppNavigationModel(
+  label: "Select Channels",
   path: AddChannelsVC.id,
   builder: (context, state) => AddChannelsVC(),
 );
 final AppNavigationModel dailyGoal = AppNavigationModel(
-  label: "Daily Goal",
+  label: "Daily Goals",
   path: DailyGoalVC.id,
   builder: (context, state) => DailyGoalVC(),
 );
 final AppNavigationModel setDailyGoal = AppNavigationModel(
-  label: "Set Daily Goal",
+  label: "Set Daily Goals",
   path: SetDailyGoalVC.id,
   builder: (context, state) => SetDailyGoalVC(),
 );
@@ -324,6 +336,7 @@ final GoRouter router = GoRouter(
       dailyLimit,
       videos,
       subjects,
+      mySubjects,
       subjectsDetail,
       videoDetail,
       notes,
@@ -335,10 +348,11 @@ final GoRouter router = GoRouter(
       editProfile,
       myChannels,
       editDailyLimit,
-      addChannels,
+      selectChannels,
       dailyGoal,
       youtubeVideoDetail,
       setDailyGoal,
+      selectSubjects,
       youtubeVideoDetail,
     ].map((routeElement) => routeElement.toGoRoute()),
     StatefulShellRoute.indexedStack(

@@ -40,19 +40,15 @@ class HomeRootState extends State<HomeRoot> {
               title: _itemLable(currentIndex),
               automaticallyImplyLeading: false,
               actions: [
-                if ([2, 3].contains(currentIndex))
+                if (currentIndex == 2)
                   Padding(
                     padding: const EdgeInsets.only(right: 10),
                     child: InkWell(
                       onTap: () {
-                        if (currentIndex == 2) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AddEditPlaylistVC(),
-                          );
-                        } else if (currentIndex == 3) {
-                          addChannels.go(context);
-                        }
+                        showDialog(
+                          context: context,
+                          builder: (context) => AddEditPlaylistVC(),
+                        );
                       },
                       child: Icon(Icons.add, size: 25, color: AppColor.primary),
                     ),
@@ -177,7 +173,7 @@ class HomePopupMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppPopupOverlay(
-      items: ["subjects", "bookmarks", "daily_goals", "history"],
+      items: ["subjects", "my_subjects", "bookmarks", "daily_goals", "history"],
       itemBuilder: (String item) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -189,6 +185,8 @@ class HomePopupMenu extends StatelessWidget {
       onItemPressed: (String item) {
         if (item == "bookmarks") {
           videos.go(context, extra: popUpLable(item));
+        } else if (item == "my_subjects") {
+          mySubjects.go(context);
         } else if (item == "subjects") {
           subjects.go(context);
         } else if (item == "daily_goals") {
@@ -204,6 +202,7 @@ class HomePopupMenu extends StatelessWidget {
   String popUpImages(String value) {
     return switch (value) {
       "subjects" => AppImage.subjectIcon,
+      "my_subjects" => AppImage.subjectIcon,
       "bookmarks" => AppImage.bookmarkIcon,
       "daily_goals" => AppImage.targetIcon,
       "history" => AppImage.historyIcon,
@@ -214,6 +213,7 @@ class HomePopupMenu extends StatelessWidget {
   String popUpLable(String value) {
     return switch (value) {
       "subjects" => "Subjects",
+      "my_subjects" => "My Subjects",
       "bookmarks" => "Bookmarks",
       "daily_goals" => "Daily Goals",
       "history" => "My History",

@@ -191,7 +191,7 @@ class _AutoCompleteFieldState extends State<AutoCompleteField> {
           return value;
         }
       },
-      optionsViewBuilder: (contxet, onSelect, list) => Align(
+      optionsViewBuilder: (contxet, onSelect, list) => Container(
         alignment: Alignment.topLeft,
         child: Container(
           constraints: BoxConstraints(
@@ -218,6 +218,7 @@ class _AutoCompleteFieldState extends State<AutoCompleteField> {
                   .map(
                     (e) => ListTile(
                       onTap: () {
+                        FocusScope.of(context).requestFocus(FocusNode());
                         if (widget.onValueSelect != null) {
                           widget.onValueSelect!(e);
                         }

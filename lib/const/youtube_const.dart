@@ -29,7 +29,7 @@ class YoutubeApiConst {
         "${_queryParam('q', query)}"
         "${_queryParam('channelId', channelId)}"
         "${_queryParam('nextPageToken', nextPageToken)}"
-        "key=$key";
+        "&key=$key";
   }
 
   static String channelUrl({String? query, String? nextPageToken}) {
@@ -39,7 +39,7 @@ class YoutubeApiConst {
         "&maxResults=$maxResults"
         "${_queryParam('q', query)}"
         "${_queryParam('nextPageToken', nextPageToken)}"
-        "key=$key";
+        "&key=$key";
   }
 
   /// Builds query param only when value is valid

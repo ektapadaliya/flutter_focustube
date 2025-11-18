@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
 import 'package:focus_tube_flutter/widget/video_widgets.dart';
 
@@ -16,6 +17,7 @@ class SearchVC extends StatefulWidget {
 
 class _SearchVCState extends State<SearchVC> {
   String? selectValue;
+  bool isYoutubeSearch = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,6 +25,24 @@ class _SearchVCState extends State<SearchVC> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Search ${isYoutubeSearch ? 'Youtube' : 'FocusTube'}",
+                  style: AppTextStyle.title16(),
+                ),
+              ),
+              AppSwitch(
+                onChanged: (value) {
+                  isYoutubeSearch = value;
+                  setState(() {});
+                },
+                isSelected: isYoutubeSearch,
+              ),
+            ],
+          ),
+          SizedBox(height: 5),
           AutoCompleteField(
             radius: 6,
             hintText: "Search here...",
@@ -48,7 +68,8 @@ class _SearchVCState extends State<SearchVC> {
           SizedBox(height: 10),
           Expanded(
             child: ListView.separated(
-              itemBuilder: (context, index) => VideoTile(isFromYoutube: true),
+              itemBuilder: (context, index) =>
+                  VideoTile(isFromYoutube: isYoutubeSearch),
               separatorBuilder: (context, index) => SizedBox(height: 15),
               itemCount: 10,
             ),

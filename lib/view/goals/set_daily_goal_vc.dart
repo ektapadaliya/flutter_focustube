@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
@@ -26,7 +25,7 @@ class _SetDailyGoalVCState extends State<SetDailyGoalVC> {
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
-      appBar: customAppBar(context, title: "Set Daily Goal"),
+      appBar: customAppBar(context, title: "Set Daily Goals"),
       body: ExpandedSingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 30),
         child: SafeArea(

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_const.dart';
@@ -74,6 +75,28 @@ class AppButton extends StatelessWidget {
                     textColor ?? (isFilled ? AppColor.white : backgroundColor),
               )
             : label,
+      ),
+    );
+  }
+}
+
+class AppSwitch extends StatelessWidget {
+  const AppSwitch({
+    super.key,
+    required this.onChanged,
+    required this.isSelected,
+  });
+  final bool isSelected;
+  final void Function(bool) onChanged;
+  @override
+  Widget build(BuildContext context) {
+    return Transform.scale(
+      scale: .7,
+      child: CupertinoSwitch(
+        value: isSelected,
+        activeTrackColor: AppColor.primary,
+        inactiveTrackColor: AppColor.lightGray.opacityToAlpha(.4),
+        onChanged: onChanged,
       ),
     );
   }

@@ -9,8 +9,14 @@ import 'package:focus_tube_flutter/widget/playlist_widgets.dart';
 import 'package:focus_tube_flutter/widget/video_widgets.dart';
 
 class ChannelTile extends StatelessWidget {
-  const ChannelTile({super.key, required this.value});
+  const ChannelTile({
+    super.key,
+    required this.value,
+    this.showAddChannels = true,
+  });
+
   final int value;
+  final bool showAddChannels;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -37,16 +43,19 @@ class ChannelTile extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 10),
-          AppButton(
-            label: "Add channel",
-            radius: 7,
-            alignment: null,
-            backgroundColor: AppColor.primary,
-            height: 32,
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-            fontSize: 12,
-          ),
+          if (showAddChannels)
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: AppButton(
+                label: "Add channel",
+                radius: 7,
+                alignment: null,
+                backgroundColor: AppColor.primary,
+                height: 32,
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                fontSize: 12,
+              ),
+            ),
         ],
       ),
     );

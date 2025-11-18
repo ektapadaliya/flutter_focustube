@@ -6,7 +6,9 @@ import 'package:focus_tube_flutter/widget/video_widgets.dart';
 
 class SubjectVC extends StatefulWidget {
   static const id = "/subjects";
-  const SubjectVC({super.key});
+  static const mySubjectId = "/my-subjects";
+  final bool isMySubjects;
+  const SubjectVC({super.key, this.isMySubjects = false});
 
   @override
   State<SubjectVC> createState() => _SubjectVCState();
@@ -24,7 +26,10 @@ class _SubjectVCState extends State<SubjectVC> {
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
-      appBar: customAppBar(context, title: "Subjects"),
+      appBar: customAppBar(
+        context,
+        title: widget.isMySubjects ? "My Subjects" : "Subjects",
+      ),
       body: SafeArea(
         minimum: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         child: ListView.separated(

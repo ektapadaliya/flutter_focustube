@@ -9,6 +9,8 @@ import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/general_dialog.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 
+import '../../widget/app_button.dart';
+
 class SettingsVC extends StatefulWidget {
   static const id = "/settings";
   const SettingsVC({super.key});
@@ -52,9 +54,9 @@ class _SettingsVCState extends State<SettingsVC> {
             SizedBox(height: 15),
             SettingsTile(
               icon: AppImage.channels,
-              label: "My Channels",
+              label: "Select Channels",
               onTap: () {
-                myChannels.go(context);
+                selectChannels.go(context);
               },
               iconSize: 32,
             ),
@@ -62,23 +64,23 @@ class _SettingsVCState extends State<SettingsVC> {
             SizedBox(height: 15),
             SettingsTile(
               icon: AppImage.subjectIcon,
-              label: "Subjects",
+              label: "Select Subjects",
               onTap: () {
-                subjects.go(context);
+                selectSubjects.go(context);
               },
             ),
             SizedBox(height: 15),
             SettingsTile(
               icon: AppImage.targetIcon,
-              label: "Daily Goals",
+              label: "Set Daily Goals",
               onTap: () {
-                dailyGoal.go(context);
+                setDailyGoal.go(context);
               },
             ),
             SizedBox(height: 15),
             SettingsTile(
               icon: AppImage.limitIcon,
-              label: "Set My Daily Limit",
+              label: "Set Daily Limits",
               onTap: () {
                 editDailyLimit.go(context);
               },
@@ -86,7 +88,7 @@ class _SettingsVCState extends State<SettingsVC> {
             SizedBox(height: 15),
             SettingsTile(
               icon: AppImage.userIntrestIcon,
-              label: "Choose My Interest",
+              label: "Choose My Interests",
               iconSize: 20,
               onTap: () {
                 editYourInteres.go(context);
@@ -204,18 +206,9 @@ class SettingsTile extends StatelessWidget {
             if (isSelected == null)
               Icon(Icons.arrow_forward_ios, color: AppColor.primary, size: 20)
             else
-              Transform.scale(
-                scale: .7,
-                child: CupertinoSwitch(
-                  value: isSelected!,
-                  activeTrackColor: AppColor.primary,
-                  inactiveTrackColor: AppColor.lightGray.opacityToAlpha(.4),
-                  onChanged: (_) {
-                    if (onTap != null) {
-                      onTap!();
-                    }
-                  },
-                ),
+              AppSwitch(
+                isSelected: isSelected!,
+                onChanged: (_) => onTap?.call(),
               ),
           ],
         ),

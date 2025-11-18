@@ -214,7 +214,10 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                             content.go(context, id: 't');
                           },
                       ),
-                      TextSpan(text: " and ", style: AppTextStyle.body16()),
+                      TextSpan(
+                        text: " and ",
+                        style: AppTextStyle.body16(color: AppColor.gray),
+                      ),
                       TextSpan(
                         text: "Privacy Policy",
                         style: AppTextStyle.body16().copyWith(
