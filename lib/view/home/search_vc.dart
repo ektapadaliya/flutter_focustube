@@ -5,6 +5,7 @@ import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
+import 'package:focus_tube_flutter/widget/drop_down_field.dart';
 import 'package:focus_tube_flutter/widget/video_widgets.dart';
 
 class SearchVC extends StatefulWidget {
@@ -25,24 +26,49 @@ class _SearchVCState extends State<SearchVC> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  "Search ${isYoutubeSearch ? 'Youtube' : 'FocusTube'}",
-                  style: AppTextStyle.title16(),
+          Align(
+            alignment: AlignmentGeometry.centerRight,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Search:", style: AppTextStyle.body16()),
+                SizedBox(width: 10),
+                SizedBox(
+                  width: 150,
+                  child: AppDropDownTextField(
+                    value: isYoutubeSearch ? "Youtube" : "FocusTube",
+                    items: ["Youtube", "FocusTube"],
+                    onChanged: (value) {
+                      isYoutubeSearch = (value == "Youtube");
+                      setState(() {});
+                    },
+                    optionChild: (value, isSelcted) =>
+                        Text(value, style: AppTextStyle.body16()),
+                    selectedChild: (value) =>
+                        Text(value, style: AppTextStyle.body16()),
+                  ),
                 ),
-              ),
-              AppSwitch(
-                onChanged: (value) {
-                  isYoutubeSearch = value;
-                  setState(() {});
-                },
-                isSelected: isYoutubeSearch,
-              ),
-            ],
+              ],
+            ),
           ),
-          SizedBox(height: 5),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: Text(
+          //         "Search ${isYoutubeSearch ? 'Youtube' : 'FocusTube'}",
+          //         style: AppTextStyle.title16(),
+          //       ),
+          //     ),
+          //     AppSwitch(
+          //       onChanged: (value) {
+          //         isYoutubeSearch = value;
+          //         setState(() {});
+          //       },
+          //       isSelected: isYoutubeSearch,
+          //     ),
+          //   ],
+          // ),
+          SizedBox(height: 10),
           AutoCompleteField(
             radius: 6,
             hintText: "Search here...",

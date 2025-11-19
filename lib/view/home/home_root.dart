@@ -22,7 +22,7 @@ class HomeRootState extends State<HomeRoot> {
   void didChangeDependencies() {
     precacheImage(AssetImage(AppImage.home), context);
     precacheImage(AssetImage(AppImage.searchSelected), context);
-    precacheImage(AssetImage(AppImage.playlistSelected), context);
+    precacheImage(AssetImage(AppImage.searchSelected), context);
     precacheImage(AssetImage(AppImage.channelsSelected), context);
     precacheImage(AssetImage(AppImage.searchSelected), context);
     super.didChangeDependencies();
@@ -40,19 +40,19 @@ class HomeRootState extends State<HomeRoot> {
               title: _itemLable(currentIndex),
               automaticallyImplyLeading: false,
               actions: [
-                if (currentIndex == 2)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: InkWell(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AddEditPlaylistVC(),
-                        );
-                      },
-                      child: Icon(Icons.add, size: 25, color: AppColor.primary),
-                    ),
-                  ),
+                // if (currentIndex == 2)
+                //   Padding(
+                //     padding: const EdgeInsets.only(right: 10),
+                //     child: InkWell(
+                //       onTap: () {
+                //         showDialog(
+                //           context: context,
+                //           builder: (context) => AddEditPlaylistVC(),
+                //         );
+                //       },
+                //       child: Icon(Icons.add, size: 25, color: AppColor.primary),
+                //     ),
+                //   ),
                 if ([1, 2, 3].contains(currentIndex))
                   Padding(
                     padding: const EdgeInsets.only(right: 30),
@@ -138,7 +138,7 @@ String _itemLable(int index) {
   return switch (index) {
     0 => "Home",
     1 => "Explore",
-    2 => "Playlist",
+    2 => "Subjects",
     3 => "Channels",
     4 => "Settings",
     _ => "",
@@ -149,7 +149,7 @@ String _itemImage(int index) {
   return switch (index) {
     0 => AppImage.home,
     1 => AppImage.search,
-    2 => AppImage.playlist,
+    2 => AppImage.subject,
     3 => AppImage.channels,
     4 => AppImage.settings,
     _ => "",
@@ -160,7 +160,7 @@ String _selectedItemImage(int index) {
   return switch (index) {
     0 => AppImage.homeSelected,
     1 => AppImage.searchSelected,
-    2 => AppImage.playlistSelected,
+    2 => AppImage.subjectSelected,
     3 => AppImage.channelsSelected,
     4 => AppImage.settingsSelected,
     _ => "",
@@ -173,7 +173,7 @@ class HomePopupMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppPopupOverlay(
-      items: ["subjects", "my_subjects", "bookmarks", "daily_goals", "history"],
+      items: ["playlist", "my_subjects", "bookmarks", "daily_goals", "history"],
       itemBuilder: (String item) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -187,8 +187,8 @@ class HomePopupMenu extends StatelessWidget {
           videos.go(context, extra: popUpLable(item));
         } else if (item == "my_subjects") {
           mySubjects.go(context);
-        } else if (item == "subjects") {
-          subjects.go(context);
+        } else if (item == "playlist") {
+          playlists.go(context);
         } else if (item == "daily_goals") {
           dailyGoal.go(context);
         } else if (item == "history") {
@@ -201,7 +201,7 @@ class HomePopupMenu extends StatelessWidget {
 
   String popUpImages(String value) {
     return switch (value) {
-      "subjects" => AppImage.subjectIcon,
+      "playlist" => AppImage.userPlaylistIcon,
       "my_subjects" => AppImage.subjectIcon,
       "bookmarks" => AppImage.bookmarkIcon,
       "daily_goals" => AppImage.targetIcon,
@@ -212,7 +212,7 @@ class HomePopupMenu extends StatelessWidget {
 
   String popUpLable(String value) {
     return switch (value) {
-      "subjects" => "Subjects",
+      "playlist" => "Playlists",
       "my_subjects" => "My Subjects",
       "bookmarks" => "Bookmarks",
       "daily_goals" => "Daily Goals",

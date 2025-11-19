@@ -91,7 +91,7 @@ class _SettingsVCState extends State<SettingsVC> {
               label: "Choose My Interests",
               iconSize: 20,
               onTap: () {
-                editYourInteres.go(context);
+                editYourInterest.go(context);
               },
             ),
 

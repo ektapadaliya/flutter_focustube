@@ -181,7 +181,7 @@ final AppNavigationModel chooseYourInteres = AppNavigationModel(
   path: ChooseYourInterestVC.id,
   builder: (context, state) => ChooseYourInterestVC(),
 );
-final AppNavigationModel editYourInteres = AppNavigationModel(
+final AppNavigationModel editYourInterest = AppNavigationModel(
   label: "Edit Your Interest",
   path: ChooseYourInterestVC.editId,
   builder: (context, state) => ChooseYourInterestVC(isFromEdit: true),
@@ -332,10 +332,11 @@ final GoRouter router = GoRouter(
       resetPassword,
       content,
       chooseYourInteres,
-      editYourInteres,
+      editYourInterest,
       dailyLimit,
       videos,
-      subjects,
+      playlists,
+      // subjects,
       mySubjects,
       subjectsDetail,
       videoDetail,
@@ -359,7 +360,7 @@ final GoRouter router = GoRouter(
       branches: [
         home,
         search,
-        playlists,
+        subjects,
         channels,
         settings,
       ].map((e) => StatefulShellBranch(routes: [e.toGoRoute()])).toList(),

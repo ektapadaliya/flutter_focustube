@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
-import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/channel_widgets.dart';
+
+import '../../const/app_image.dart';
+import '../../widget/app_text_form_field.dart';
 
 class ChannelsVC extends StatefulWidget {
   static const id = "/channels";
@@ -15,6 +17,14 @@ class ChannelsVC extends StatefulWidget {
 class _ChannelsVCState extends State<ChannelsVC> {
   String? selectValue;
   int selectedIndex = 0;
+
+  //List<GlobalKey> itemKeys = [];
+  @override
+  void initState() {
+    //itemKeys = List.generate(5, (index) => GlobalKey());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,8 +41,35 @@ class _ChannelsVCState extends State<ChannelsVC> {
               itemCount: 5,
             ),
           ),
-          SizedBox(height: 20),
-          Text(_channelsType(selectedIndex), style: AppTextStyle.title20()),
+          if (selectedIndex == 4)
+            Padding(
+              padding: const EdgeInsets.only(top: 15, bottom: 10),
+              child: AutoCompleteField(
+                radius: 6,
+                hintText: "Search here...",
+                suggestions: [
+                  "Channels 1",
+                  "Channels 2",
+                  "Channels 3",
+                  "Channels 4",
+                  "Channels 5",
+                ],
+                onValueSelect: (value) {
+                  selectValue = value;
+
+                  setState(() {});
+                },
+                hintTextColor: AppColor.gray,
+                prefixIcon: Image.asset(AppImage.search, height: 35),
+                suffixIcon: selectValue == null
+                    ? null
+                    : Icon(Icons.close, size: 22, color: AppColor.gray),
+              ),
+            )
+          else
+            SizedBox(height: 20),
+
+          Text(_channelsResults(selectedIndex), style: AppTextStyle.title20()),
           SizedBox(height: 20),
           Expanded(
             child: ListView.separated(
@@ -53,14 +90,17 @@ class _ChannelsVCState extends State<ChannelsVC> {
     bool isSelected = selectedIndex == index;
     return InkWell(
       onTap: () {
-        if (index == 4) {
-          selectChannels.go(context);
-        } else {
-          selectedIndex = index;
-          setState(() {});
-        }
+        selectedIndex = index;
+        // Scrollable.ensureVisible(
+        //   itemKeys[index].currentContext!,
+        //   duration: const Duration(milliseconds: 300),
+        //   alignment: .5, // 0.0 = left, 1.0 = right, 0.5 = center
+        //   curve: Curves.easeInOut,
+        // );
+        setState(() {});
       },
       child: Container(
+        //key: itemKeys[index],
         height: 40,
         padding: EdgeInsets.symmetric(horizontal: 30),
         decoration: BoxDecoration(
@@ -88,6 +128,17 @@ class _ChannelsVCState extends State<ChannelsVC> {
       2 => "Curated Channels",
       3 => "Scholar Tube",
       4 => "Select Channels",
+      _ => "",
+    };
+  }
+
+  _channelsResults(int index) {
+    return switch (index) {
+      0 => "Channels",
+      1 => "My Channels",
+      2 => "Curated Channels",
+      3 => "Scholar Tube",
+      4 => "Search Results",
       _ => "",
     };
   }

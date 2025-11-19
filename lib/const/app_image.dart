@@ -33,13 +33,16 @@ class AppImage {
   //Non Selected Icon
   static const home = "assets/nav_icons/home.png";
   static const search = "assets/nav_icons/search.png";
-  static const playlist = "assets/nav_icons/playlist.png";
+  //static const playlist = "assets/nav_icons/playlist.png";
+  static const subject = "assets/nav_icons/subject.png";
+
   static const channels = "assets/nav_icons/channels.png";
   static const settings = "assets/nav_icons/settings.png";
   //Selected Icon
   static const homeSelected = "assets/nav_icons/home_selected.png";
   static const searchSelected = "assets/nav_icons/search_selected.png";
-  static const playlistSelected = "assets/nav_icons/playlist_selected.png";
+  static const subjectSelected = "assets/nav_icons/subject_selected.png";
+  //static const playlistSelected = "assets/nav_icons/playlist_selected.png";
   static const channelsSelected = "assets/nav_icons/channels_selected.png";
   static const settingsSelected = "assets/nav_icons/settings_selected.png";
 
@@ -96,6 +99,8 @@ class AppImage {
   static const playListIcon = "assets/icons/playlist.svg";
   static const calendarIcon = "assets/icons/calendar.svg";
   static const userIntrestIcon = "assets/icons/user_intrest.svg";
+  static const userPlaylistIcon = "assets/icons/user_playlist.svg";
+
   static const notificationIcon = "assets/icons/notification.svg";
   static const bookmarkFillIcon = "assets/icons/bookmark_fill.svg";
   static const privacyPolicyIcon = "assets/icons/privacy_policy.svg";
