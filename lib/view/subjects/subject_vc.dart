@@ -58,7 +58,7 @@ class _SubjectVCState extends State<SubjectVC> {
         itemCount: subjects.length,
       ),
     );
-    if (widget.isMySubjects) {
+    if (!widget.isMySubjects) {
       return ScreenBackground(
         appBar: customAppBar(
           context,

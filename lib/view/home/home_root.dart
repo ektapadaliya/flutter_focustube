@@ -138,7 +138,7 @@ String _itemLable(int index) {
   return switch (index) {
     0 => "Home",
     1 => "Explore",
-    2 => "Subjects",
+    2 => "My Subjects",
     3 => "Channels",
     4 => "Settings",
     _ => "",
@@ -173,7 +173,7 @@ class HomePopupMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppPopupOverlay(
-      items: ["playlist", "my_subjects", "bookmarks", "daily_goals", "history"],
+      items: ["playlist", "subjects", "bookmarks", "daily_goals", "history"],
       itemBuilder: (String item) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -185,8 +185,8 @@ class HomePopupMenu extends StatelessWidget {
       onItemPressed: (String item) {
         if (item == "bookmarks") {
           videos.go(context, extra: popUpLable(item));
-        } else if (item == "my_subjects") {
-          mySubjects.go(context);
+        } else if (item == "subjects") {
+          subjects.go(context);
         } else if (item == "playlist") {
           playlists.go(context);
         } else if (item == "daily_goals") {
@@ -202,7 +202,7 @@ class HomePopupMenu extends StatelessWidget {
   String popUpImages(String value) {
     return switch (value) {
       "playlist" => AppImage.userPlaylistIcon,
-      "my_subjects" => AppImage.subjectIcon,
+      "subjects" => AppImage.subjectIcon,
       "bookmarks" => AppImage.bookmarkIcon,
       "daily_goals" => AppImage.targetIcon,
       "history" => AppImage.historyIcon,
@@ -213,7 +213,7 @@ class HomePopupMenu extends StatelessWidget {
   String popUpLable(String value) {
     return switch (value) {
       "playlist" => "Playlists",
-      "my_subjects" => "My Subjects",
+      "subjects" => "Subjects",
       "bookmarks" => "Bookmarks",
       "daily_goals" => "Daily Goals",
       "history" => "My History",
