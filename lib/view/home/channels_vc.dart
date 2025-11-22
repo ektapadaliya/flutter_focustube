@@ -38,10 +38,10 @@ class _ChannelsVCState extends State<ChannelsVC> {
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) => buildCategoryTile(index),
               separatorBuilder: (context, index) => SizedBox(width: 10),
-              itemCount: 5,
+              itemCount: 4,
             ),
           ),
-          if (selectedIndex == 4)
+          if (selectedIndex == 0)
             Padding(
               padding: const EdgeInsets.only(top: 15, bottom: 10),
               child: AutoCompleteField(
@@ -123,22 +123,24 @@ class _ChannelsVCState extends State<ChannelsVC> {
 
   _channelsType(int index) {
     return switch (index) {
-      0 => "Channels",
+      // 0 => "Channels",
+      0 => "Select Channels",
       1 => "My Channels",
       2 => "Curated Channels",
       3 => "Scholar Tube",
-      4 => "Select Channels",
+      //4 => "Select Channels",
       _ => "",
     };
   }
 
   _channelsResults(int index) {
     return switch (index) {
-      0 => "Channels",
+      //0 => "Channels",
+      0 => "Search Results",
       1 => "My Channels",
       2 => "Curated Channels",
       3 => "Scholar Tube",
-      4 => "Search Results",
+      // 4 => "Search Results",
       _ => "",
     };
   }

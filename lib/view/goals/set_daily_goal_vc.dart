@@ -9,7 +9,8 @@ import 'package:go_router/go_router.dart';
 
 class SetDailyGoalVC extends StatefulWidget {
   static const id = "/set-daily-goal";
-  const SetDailyGoalVC({super.key});
+  final bool isFromNav;
+  const SetDailyGoalVC({super.key, this.isFromNav = false});
 
   @override
   State<SetDailyGoalVC> createState() => _SetDailyGoalVCState();
@@ -24,44 +25,53 @@ class _SetDailyGoalVCState extends State<SetDailyGoalVC> {
   ];
   @override
   Widget build(BuildContext context) {
-    return ScreenBackground(
-      appBar: customAppBar(context, title: "Set Daily Goals"),
-      body: ExpandedSingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 30),
-        child: SafeArea(
-          child: FormScreenBoundries(
-            child: Column(
-              children: [
-                ...List.generate(goals.length, (index) {
-                  var goal = goals[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 15),
-                    child: SetGoalTile(
-                      goal: goal,
-                      onCountChanged: (newCount) {
-                        setState(() {
-                          goals[index] = goal.copyWith(count: newCount);
-                        });
-                      },
-                    ),
-                  );
-                }),
-                Spacer(),
-                SizedBox(height: 20),
-                AppButton(
-                  label: "Save Goals",
-                  onTap: () {
+    var child = ExpandedSingleChildScrollView(
+      padding: EdgeInsets.symmetric(
+        horizontal: widget.isFromNav ? 0 : 30,
+      ).copyWith(top: widget.isFromNav ? 15 : 0),
+      child: SafeArea(
+        child: FormScreenBoundries(
+          child: Column(
+            children: [
+              ...List.generate(goals.length, (index) {
+                var goal = goals[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: SetGoalTile(
+                    goal: goal,
+                    onCountChanged: (newCount) {
+                      setState(() {
+                        goals[index] = goal.copyWith(count: newCount);
+                      });
+                    },
+                  ),
+                );
+              }),
+              Spacer(),
+              SizedBox(height: 20),
+              AppButton(
+                label: "Save Goals",
+                onTap: () {
+                  if (!widget.isFromNav) {
                     context.pop();
-                  },
-                  backgroundColor: AppColor.primary,
-                ),
-                SizedBox(height: 20),
-              ],
-            ),
+                  }
+                },
+                backgroundColor: AppColor.primary,
+              ),
+              SizedBox(height: 20),
+            ],
           ),
         ),
       ),
     );
+    if (widget.isFromNav) {
+      return child;
+    } else {
+      return ScreenBackground(
+        appBar: customAppBar(context, title: "Set Daily Goals"),
+        body: child,
+      );
+    }
   }
 }
 

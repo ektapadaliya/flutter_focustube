@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
-import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
 import 'package:focus_tube_flutter/widget/drop_down_field.dart';
 import 'package:focus_tube_flutter/widget/video_widgets.dart';
@@ -36,10 +35,10 @@ class _SearchVCState extends State<SearchVC> {
                 SizedBox(
                   width: 150,
                   child: AppDropDownTextField(
-                    value: isYoutubeSearch ? "Youtube" : "FocusTube",
-                    items: ["Youtube", "FocusTube"],
+                    value: isYoutubeSearch ? "YouTube" : "FocusTube",
+                    items: ["YouTube", "FocusTube"],
                     onChanged: (value) {
-                      isYoutubeSearch = (value == "Youtube");
+                      isYoutubeSearch = (value == "YouTube");
                       setState(() {});
                     },
                     optionChild: (value, isSelcted) =>

@@ -33,6 +33,8 @@ class AppImage {
   //Non Selected Icon
   static const home = "assets/nav_icons/home.png";
   static const search = "assets/nav_icons/search.png";
+  static const dailyGoal = "assets/nav_icons/daily_goal.png";
+
   //static const playlist = "assets/nav_icons/playlist.png";
   static const subject = "assets/nav_icons/subject.png";
 
@@ -41,6 +43,8 @@ class AppImage {
   //Selected Icon
   static const homeSelected = "assets/nav_icons/home_selected.png";
   static const searchSelected = "assets/nav_icons/search_selected.png";
+  static const dailyGoalSelected = "assets/nav_icons/daily_goal_selected.png";
+
   static const subjectSelected = "assets/nav_icons/subject_selected.png";
   //static const playlistSelected = "assets/nav_icons/playlist_selected.png";
   static const channelsSelected = "assets/nav_icons/channels_selected.png";
@@ -95,6 +99,7 @@ class AppImage {
   static const targetIcon = "assets/icons/target.svg";
   static const historyIcon = "assets/icons/history.svg";
   static const subjectIcon = "assets/icons/subject.svg";
+  static const settingIcon = "assets/icons/setting.svg";
   static const bookmarkIcon = "assets/icons/bookmark.svg";
   static const playListIcon = "assets/icons/playlist.svg";
   static const calendarIcon = "assets/icons/calendar.svg";

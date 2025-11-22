@@ -11,7 +11,8 @@ import '../../model/subject_model.dart';
 
 class SelectSubjectVC extends StatefulWidget {
   static const id = "/select-subject";
-  const SelectSubjectVC({super.key});
+  final bool isFromNav;
+  const SelectSubjectVC({super.key, this.isFromNav = false});
 
   @override
   State<SelectSubjectVC> createState() => _SelectSubjectVCState();
@@ -20,98 +21,101 @@ class SelectSubjectVC extends StatefulWidget {
 class _SelectSubjectVCState extends State<SelectSubjectVC> {
   @override
   Widget build(BuildContext context) {
-    return ScreenBackground(
-      appBar: customAppBar(context, title: "Select Subject"),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30,
-        ).copyWith(bottom: 15),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.separated(
-                itemCount: sampleSubjects.length,
-                separatorBuilder: (context, index) => SizedBox(height: 15),
-                itemBuilder: (context, index) {
-                  var subject = sampleSubjects[index];
-                  return Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColor.borderColor),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+    var child = Column(
+      children: [
+        Expanded(
+          child: ListView.separated(
+            itemCount: sampleSubjects.length,
+            separatorBuilder: (context, index) => SizedBox(height: 15),
+            itemBuilder: (context, index) {
+              var subject = sampleSubjects[index];
+              return Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColor.borderColor),
+                  borderRadius: BorderRadius.circular(16),
+                ),
 
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: subject.isSelected
-                              ? BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: AppColor.borderColor,
-                                    ),
-                                  ),
-                                )
-                              : null,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 8,
-                          ),
-                          child: AppCheckBoxTile(
-                            title: Text(
-                              subject.title,
-                              style: AppTextStyle.title18(),
-                            ),
-                            isExpaned: true,
-                            align: AppCheckBoxTileAlign.right,
-                            onChanged: (value) {
-                              subject.onSelectionChanged(value ?? false);
-                              setState(() {});
-                            },
-                            isSelected: subject.isSelected,
-                          ),
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: subject.isSelected
+                          ? BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: AppColor.borderColor),
+                              ),
+                            )
+                          : null,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 8,
+                      ),
+                      child: AppCheckBoxTile(
+                        title: Text(
+                          subject.title,
+                          style: AppTextStyle.title18(),
                         ),
-                        if (subject.isSelected)
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 25,
-                              right: 15,
-                              bottom: 10,
-                              top: 5,
-                            ),
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: subject.subSubjects.length,
-                              itemBuilder: (context, index) {
-                                var subSubject = subject.subSubjects[index];
-                                return AppCheckBoxTile(
-                                  title: Text(
-                                    subSubject.title,
-                                    style: AppTextStyle.body16(),
-                                  ),
-                                  isExpaned: true,
-                                  align: AppCheckBoxTileAlign.right,
-                                  onChanged: (value) {
-                                    subSubject.isSelected = value ?? false;
-                                    setState(() {});
-                                  },
-                                  isSelected: subSubject.isSelected,
-                                );
-                              },
-                            ),
-                          ),
-                      ],
+                        isExpaned: true,
+                        align: AppCheckBoxTileAlign.right,
+                        onChanged: (value) {
+                          subject.onSelectionChanged(value ?? false);
+                          setState(() {});
+                        },
+                        isSelected: subject.isSelected,
+                      ),
                     ),
-                  );
-                },
-              ),
-            ),
-            SizedBox(height: 10),
-            AppButton(label: "Save", backgroundColor: AppColor.primary),
-          ],
+                    if (subject.isSelected)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 25,
+                          right: 15,
+                          bottom: 10,
+                          top: 5,
+                        ),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: subject.subSubjects.length,
+                          itemBuilder: (context, index) {
+                            var subSubject = subject.subSubjects[index];
+                            return AppCheckBoxTile(
+                              title: Text(
+                                subSubject.title,
+                                style: AppTextStyle.body16(),
+                              ),
+                              isExpaned: true,
+                              align: AppCheckBoxTileAlign.right,
+                              onChanged: (value) {
+                                subSubject.isSelected = value ?? false;
+                                setState(() {});
+                              },
+                              isSelected: subSubject.isSelected,
+                            );
+                          },
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
-      ),
+        SizedBox(height: 10),
+        AppButton(label: "Save", backgroundColor: AppColor.primary),
+      ],
     );
+    if (widget.isFromNav) {
+      return child;
+    } else {
+      return ScreenBackground(
+        appBar: customAppBar(context, title: "Select Subject"),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 30,
+          ).copyWith(bottom: 15),
+          child: child,
+        ),
+      );
+    }
   }
 }
 

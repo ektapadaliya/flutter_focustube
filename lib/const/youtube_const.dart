@@ -13,7 +13,7 @@ class YoutubeApiConst {
   static const domain = "youtube.googleapis.com";
   static const apiVersion = "v3";
   static const maxResults = 20;
-  static const key = "20";
+  static const key = "google_api_key";
 
   static const baseUrl = "https://$domain/youtube/$apiVersion/search";
 

@@ -4,7 +4,6 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
-import 'package:focus_tube_flutter/view/dialog/add_edit_playlist_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/filter_pop_up.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
@@ -24,7 +23,7 @@ class HomeRootState extends State<HomeRoot> {
     precacheImage(AssetImage(AppImage.searchSelected), context);
     precacheImage(AssetImage(AppImage.searchSelected), context);
     precacheImage(AssetImage(AppImage.channelsSelected), context);
-    precacheImage(AssetImage(AppImage.searchSelected), context);
+    precacheImage(AssetImage(AppImage.dailyGoalSelected), context);
     super.didChangeDependencies();
   }
 
@@ -39,26 +38,27 @@ class HomeRootState extends State<HomeRoot> {
               centerTitle: true,
               title: _itemLable(currentIndex),
               automaticallyImplyLeading: false,
-              actions: [
-                // if (currentIndex == 2)
-                //   Padding(
-                //     padding: const EdgeInsets.only(right: 10),
-                //     child: InkWell(
-                //       onTap: () {
-                //         showDialog(
-                //           context: context,
-                //           builder: (context) => AddEditPlaylistVC(),
-                //         );
-                //       },
-                //       child: Icon(Icons.add, size: 25, color: AppColor.primary),
-                //     ),
-                //   ),
-                if ([1, 2, 3].contains(currentIndex))
-                  Padding(
-                    padding: const EdgeInsets.only(right: 30),
-                    child: HomePopupMenu(),
-                  ),
-              ],
+              actions: (currentIndex != 0)
+                  ? [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: HomePopupMenu(),
+                      ),
+                      if (currentIndex != 0)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 30),
+                          child: InkWell(
+                            onTap: () {
+                              settings.go(context);
+                            },
+                            child: SvgPicture.asset(
+                              AppImage.settingIcon,
+                              height: 24,
+                            ),
+                          ),
+                        ),
+                    ]
+                  : null,
             ),
       body: widget.navigationShell,
       bottomNavigationBar: _HomeBottomNavigationBar(
@@ -138,9 +138,9 @@ String _itemLable(int index) {
   return switch (index) {
     0 => "Home",
     1 => "Explore",
-    2 => "My Subjects",
+    2 => "Subjects",
     3 => "Channels",
-    4 => "Settings",
+    4 => "Daily Goals",
     _ => "",
   };
 }
@@ -151,7 +151,7 @@ String _itemImage(int index) {
     1 => AppImage.search,
     2 => AppImage.subject,
     3 => AppImage.channels,
-    4 => AppImage.settings,
+    4 => AppImage.dailyGoal,
     _ => "",
   };
 }
@@ -162,7 +162,7 @@ String _selectedItemImage(int index) {
     1 => AppImage.searchSelected,
     2 => AppImage.subjectSelected,
     3 => AppImage.channelsSelected,
-    4 => AppImage.settingsSelected,
+    4 => AppImage.dailyGoalSelected,
     _ => "",
   };
 }
@@ -173,7 +173,7 @@ class HomePopupMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppPopupOverlay(
-      items: ["playlist", "subjects", "bookmarks", "daily_goals", "history"],
+      items: ["playlist", /* "my_subjects", */ "bookmarks", "history"],
       itemBuilder: (String item) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -185,12 +185,10 @@ class HomePopupMenu extends StatelessWidget {
       onItemPressed: (String item) {
         if (item == "bookmarks") {
           videos.go(context, extra: popUpLable(item));
-        } else if (item == "subjects") {
-          subjects.go(context);
-        } else if (item == "playlist") {
+        } /* else if (item == "my_subjects") {
+          mySubjects.go(context);
+        } */ else if (item == "playlist") {
           playlists.go(context);
-        } else if (item == "daily_goals") {
-          dailyGoal.go(context);
         } else if (item == "history") {
           videos.go(context, extra: popUpLable(item));
         }
@@ -202,9 +200,9 @@ class HomePopupMenu extends StatelessWidget {
   String popUpImages(String value) {
     return switch (value) {
       "playlist" => AppImage.userPlaylistIcon,
-      "subjects" => AppImage.subjectIcon,
+      "my_subjects" => AppImage.subjectIcon,
       "bookmarks" => AppImage.bookmarkIcon,
-      "daily_goals" => AppImage.targetIcon,
+      //"setting" => AppImage.settingIcon,
       "history" => AppImage.historyIcon,
       _ => "",
     };
@@ -213,9 +211,9 @@ class HomePopupMenu extends StatelessWidget {
   String popUpLable(String value) {
     return switch (value) {
       "playlist" => "Playlists",
-      "subjects" => "Subjects",
+      "my_subjects" => "My Subjects",
       "bookmarks" => "Bookmarks",
-      "daily_goals" => "Daily Goals",
+      //"setting" => "Settings",
       "history" => "My History",
       _ => "",
     };

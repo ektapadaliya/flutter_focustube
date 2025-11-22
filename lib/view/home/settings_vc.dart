@@ -5,6 +5,7 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/general_dialog.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
@@ -23,132 +24,137 @@ class _SettingsVCState extends State<SettingsVC> {
   bool isNotificationOn = false;
   @override
   Widget build(BuildContext context) {
-    return ExpandedSingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: FormScreenBoundries(
-        child: Column(
-          children: [
-            SettingsTile(
-              icon: AppImage.userIcon,
-              label: "My Profile",
-              onTap: () => profile.go(context),
-            ),
-            SizedBox(height: 15),
-            SettingsTile(
-              icon: AppImage.notificationIcon,
-              label: "Notifications",
-              isSelected: isNotificationOn,
-              onTap: () {
-                isNotificationOn = !isNotificationOn;
-                setState(() {});
-              },
-            ),
-            SizedBox(height: 15),
-            SettingsTile(
-              icon: AppImage.historyIcon,
-              label: "My History",
-              onTap: () {
-                videos.go(context, extra: "My History");
-              },
-            ),
-            SizedBox(height: 15),
-            SettingsTile(
-              icon: AppImage.channels,
-              label: "Select Channels",
-              onTap: () {
-                selectChannels.go(context);
-              },
-              iconSize: 32,
-            ),
+    return ScreenBackground(
+      appBar: customAppBar(context, title: "Settings", centerTitle: true),
+      body: SafeArea(
+        child: ExpandedSingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+          child: FormScreenBoundries(
+            child: Column(
+              children: [
+                SettingsTile(
+                  icon: AppImage.userIcon,
+                  label: "My Profile",
+                  onTap: () => profile.go(context),
+                ),
+                SizedBox(height: 15),
+                SettingsTile(
+                  icon: AppImage.notificationIcon,
+                  label: "Notifications",
+                  isSelected: isNotificationOn,
+                  onTap: () {
+                    isNotificationOn = !isNotificationOn;
+                    setState(() {});
+                  },
+                ),
+                SizedBox(height: 15),
+                SettingsTile(
+                  icon: AppImage.historyIcon,
+                  label: "My History",
+                  onTap: () {
+                    videos.go(context, extra: "My History");
+                  },
+                ),
+                SizedBox(height: 15),
+                SettingsTile(
+                  icon: AppImage.channels,
+                  label: "Select Channels",
+                  onTap: () {
+                    selectChannels.go(context);
+                  },
+                  iconSize: 32,
+                ),
 
-            SizedBox(height: 15),
-            SettingsTile(
-              icon: AppImage.subjectIcon,
-              label: "Select Subjects",
-              onTap: () {
-                selectSubjects.go(context);
-              },
-            ),
-            SizedBox(height: 15),
-            SettingsTile(
-              icon: AppImage.targetIcon,
-              label: "Set Daily Goals",
-              onTap: () {
-                setDailyGoal.go(context);
-              },
-            ),
-            SizedBox(height: 15),
-            SettingsTile(
-              icon: AppImage.limitIcon,
-              label: "Set Daily Limits",
-              onTap: () {
-                editDailyLimit.go(context);
-              },
-            ),
-            SizedBox(height: 15),
-            SettingsTile(
-              icon: AppImage.userIntrestIcon,
-              label: "Choose My Interests",
-              iconSize: 20,
-              onTap: () {
-                editYourInterest.go(context);
-              },
-            ),
+                SizedBox(height: 15),
+                SettingsTile(
+                  icon: AppImage.subjectIcon,
+                  label: "Select Subjects",
+                  onTap: () {
+                    selectSubjects.go(context);
+                  },
+                ),
+                SizedBox(height: 15),
+                SettingsTile(
+                  icon: AppImage.targetIcon,
+                  label: "Set Daily Goals",
+                  onTap: () {
+                    setDailyGoal.go(context);
+                  },
+                ),
+                SizedBox(height: 15),
+                SettingsTile(
+                  icon: AppImage.limitIcon,
+                  label: "Set Daily Limits",
+                  onTap: () {
+                    editDailyLimit.go(context);
+                  },
+                ),
+                SizedBox(height: 15),
+                SettingsTile(
+                  icon: AppImage.userIntrestIcon,
+                  label: "Choose My Interests",
+                  iconSize: 20,
+                  onTap: () {
+                    editYourInterest.go(context);
+                  },
+                ),
 
-            SizedBox(height: 15),
-            SettingsTile(
-              icon: AppImage.privacyPolicyIcon,
-              label: "Privacy & Legal",
-              iconSize: 20,
-              onTap: () {
-                content.go(context, id: 'p');
-              },
-            ),
+                SizedBox(height: 15),
+                SettingsTile(
+                  icon: AppImage.privacyPolicyIcon,
+                  label: "Privacy & Legal",
+                  iconSize: 20,
+                  onTap: () {
+                    content.go(context, id: 'p');
+                  },
+                ),
 
-            SizedBox(height: 15),
-            SettingsTile(
-              icon: AppImage.termsConditionsIcon,
-              iconSize: 20,
-              label: "Terms of Service",
-              onTap: () {
-                content.go(context, id: 't');
-              },
+                SizedBox(height: 15),
+                SettingsTile(
+                  icon: AppImage.termsConditionsIcon,
+                  iconSize: 20,
+                  label: "Terms of Service",
+                  onTap: () {
+                    content.go(context, id: 't');
+                  },
+                ),
+                SizedBox(height: 30),
+                Expanded(child: Container()),
+                InkWell(
+                  onTap: () {
+                    generalDialog(
+                      context,
+                      title: "Logout",
+                      message: "Are you sure you want to log out?",
+                      submitText: "Logout",
+                      onSubmit: () {},
+                    );
+                  },
+                  overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                  child: Text("Logout", style: AppTextStyle.title16()),
+                ),
+                SizedBox(height: 20),
+                InkWell(
+                  onTap: () {
+                    generalDialog(
+                      context,
+                      title: "Delete account",
+                      message: "Are you sure you want to Delete your account?",
+                      submitText: "Delete",
+                      submitColor: AppColor.red,
+                      onSubmit: () {},
+                    );
+                  },
+                  overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                  child: Text(
+                    "Delete account",
+                    style: AppTextStyle.title16(color: AppColor.red),
+                  ),
+                ),
+                SizedBox(height: 30),
+              ],
             ),
-            SizedBox(height: 30),
-            Expanded(child: Container()),
-            InkWell(
-              onTap: () {
-                generalDialog(
-                  context,
-                  title: "Logout",
-                  message: "Are you sure you want to log out?",
-                  submitText: "Logout",
-                  onSubmit: () {},
-                );
-              },
-              overlayColor: WidgetStatePropertyAll(Colors.transparent),
-              child: Text("Logout", style: AppTextStyle.title16()),
-            ),
-            SizedBox(height: 20),
-            InkWell(
-              onTap: () {
-                generalDialog(
-                  context,
-                  title: "Delete account",
-                  message: "Are you sure you want to Delete your account?",
-                  submitText: "Delete",
-                  submitColor: AppColor.red,
-                  onSubmit: () {},
-                );
-              },
-              overlayColor: WidgetStatePropertyAll(Colors.transparent),
-              child: Text(
-                "Delete account",
-                style: AppTextStyle.title16(color: AppColor.red),
-              ),
-            ),
-            SizedBox(height: 30),
-          ],
+          ),
         ),
       ),
     );

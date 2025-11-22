@@ -14,8 +14,12 @@ class DailyLimitVC extends StatefulWidget {
   static const id = "/daily-limit";
   static const editId = "$id/edit";
 
-  const DailyLimitVC({super.key, this.isFromEdit = false});
-  final bool isFromEdit;
+  const DailyLimitVC({
+    super.key,
+    this.isFromEdit = false,
+    this.isFromGoal = false,
+  });
+  final bool isFromEdit, isFromGoal;
   @override
   State<DailyLimitVC> createState() => _DailyLimitVCState();
 }
@@ -26,122 +30,130 @@ class _DailyLimitVCState extends State<DailyLimitVC> {
     text: "10",
   );
   List<int> videoSelectionOption = [10, 20, 50, 100, 200];
+
   @override
   Widget build(BuildContext context) {
-    return ScreenBackground(
-      appBar: customAppBar(
-        context,
-        title: widget.isFromEdit ? "Set Daily Limits" : "Daily Limits",
-      ),
-      body: ExpandedSingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-        child: Column(
-          children: [
-            Center(
-              child: Container(
-                height: 140,
-                constraints: BoxConstraints(maxWidth: 390),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  image: DecorationImage(
-                    image: AssetImage(AppImage.videoLimitBackground),
-                    fit: BoxFit.fill,
-                  ),
+    var child = ExpandedSingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+      child: Column(
+        children: [
+          Center(
+            child: Container(
+              height: 140,
+              constraints: BoxConstraints(maxWidth: 390),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                image: DecorationImage(
+                  image: AssetImage(AppImage.videoLimitBackground),
+                  fit: BoxFit.fill,
                 ),
-                alignment: Alignment.center,
-                child: Center(
-                  child: TextFormField(
-                    autofocus: true,
-                    controller: videoSelectionController,
-                    expands: false,
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.done,
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      isDense: true,
-                    ),
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    style: AppTextStyle.title40(color: AppColor.white),
-                    cursorColor: AppColor.white,
+              ),
+              alignment: Alignment.center,
+              child: Center(
+                child: TextFormField(
+                  autofocus: true,
+                  controller: videoSelectionController,
+                  expands: false,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.done,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    isDense: true,
                   ),
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  style: AppTextStyle.title40(color: AppColor.white),
+                  cursorColor: AppColor.white,
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Text(
-              "Enter the maximum amount of videos you want to watch per day",
-              style: AppTextStyle.title20(),
-            ),
-            // SizedBox(height: 70),
-            // Wrap(
-            //   runSpacing: 20,
-            //   spacing: 20,
-            //   alignment: WrapAlignment.center,
-            //   children: List.generate(
-            //     videoSelectionOption.length,
-            //     (index) => VideoSelectionTile(
-            //       onTap: () {
-            //         selectedVideo = videoSelectionOption[index];
-            //         setState(() {});
-            //       },
-            //       videos: videoSelectionOption[index],
-            //       isSelected: selectedVideo == videoSelectionOption[index],
-            //     ),
-            //   ),
-            // ),
-            // SizedBox(height: 50),
-            // SizedBox(
-            //   height: 30,
-            //   child: SfSliderTheme(
-            //     data: SfSliderThemeData(
-            //       thumbRadius: 19,
-            //       trackCornerRadius: 33,
-            //       activeTrackHeight: 20,
-            //       inactiveTrackHeight: 20,
-            //       thumbColor: AppColor.primary,
-            //       activeTrackColor: AppColor.primary,
-            //       inactiveTrackColor: AppColor.lightGray.opacityToAlpha(.5),
-            //       tooltipBackgroundColor: AppColor.primary,
-            //       tooltipTextStyle: AppTextStyle.title28(color: AppColor.white),
-            //     ),
-            //     child: SfSlider(
-            //       min: 10,
-            //       max: 200,
-            //       interval: 1,
-            //       value: selectedVideo,
-            //       enableTooltip: true,
-            //       onChanged: (value) {
-            //         selectedVideo = value.round();
-            //         setState(() {});
-            //       },
-            //     ),
-            //   ),
-            // ),
-            Expanded(child: Container()),
-            SizedBox(height: 20),
-            Text(
-              "You can change this anytime in Settings.",
-              style: AppTextStyle.body16(color: AppColor.gray),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30),
-              child: AppButton(
-                label: widget.isFromEdit ? "Save" : "Continue",
-                backgroundColor: AppColor.primary,
-                onTap: () {
+          ),
+          SizedBox(height: 20),
+          Text(
+            "Enter the maximum amount of videos you want to watch per day",
+            style: AppTextStyle.title20(),
+          ),
+          // SizedBox(height: 70),
+          // Wrap(
+          //   runSpacing: 20,
+          //   spacing: 20,
+          //   alignment: WrapAlignment.center,
+          //   children: List.generate(
+          //     videoSelectionOption.length,
+          //     (index) => VideoSelectionTile(
+          //       onTap: () {
+          //         selectedVideo = videoSelectionOption[index];
+          //         setState(() {});
+          //       },
+          //       videos: videoSelectionOption[index],
+          //       isSelected: selectedVideo == videoSelectionOption[index],
+          //     ),
+          //   ),
+          // ),
+          // SizedBox(height: 50),
+          // SizedBox(
+          //   height: 30,
+          //   child: SfSliderTheme(
+          //     data: SfSliderThemeData(
+          //       thumbRadius: 19,
+          //       trackCornerRadius: 33,
+          //       activeTrackHeight: 20,
+          //       inactiveTrackHeight: 20,
+          //       thumbColor: AppColor.primary,
+          //       activeTrackColor: AppColor.primary,
+          //       inactiveTrackColor: AppColor.lightGray.opacityToAlpha(.5),
+          //       tooltipBackgroundColor: AppColor.primary,
+          //       tooltipTextStyle: AppTextStyle.title28(color: AppColor.white),
+          //     ),
+          //     child: SfSlider(
+          //       min: 10,
+          //       max: 200,
+          //       interval: 1,
+          //       value: selectedVideo,
+          //       enableTooltip: true,
+          //       onChanged: (value) {
+          //         selectedVideo = value.round();
+          //         setState(() {});
+          //       },
+          //     ),
+          //   ),
+          // ),
+          Expanded(child: Container()),
+          SizedBox(height: 20),
+          Text(
+            "You can change this anytime in Settings.",
+            style: AppTextStyle.body16(color: AppColor.gray),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30),
+            child: AppButton(
+              label: widget.isFromEdit ? "Save" : "Continue",
+              backgroundColor: AppColor.primary,
+              onTap: () {
+                if (!widget.isFromGoal) {
                   if (widget.isFromEdit) {
                     context.pop();
                   } else {
                     home.go(context);
                   }
-                },
-              ),
+                }
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+    if (widget.isFromGoal) {
+      return child;
+    } else {
+      return ScreenBackground(
+        appBar: customAppBar(
+          context,
+          title: widget.isFromEdit ? "Edit Daily Limit" : "Set Daily Limit",
+        ),
+        body: child,
+      );
+    }
   }
 }
 
