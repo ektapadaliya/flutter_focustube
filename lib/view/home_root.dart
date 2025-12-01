@@ -38,27 +38,22 @@ class HomeRootState extends State<HomeRoot> {
               centerTitle: true,
               title: _itemLable(currentIndex),
               automaticallyImplyLeading: false,
-              actions: (currentIndex != 0)
-                  ? [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: HomePopupMenu(),
-                      ),
-                      if (currentIndex != 0)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 30),
-                          child: InkWell(
-                            onTap: () {
-                              settings.go(context);
-                            },
-                            child: SvgPicture.asset(
-                              AppImage.settingIcon,
-                              height: 24,
-                            ),
-                          ),
-                        ),
-                    ]
-                  : null,
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 15),
+                  child: HomePopupMenu(),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(right: 30),
+                  child: InkWell(
+                    onTap: () {
+                      settings.go(context);
+                    },
+                    child: SvgPicture.asset(AppImage.settingIcon, height: 24),
+                  ),
+                ),
+              ],
             ),
       body: widget.navigationShell,
       bottomNavigationBar: _HomeBottomNavigationBar(

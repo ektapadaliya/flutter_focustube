@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
-import 'package:focus_tube_flutter/view/home/home_root.dart';
+import 'package:focus_tube_flutter/view/home_root.dart';
 import 'package:focus_tube_flutter/widget/video_widgets.dart';
 
 class HomeVC extends StatefulWidget {
@@ -113,6 +114,13 @@ class _HomeVCState extends State<HomeVC> {
               ),
               SizedBox(width: 10),
               HomePopupMenu(),
+              SizedBox(width: 15),
+              InkWell(
+                onTap: () {
+                  settings.go(context);
+                },
+                child: SvgPicture.asset(AppImage.settingIcon, height: 24),
+              ),
             ],
           ),
         ],

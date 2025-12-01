@@ -6,7 +6,7 @@ import 'package:focus_tube_flutter/view/auth/daily_limit_vc.dart';
 import 'package:focus_tube_flutter/view/channels/channel_detail_vc.dart';
 import 'package:focus_tube_flutter/view/goals/daily_goal_vc.dart';
 import 'package:focus_tube_flutter/view/goals/set_daily_goal_vc.dart';
-import 'package:focus_tube_flutter/view/home/home_root.dart';
+import 'package:focus_tube_flutter/view/home_root.dart';
 import 'package:focus_tube_flutter/view/channels/my_channels_vc.dart';
 import 'package:focus_tube_flutter/view/notes/note_detail_vc.dart';
 import 'package:focus_tube_flutter/view/notes/note_list_vc.dart';

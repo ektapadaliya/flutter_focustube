@@ -27,7 +27,6 @@ class _PlaylistVCState extends State<PlaylistVC> {
         context,
         centerTitle: true,
         title: "Playlists",
-        automaticallyImplyLeading: false,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 30),
