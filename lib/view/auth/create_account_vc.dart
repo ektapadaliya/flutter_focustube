@@ -1,14 +1,22 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
+import 'package:focus_tube_flutter/const/validators.dart';
+import 'package:focus_tube_flutter/controller/app_controller.dart';
+import 'package:focus_tube_flutter/controller/loader_cotroller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/service/image_services.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
+import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
+import 'package:focus_tube_flutter/widget/app_tost_message.dart';
 import 'package:focus_tube_flutter/widget/checkbox_tile.dart';
 import 'package:focus_tube_flutter/widget/image_classes.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
@@ -30,7 +38,10 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
       emailController,
       passwordController,
       confirmPasswordController;
-
+  GlobalKey<FormState> signUpFormKey = GlobalKey<FormState>();
+  LoaderCotroller loaderCotroller = controller<LoaderCotroller>(
+    tag: "/sign-up",
+  );
   @override
   void initState() {
     firstNameController = TextEditingController();
@@ -55,213 +66,282 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
   dynamic selectedImage;
   @override
   Widget build(BuildContext context) {
-    return ScreenBackground(
-      appBar: customAppBar(context),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-        child: FormScreenBoundries(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Create your account", style: AppTextStyle.title28()),
-              Text(
-                "Please enter your details to continue.",
-                style: AppTextStyle.body18(color: AppColor.gray),
-              ),
-              SizedBox(height: 25),
-              Center(
-                child: InkWell(
-                  onTap: () async {
-                    var image = await ImageService.pickImage(context);
-                    if (image != null) {
-                      selectedImage = image;
-                      setState(() {});
-                    }
-                  },
-                  child: Stack(
-                    children: [
-                      DottedBorder(
-                        options: CircularDottedBorderOptions(
-                          dashPattern: [12, 8],
-                          strokeWidth: 3,
-                          color: AppColor.borderColor,
-                        ),
-                        child: NetworkImageClass(
-                          width: 140,
-                          height: 140,
-                          image: selectedImage,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      Positioned(
-                        right: 5,
-                        bottom: 5,
-                        child: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                            color: AppColor.white,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: AppColor.primary,
-                              width: 2,
+    return AppLoader(
+      loaderController: loaderCotroller,
+      child: ScreenBackground(
+        appBar: customAppBar(context),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+          child: FormScreenBoundries(
+            child: Form(
+              key: signUpFormKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Create your account", style: AppTextStyle.title28()),
+                  Text(
+                    "Please enter your details to continue.",
+                    style: AppTextStyle.body18(color: AppColor.gray),
+                  ),
+                  SizedBox(height: 25),
+                  Center(
+                    child: InkWell(
+                      onTap: () async {
+                        var image = await ImageService.pickImage(context);
+                        if (image != null) {
+                          selectedImage = image;
+                          setState(() {});
+                        }
+                      },
+                      child: Stack(
+                        children: [
+                          DottedBorder(
+                            options: CircularDottedBorderOptions(
+                              dashPattern: [12, 8],
+                              strokeWidth: 3,
+                              color: AppColor.borderColor,
+                            ),
+                            child: NetworkImageClass(
+                              width: 140,
+                              height: 140,
+                              image: selectedImage,
+                              shape: BoxShape.circle,
                             ),
                           ),
-                          child: Text(
-                            String.fromCharCode(Icons.add_rounded.codePoint),
-                            style: TextStyle(
-                              package: Icons.add_rounded.fontPackage,
-                              fontFamily: Icons.add_rounded.fontFamily,
-                              height: 1,
-                              fontSize: 26,
-                              fontWeight: FontWeight.w500,
+                          Positioned(
+                            right: 5,
+                            bottom: 5,
+                            child: Container(
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                color: AppColor.white,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: AppColor.primary,
+                                  width: 2,
+                                ),
+                              ),
+                              child: Text(
+                                String.fromCharCode(
+                                  Icons.add_rounded.codePoint,
+                                ),
+                                style: TextStyle(
+                                  package: Icons.add_rounded.fontPackage,
+                                  fontFamily: Icons.add_rounded.fontFamily,
+                                  height: 1,
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(height: 20),
-              AppTextFormField(
-                label: "First name",
-                hintText: "Enter your first name",
-                controller: firstNameController,
-                keyboardType: TextInputType.name,
-                textInputAction: TextInputAction.next,
-              ),
-              SizedBox(height: 15),
-              AppTextFormField(
-                label: "Last name",
-                hintText: "Enter your last name",
-                controller: lastNameController,
-                keyboardType: TextInputType.name,
-                textInputAction: TextInputAction.next,
-              ),
-              SizedBox(height: 15),
-              AppTextFormField(
-                label: "Email",
-                hintText: "Enter your email",
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-              ),
-              SizedBox(height: 15),
-              AppTextFormField(
-                label: "Password",
-                controller: passwordController,
-                keyboardType: TextInputType.visiblePassword,
-                hintText: "Enter your password",
-                textInputAction: TextInputAction.next,
-                obscureText: !showPassword,
-                suffixIcon: InkWell(
-                  onTap: () {
-                    setState(() {
-                      showPassword = !showPassword;
-                    });
-                  },
-                  child: Icon(
-                    showPassword
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                    size: 25,
-                    color: AppColor.primary,
+                  SizedBox(height: 20),
+                  AppTextFormField(
+                    label: "First name",
+                    hintText: "Enter your first name",
+                    controller: firstNameController,
+                    keyboardType: TextInputType.name,
+                    textInputAction: TextInputAction.next,
+                    validator: (value) {
+                      if (!(value?.trim().nameValidator ?? true)) {
+                        return "Please enter your first name";
+                      }
+                      return null;
+                    },
                   ),
-                ),
-              ),
-              SizedBox(height: 15),
-              AppTextFormField(
-                label: "Confirm Password",
-                controller: confirmPasswordController,
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
-                hintText: "Enter your password",
-                obscureText: !showConfirmPassword,
-                suffixIcon: InkWell(
-                  onTap: () {
-                    setState(() {
-                      showConfirmPassword = !showConfirmPassword;
-                    });
-                  },
-                  child: Icon(
-                    showConfirmPassword
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                    size: 25,
-                    color: AppColor.primary,
+                  SizedBox(height: 15),
+                  AppTextFormField(
+                    label: "Last name",
+                    hintText: "Enter your last name",
+                    controller: lastNameController,
+                    keyboardType: TextInputType.name,
+                    textInputAction: TextInputAction.next,
+                    validator: (value) {
+                      if (!(value?.trim().nameValidator ?? true)) {
+                        return "Please enter your last name";
+                      }
+                      return null;
+                    },
                   ),
-                ),
-              ),
+                  SizedBox(height: 15),
+                  AppTextFormField(
+                    label: "Email",
+                    hintText: "Enter your email",
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    validator: (value) {
+                      if (!(value?.trim().isEmail ?? true)) {
+                        return Validators.emailValidation;
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 15),
+                  AppTextFormField(
+                    label: "Password",
+                    controller: passwordController,
+                    keyboardType: TextInputType.visiblePassword,
+                    hintText: "Enter your password",
+                    textInputAction: TextInputAction.next,
+                    obscureText: !showPassword,
+                    validator: (value) {
+                      if (!(value?.trim().isPassword ?? true)) {
+                        return Validators.passwordValidation(field: "Password");
+                      }
+                      return null;
+                    },
+                    suffixIcon: InkWell(
+                      onTap: () {
+                        setState(() {
+                          showPassword = !showPassword;
+                        });
+                      },
+                      child: Icon(
+                        showPassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        size: 25,
+                        color: AppColor.primary,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  AppTextFormField(
+                    label: "Confirm Password",
+                    controller: confirmPasswordController,
+                    keyboardType: TextInputType.visiblePassword,
+                    textInputAction: TextInputAction.done,
+                    hintText: "Enter your password",
+                    obscureText: !showConfirmPassword,
+                    validator: (value) {
+                      if (passwordController.text.trim() !=
+                          confirmPasswordController.text.trim()) {
+                        return "Password does not match";
+                      } else if (!(value?.trim().isPassword ?? true)) {
+                        return Validators.passwordValidation(
+                          field: "Confirm Password",
+                        );
+                      }
+                      return null;
+                    },
+                    suffixIcon: InkWell(
+                      onTap: () {
+                        setState(() {
+                          showConfirmPassword = !showConfirmPassword;
+                        });
+                      },
+                      child: Icon(
+                        showConfirmPassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        size: 25,
+                        color: AppColor.primary,
+                      ),
+                    ),
+                  ),
 
-              SizedBox(height: 15),
-              AppCheckBoxTile(
-                isSelected: isTermsAccepted,
-                onChanged: (value) =>
-                    setState(() => isTermsAccepted = value ?? false),
-                title: Text.rich(
-                  TextSpan(
-                    text: "By continuing your confirm that you agree with our ",
-                    style: AppTextStyle.body16(color: AppColor.gray),
-                    children: [
+                  SizedBox(height: 15),
+                  AppCheckBoxTile(
+                    isSelected: isTermsAccepted,
+                    onChanged: (value) =>
+                        setState(() => isTermsAccepted = value ?? false),
+                    title: Text.rich(
                       TextSpan(
-                        text: "Terms And Conditions",
-                        style: AppTextStyle.body16().copyWith(
-                          decoration: TextDecoration.underline,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            content.go(context, id: 't');
-                          },
-                      ),
-                      TextSpan(
-                        text: " and ",
+                        text:
+                            "By continuing your confirm that you agree with our ",
                         style: AppTextStyle.body16(color: AppColor.gray),
+                        children: [
+                          TextSpan(
+                            text: "Terms And Conditions",
+                            style: AppTextStyle.body16().copyWith(
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                content.go(context, id: 't');
+                              },
+                          ),
+                          TextSpan(
+                            text: " and ",
+                            style: AppTextStyle.body16(color: AppColor.gray),
+                          ),
+                          TextSpan(
+                            text: "Privacy Policy",
+                            style: AppTextStyle.body16().copyWith(
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                content.go(context, id: 'p');
+                              },
+                          ),
+                        ],
                       ),
-                      TextSpan(
-                        text: "Privacy Policy",
-                        style: AppTextStyle.body16().copyWith(
-                          decoration: TextDecoration.underline,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            content.go(context, id: 'p');
-                          },
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(height: 30),
-              AppButton(
-                label: "Sign up",
-                backgroundColor: AppColor.primary,
-                onTap: () {
-                  emailVerification.go(context);
-                },
-              ),
-              const SizedBox(height: 30),
-              Center(
-                child: Text.rich(
-                  TextSpan(
-                    text: "Part of ${AppConst.appName}? ",
-                    style: AppTextStyle.body16(color: AppColor.gray),
-                    children: [
-                      TextSpan(
-                        text: "Login",
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            signIn.replace(context);
-                          },
-                        style: AppTextStyle.body16(),
-                      ),
-                    ],
+                  SizedBox(height: 30),
+                  AppButton(
+                    label: "Sign up",
+                    backgroundColor: AppColor.primary,
+                    onTap: () async {
+                      if (signUpFormKey.currentState!.validate()) {
+                        if (isTermsAccepted) {
+                          loaderCotroller.setLoading(true);
+                          bool isSignUpSuccess = await ApiFunctions.instance
+                              .signUp(
+                                context,
+                                firstName: firstNameController.text.trim(),
+                                lastName: lastNameController.text.trim(),
+                                email: emailController.text.trim(),
+                                password: passwordController.text.trim(),
+                                confirmPassword: confirmPasswordController.text
+                                    .trim(),
+                              );
+                          loaderCotroller.setLoading(false);
+                          if (isSignUpSuccess) {
+                            emailVerification.go(context);
+                          }
+                        } else {
+                          AppTostMessage.snackBarMessage(
+                            context,
+                            message:
+                                "Please accept terms & conditions and privacy policy",
+                            isError: true,
+                          );
+                        }
+                      }
+                    },
                   ),
-                ),
-              ),
+                  const SizedBox(height: 30),
+                  Center(
+                    child: Text.rich(
+                      TextSpan(
+                        text: "Part of ${AppConst.appName}? ",
+                        style: AppTextStyle.body16(color: AppColor.gray),
+                        children: [
+                          TextSpan(
+                            text: "Login",
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                signIn.replace(context);
+                              },
+                            style: AppTextStyle.body16(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
 
-              SizedBox(height: 30),
-            ],
+                  SizedBox(height: 30),
+                ],
+              ),
+            ),
           ),
         ),
       ),

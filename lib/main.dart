@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:focus_tube_flutter/api/api_functions.dart';
+import 'package:focus_tube_flutter/api/app_model_factory.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
@@ -8,7 +11,22 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
-void main() {
+import 'controller/app_controller.dart';
+import 'controller/user_controller.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  var authCtrl = controller<UserController>();
+  await Future.wait([
+    authCtrl.getUUID(),
+    authCtrl.getUser(),
+    authCtrl.getToken(),
+    authCtrl.getXAPIKey(),
+  ]);
+  if (authCtrl.xAPIKey == null) {
+    await ApiFunctions.instance.generateToken();
+  }
+  AppModelFactory.instance.init();
   runApp(const MyApp());
   if (kIsWeb) {
     usePathUrlStrategy();
@@ -16,8 +34,20 @@ void main() {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    FlutterNativeSplash.remove();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp.router(

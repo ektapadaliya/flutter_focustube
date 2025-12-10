@@ -50,6 +50,9 @@ dependencies:
   syncfusion_flutter_sliders: ^31.1.22
   syncfusion_flutter_core: ^31.1.22
   flutter_slidable: ^4.0.3
+  device_info_plus: ^12.3.0
+  shared_preferences: ^2.5.4
+  another_flushbar: ^1.12.32
 
 dev_dependencies:
   flutter_test:

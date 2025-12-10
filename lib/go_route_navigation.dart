@@ -30,6 +30,8 @@ import 'package:focus_tube_flutter/view/home/search_vc.dart';
 import 'package:focus_tube_flutter/view/home/playlist_vc.dart';
 import 'package:focus_tube_flutter/view/home/channels_vc.dart';
 import 'package:focus_tube_flutter/view/home/settings_vc.dart';
+import 'controller/app_controller.dart';
+import 'controller/user_controller.dart';
 import 'view/content_vc.dart';
 
 // MARK: Navigation Model
@@ -317,20 +319,22 @@ final AppNavigationModel setDailyGoal = AppNavigationModel(
 );
 // MARK: Router
 final GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();
-
+List<AppNavigationModel> authNavigation = [
+  onboarding,
+  signUp,
+  signIn,
+  forgotPassword,
+  emailVerification,
+  forgotPasswordVerification,
+  resetPassword,
+  content,
+];
 final GoRouter router = GoRouter(
   navigatorKey: navigationKey,
   initialLocation: onboarding.path,
   routes: [
     ...[
-      onboarding,
-      signUp,
-      signIn,
-      forgotPassword,
-      emailVerification,
-      forgotPasswordVerification,
-      resetPassword,
-      content,
+      ...authNavigation,
       chooseYourInteres,
       editYourInterest,
       dailyLimit,
@@ -371,4 +375,14 @@ final GoRouter router = GoRouter(
       ),
     ),
   ],
+  redirect: (context, state) {
+    var authCtrl = controller<UserController>();
+    if (authCtrl.token == null) {
+      if (authNavigation.where((e) => e.path == state.fullPath).isNotEmpty) {
+        return state.path;
+      }
+      return onboarding.path;
+    }
+    return state.path;
+  },
 );

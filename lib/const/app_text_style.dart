@@ -36,4 +36,5 @@ class AppTextStyle {
   static TextStyle body16({Color? color}) => _b(fontSize: 16, color: color);
   static TextStyle body14({Color? color}) => _b(fontSize: 14, color: color);
   static TextStyle body12({Color? color}) => _b(fontSize: 12, color: color);
+  static TextStyle body11({Color? color}) => _b(fontSize: 11, color: color);
 }

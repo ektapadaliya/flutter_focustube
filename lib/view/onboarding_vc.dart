@@ -78,7 +78,7 @@ class _OnboardingVCState extends State<OnboardingVC> {
             padding: const EdgeInsets.only(right: 10),
             child: TextButton(
               onPressed: () {
-                signUp.go(context);
+                signUp.off(context);
               },
               child: Text(
                 "Skip",
@@ -200,7 +200,7 @@ class _OnboardingVCState extends State<OnboardingVC> {
                         curve: Curves.easeIn,
                       );
                     } else {
-                      signUp.go(context);
+                      signUp.off(context);
                     }
                   },
                 ),

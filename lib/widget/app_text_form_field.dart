@@ -53,7 +53,7 @@ class AppTextFormField extends StatelessWidget {
   String? Function(String?)? validator;
   List<TextInputFormatter>? inputFormatters;
   TextCapitalization textCapitalization;
-  get border => OutlineInputBorder(
+  OutlineInputBorder get border => OutlineInputBorder(
     borderRadius: BorderRadius.circular(radius),
     borderSide: BorderSide(
       color: borderColor ?? AppColor.borderColor,
@@ -126,11 +126,13 @@ class AppTextFormField extends StatelessWidget {
               border: border,
               enabledBorder: border,
               disabledBorder: border,
-              errorMaxLines: 2,
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+              errorMaxLines: 4,
+              errorStyle: AppTextStyle.body11(color: AppColor.red),
+              focusedErrorBorder: border.copyWith(
                 borderSide: const BorderSide(color: AppColor.red, width: 1.2),
-                gapPadding: 0,
+              ),
+              errorBorder: border.copyWith(
+                borderSide: const BorderSide(color: AppColor.red, width: 1.2),
               ),
             ),
           ),
