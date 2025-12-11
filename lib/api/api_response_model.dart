@@ -1,5 +1,8 @@
 // ignore_for_file: unnecessary_type_check
 
+import 'package:focus_tube_flutter/api/api_functions.dart';
+import 'package:focus_tube_flutter/go_route_navigation.dart';
+
 import 'app_model_factory.dart';
 
 /// A generic API response model that handles response parsing and error handling.
@@ -63,7 +66,7 @@ class ApiResponse<T> {
     }
 
     // Parse data using the provided fromJson function or AppModelFactory
-    dynamic parsedData = data;
+    var parsedData = data;
     if (data != null) {
       try {
         if (AppModelFactory.instance.isRegistered<T>()) {
@@ -92,7 +95,7 @@ class ApiResponse<T> {
 
   /// Factory constructor for success responses
   factory ApiResponse.success({
-    required T data,
+    required var data,
     String? message,
     Map<String, dynamic>? response,
     int? code,
@@ -107,7 +110,9 @@ class ApiResponse<T> {
   }
 
   /// Method to handle a logout event
-  static void _onLogout(/* {bool clearXapi = false} */) {}
+  static void _onLogout() {
+    ApiFunctions.instance.logoutfn(context: navigationKey.currentContext);
+  }
 
   /// Method to handle a maintenance event
   static void _onMaintenance() {}

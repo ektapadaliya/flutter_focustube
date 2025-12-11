@@ -27,7 +27,7 @@ class SharedPreferenceService {
   }
 
   // Remove data from preference
-  Future<bool> removeDataInPrefrence(String key) async {
+  Future<bool> removeDataFromPrefrence(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.remove(key);
   }

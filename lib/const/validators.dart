@@ -20,7 +20,7 @@ extension ValidatorsExtension on String {
 
   //Name Validator
   bool get nameValidator =>
-      RegExp(r"^[a-zA-Z]+$").hasMatch(this) && length >= 2 && length <= 20;
+      RegExp(r"^[a-zA-Z0-9]+$").hasMatch(this) && length >= 2 && length <= 20;
 
   //Code Validator
   bool get codeValidator => length == 4;

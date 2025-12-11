@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:focus_tube_flutter/service/encrypt_service.dart';
+import 'package:focus_tube_flutter/view/auth/change_password_vc.dart';
 import 'package:focus_tube_flutter/view/channels/add_channels_vc.dart';
 import 'package:focus_tube_flutter/view/auth/choose_your_interest_vc.dart';
 import 'package:focus_tube_flutter/view/auth/daily_limit_vc.dart';
@@ -31,7 +35,6 @@ import 'package:focus_tube_flutter/view/home/playlist_vc.dart';
 import 'package:focus_tube_flutter/view/home/channels_vc.dart';
 import 'package:focus_tube_flutter/view/home/settings_vc.dart';
 import 'controller/app_controller.dart';
-import 'controller/user_controller.dart';
 import 'view/content_vc.dart';
 
 // MARK: Navigation Model
@@ -161,23 +164,34 @@ final AppNavigationModel emailVerification = AppNavigationModel(
 
 final AppNavigationModel forgotPasswordVerification = AppNavigationModel(
   label: "Forgot Password Verification",
-  path: VerificationVC.forgotPasswordId,
-  builder: (context, state) => const VerificationVC(isFromForgotPassword: true),
+  path: "${VerificationVC.forgotPasswordId}/:id",
+  builder: (context, state) => VerificationVC(
+    isFromForgotPassword: true,
+    email: EncryptService.decrypt(state.pathParameters['id']!),
+  ),
 );
 
 final AppNavigationModel resetPassword = AppNavigationModel(
   label: "Reset Password",
-  path: ResetPasswordVC.id,
-  builder: (context, state) => const ResetPasswordVC(),
+  path: "${ResetPasswordVC.id}/:id",
+  builder: (context, state) {
+    var data = jsonDecode(EncryptService.decrypt(state.pathParameters['id']!));
+
+    return ResetPasswordVC(email: data['email'], code: data['code']);
+  },
 );
 
 final AppNavigationModel content = AppNavigationModel(
   label: "Content",
   path: "${ContentVC.id}/:id",
   builder: (context, state) =>
-      ContentVC(type: state.pathParameters['id'] ?? ''),
+      ContentVC(slug: state.pathParameters['id'] ?? ''),
 );
-
+final AppNavigationModel changePassword = AppNavigationModel(
+  label: "Change Password",
+  path: ChangePasswordVC.id,
+  builder: (context, state) => const ChangePasswordVC(),
+);
 final AppNavigationModel chooseYourInteres = AppNavigationModel(
   label: "Choose Your Interest",
   path: ChooseYourInterestVC.id,
@@ -324,7 +338,6 @@ List<AppNavigationModel> authNavigation = [
   signUp,
   signIn,
   forgotPassword,
-  emailVerification,
   forgotPasswordVerification,
   resetPassword,
   content,
@@ -334,12 +347,13 @@ final GoRouter router = GoRouter(
   initialLocation: onboarding.path,
   routes: [
     ...[
-      ...authNavigation,
+      ...authNavigation, emailVerification,
       chooseYourInteres,
       editYourInterest,
       dailyLimit,
       videos,
       playlists,
+      changePassword,
       //  subjects,
       mySubjects,
       subjectsDetail,
@@ -377,11 +391,22 @@ final GoRouter router = GoRouter(
   ],
   redirect: (context, state) {
     var authCtrl = controller<UserController>();
-    if (authCtrl.token == null) {
+    var interestCtrl = controller<InterestController>();
+    if (authCtrl.user == null) {
       if (authNavigation.where((e) => e.path == state.fullPath).isNotEmpty) {
         return state.path;
       }
       return onboarding.path;
+    } else if (authCtrl.user?.emailActive != "y") {
+      return emailVerification.path;
+    } else if (interestCtrl.userInterests.isEmpty) {
+      return chooseYourInteres.path;
+    } else if ((int.tryParse(
+              authCtrl.user?.preference?.dailyVideoLimit ?? "0",
+            ) ??
+            0) ==
+        0) {
+      return dailyLimit.path;
     }
     return state.path;
   },

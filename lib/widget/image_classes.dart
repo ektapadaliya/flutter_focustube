@@ -15,6 +15,7 @@ class NetworkImageClass extends StatefulWidget {
     this.height,
     this.keepAlive = false,
     this.aspectRatio,
+    this.color,
     this.shadow = const [],
     this.shape = BoxShape.rectangle,
     this.border,
@@ -30,6 +31,7 @@ class NetworkImageClass extends StatefulWidget {
   final bool keepAlive;
   final Border? border;
   final double? aspectRatio;
+  final Color? color;
   @override
   State<NetworkImageClass> createState() => _NetworkImageClassState();
 }
@@ -43,17 +45,18 @@ class _NetworkImageClassState extends State<NetworkImageClass>
       if (widget.image == null) {
         return commonContainer(AssetImage(widget.placeHolder));
       } else if (widget.image is Uint8List) {
-        return commonContainer(MemoryImage(widget.image));
+        return commonContainer(MemoryImage(widget.image), color: widget.color);
       } else if (kIsWeb ? false : (widget.image is io.File)) {
-        return commonContainer(FileImage(widget.image));
+        return commonContainer(FileImage(widget.image), color: widget.color);
       } else {
         return CachedNetworkImage(
           imageUrl: widget.image,
           height: widget.height,
           width: widget.width,
-
+          color: widget.color,
+          colorBlendMode: widget.color != null ? BlendMode.color : null,
           imageBuilder: (context, imageProvider) {
-            return commonContainer(imageProvider);
+            return commonContainer(imageProvider, color: widget.color);
           },
           errorWidget: (context, url, error) {
             return commonContainer(AssetImage(widget.placeHolder));
@@ -72,14 +75,20 @@ class _NetworkImageClassState extends State<NetworkImageClass>
     }
   }
 
-  Widget commonContainer(ImageProvider child) {
+  Widget commonContainer(ImageProvider child, {Color? color}) {
     return Container(
       height: widget.height,
       width: widget.width,
       decoration: BoxDecoration(
         border: widget.border,
         boxShadow: widget.shadow,
-        image: DecorationImage(image: child, fit: widget.boxFit),
+        image: DecorationImage(
+          image: child,
+          fit: widget.boxFit,
+          colorFilter: color == null
+              ? null
+              : ColorFilter.mode(color, BlendMode.srcIn),
+        ),
         shape: widget.shape,
         borderRadius:
             (widget.shape == BoxShape.circle) || widget.borderRadius == null

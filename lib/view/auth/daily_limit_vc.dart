@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
+import 'package:focus_tube_flutter/controller/app_controller.dart';
+import 'package:focus_tube_flutter/controller/loader_cotroller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
+import 'package:focus_tube_flutter/widget/app_loader.dart';
+import 'package:focus_tube_flutter/widget/app_tost_message.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 import 'package:go_router/go_router.dart';
@@ -25,12 +30,13 @@ class DailyLimitVC extends StatefulWidget {
 }
 
 class _DailyLimitVCState extends State<DailyLimitVC> {
-  //int selectedVideo = 10;
   TextEditingController videoSelectionController = TextEditingController(
-    text: "10",
+    text:
+        controller<UserController>().user?.preference?.dailyVideoLimit ?? "10",
   );
-  List<int> videoSelectionOption = [10, 20, 50, 100, 200];
-
+  LoaderController loaderController = controller<LoaderController>(
+    tag: "/daily-limit",
+  );
   @override
   Widget build(BuildContext context) {
     var child = ExpandedSingleChildScrollView(
@@ -73,51 +79,7 @@ class _DailyLimitVCState extends State<DailyLimitVC> {
             "Enter the maximum amount of videos you want to watch per day",
             style: AppTextStyle.title20(),
           ),
-          // SizedBox(height: 70),
-          // Wrap(
-          //   runSpacing: 20,
-          //   spacing: 20,
-          //   alignment: WrapAlignment.center,
-          //   children: List.generate(
-          //     videoSelectionOption.length,
-          //     (index) => VideoSelectionTile(
-          //       onTap: () {
-          //         selectedVideo = videoSelectionOption[index];
-          //         setState(() {});
-          //       },
-          //       videos: videoSelectionOption[index],
-          //       isSelected: selectedVideo == videoSelectionOption[index],
-          //     ),
-          //   ),
-          // ),
-          // SizedBox(height: 50),
-          // SizedBox(
-          //   height: 30,
-          //   child: SfSliderTheme(
-          //     data: SfSliderThemeData(
-          //       thumbRadius: 19,
-          //       trackCornerRadius: 33,
-          //       activeTrackHeight: 20,
-          //       inactiveTrackHeight: 20,
-          //       thumbColor: AppColor.primary,
-          //       activeTrackColor: AppColor.primary,
-          //       inactiveTrackColor: AppColor.lightGray.opacityToAlpha(.5),
-          //       tooltipBackgroundColor: AppColor.primary,
-          //       tooltipTextStyle: AppTextStyle.title28(color: AppColor.white),
-          //     ),
-          //     child: SfSlider(
-          //       min: 10,
-          //       max: 200,
-          //       interval: 1,
-          //       value: selectedVideo,
-          //       enableTooltip: true,
-          //       onChanged: (value) {
-          //         selectedVideo = value.round();
-          //         setState(() {});
-          //       },
-          //     ),
-          //   ),
-          // ),
+
           Expanded(child: Container()),
           SizedBox(height: 20),
           Text(
@@ -129,30 +91,57 @@ class _DailyLimitVCState extends State<DailyLimitVC> {
             child: AppButton(
               label: widget.isFromEdit ? "Save" : "Continue",
               backgroundColor: AppColor.primary,
-              onTap: () {
-                if (!widget.isFromGoal) {
-                  if (widget.isFromEdit) {
-                    context.pop();
-                  } else {
-                    home.go(context);
-                  }
-                }
-              },
+              onTap: updateLimit,
             ),
           ),
         ],
       ),
     );
-    if (widget.isFromGoal) {
-      return child;
-    } else {
-      return ScreenBackground(
-        appBar: customAppBar(
-          context,
-          title: widget.isFromEdit ? "Edit Daily Limit" : "Set Daily Limit",
-        ),
-        body: child,
+    return AppLoader(
+      loaderController: loaderController,
+      child: widget.isFromGoal
+          ? child
+          : ScreenBackground(
+              appBar: customAppBar(
+                context,
+                title: widget.isFromEdit
+                    ? "Edit Daily Limit"
+                    : "Set Daily Limit",
+              ),
+              body: child,
+            ),
+    );
+  }
+
+  void updateLimit() async {
+    if (videoSelectionController.text.isEmpty) {
+      await AppTostMessage.snackBarMessage(
+        context,
+        message: "Please enter daily limit",
+        isError: true,
       );
+      return;
+    } else if (int.tryParse(videoSelectionController.text) == null) {
+      await AppTostMessage.snackBarMessage(
+        context,
+        message: "Please enter valid daily limit",
+        isError: true,
+      );
+      return;
+    } else {
+      loaderController.setLoading(true);
+      bool isUpdated = await ApiFunctions.instance.updateDailyLimit(
+        context,
+        limit: int.parse(videoSelectionController.text),
+      );
+      loaderController.setLoading(false);
+      if (isUpdated && (!widget.isFromGoal)) {
+        if (widget.isFromEdit) {
+          context.pop();
+        } else {
+          home.off(context);
+        }
+      }
     }
   }
 }

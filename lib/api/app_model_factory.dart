@@ -1,3 +1,6 @@
+import 'package:focus_tube_flutter/model/content_model.dart';
+import 'package:focus_tube_flutter/model/interest_model.dart';
+import 'package:focus_tube_flutter/model/user_intrest_model.dart';
 import 'package:focus_tube_flutter/model/user_model.dart';
 
 /// A factory class for creating and managing app models from JSON data.
@@ -52,7 +55,7 @@ class AppModelFactory {
   /// Supports both single objects and lists of objects.
   /// Returns null if json is null.
   /// Returns the original json if the type is not registered.
-  static T? fromJson<T>(dynamic json) {
+  static fromJson<T>(dynamic json) {
     // Fast path for null values
     if (json == null) return null;
 
@@ -62,7 +65,7 @@ class AppModelFactory {
     if (converter != null) {
       // Handle iterable (list) responses
       if (json is Iterable) {
-        return _iterableJsonResponse<T>(json, converter) as T?;
+        return _iterableJsonResponse<T>(json, converter);
       }
       // Handle single object responses
       else if (json is Map<String, dynamic>) {
@@ -142,5 +145,8 @@ class AppModelFactory {
 
     // Or use registerAll for bulk registration:
     register<UserModel>(UserModel.fromJson);
+    register<ContentModel>(ContentModel.fromJson);
+    register<InterestModel>(InterestModel.fromJson);
+    register<UserInterestModel>(UserInterestModel.fromJson);
   }
 }

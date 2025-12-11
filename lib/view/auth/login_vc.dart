@@ -6,7 +6,6 @@ import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/const/validators.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
-import 'package:focus_tube_flutter/controller/loader_cotroller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
@@ -27,15 +26,14 @@ class LoginVC extends StatefulWidget {
 class _LoginVCState extends State<LoginVC> {
   bool showPassword = false;
   late TextEditingController emailController, passwordController;
-  LoaderCotroller loaderCotroller = controller<LoaderCotroller>(
+  LoaderController loaderController = controller<LoaderController>(
     tag: "/sign-in",
   );
 
   GlobalKey<FormState> signInFormKey = GlobalKey<FormState>();
   @override
   void initState() {
-    loaderCotroller.setLoading(false);
-
+    loaderController.setLoading(false);
     emailController = TextEditingController();
     passwordController = TextEditingController();
     super.initState();
@@ -51,7 +49,7 @@ class _LoginVCState extends State<LoginVC> {
   @override
   Widget build(BuildContext context) {
     return AppLoader(
-      loaderController: loaderCotroller,
+      loaderController: loaderController,
       child: ScreenBackground(
         appBar: customAppBar(context, automaticallyImplyLeading: false),
         body: ExpandedSingleChildScrollView(
@@ -129,13 +127,22 @@ class _LoginVCState extends State<LoginVC> {
                     backgroundColor: AppColor.primary,
                     onTap: () async {
                       if (signInFormKey.currentState!.validate()) {
-                        loaderCotroller.setLoading(true);
-                        await ApiFunctions.instance.login(
+                        loaderController.setLoading(true);
+                        var isLoginSuccess = await ApiFunctions.instance.login(
                           context,
                           email: emailController.text,
                           password: passwordController.text,
                         );
-                        loaderCotroller.setLoading(false);
+                        loaderController.setLoading(false);
+                        if (isLoginSuccess) {
+                          if (controller<UserController>().user?.emailActive !=
+                              "y") {
+                            ApiFunctions.instance.resendVerifyCode(context);
+                            emailVerification.off(context);
+                          } else {
+                            home.off(context);
+                          }
+                        }
                       }
                     },
                   ),
@@ -150,7 +157,7 @@ class _LoginVCState extends State<LoginVC> {
                             text: "Sign up",
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                signUp.replace(context);
+                                signUp.off(context);
                               },
                             style: AppTextStyle.body16(),
                           ),

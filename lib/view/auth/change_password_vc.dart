@@ -1,41 +1,41 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
-import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/const/validators.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
-import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
+import 'package:go_router/go_router.dart';
 
-class ResetPasswordVC extends StatefulWidget {
-  static const id = "/reset-password";
-  const ResetPasswordVC({super.key, required this.email, required this.code});
-
-  final String email;
-  final String code;
+class ChangePasswordVC extends StatefulWidget {
+  static const id = "/change-password";
+  const ChangePasswordVC({super.key});
 
   @override
-  State<ResetPasswordVC> createState() => _ResetPasswordVCState();
+  State<ChangePasswordVC> createState() => _ChangePasswordVCState();
 }
 
-class _ResetPasswordVCState extends State<ResetPasswordVC> {
-  late TextEditingController passwordController, confirmPasswordController;
+class _ChangePasswordVCState extends State<ChangePasswordVC> {
+  late TextEditingController oldPasswordController,
+      passwordController,
+      confirmPasswordController;
+
+  bool showOldPassword = false;
   bool showPassword = false;
   bool showConfirmPassword = false;
   LoaderController loaderController = controller<LoaderController>(
-    tag: "/reset-password",
+    tag: "/change-password",
   );
 
-  GlobalKey<FormState> resetPasswordFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> changePasswordFormKey = GlobalKey<FormState>();
   @override
   void initState() {
+    oldPasswordController = TextEditingController();
     passwordController = TextEditingController();
     confirmPasswordController = TextEditingController();
     super.initState();
@@ -43,6 +43,7 @@ class _ResetPasswordVCState extends State<ResetPasswordVC> {
 
   @override
   void dispose() {
+    oldPasswordController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
     super.dispose();
@@ -58,17 +59,48 @@ class _ResetPasswordVCState extends State<ResetPasswordVC> {
           padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
           child: FormScreenBoundries(
             child: Form(
-              key: resetPasswordFormKey,
+              key: changePasswordFormKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Reset password!", style: AppTextStyle.title28()),
+                  Text("Change password!", style: AppTextStyle.title28()),
                   Text(
-                    "Create new password!",
+                    "Change your old password!",
                     style: AppTextStyle.body18(color: AppColor.gray),
                   ),
                   SizedBox(height: 25),
                   Expanded(child: Container()),
+                  AppTextFormField(
+                    label: "Old Password",
+                    controller: oldPasswordController,
+                    keyboardType: TextInputType.visiblePassword,
+                    hintText: "Enter your old password",
+                    textInputAction: TextInputAction.next,
+                    obscureText: !showOldPassword,
+                    validator: (value) {
+                      if (!(value?.trim().isPassword ?? true)) {
+                        return Validators.passwordValidation(
+                          field: "Old Password",
+                        );
+                      }
+                      return null;
+                    },
+                    suffixIcon: InkWell(
+                      onTap: () {
+                        setState(() {
+                          showOldPassword = !showOldPassword;
+                        });
+                      },
+                      child: Icon(
+                        showOldPassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        size: 25,
+                        color: AppColor.primary,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 15),
                   AppTextFormField(
                     label: "Password",
                     controller: passwordController,
@@ -78,7 +110,7 @@ class _ResetPasswordVCState extends State<ResetPasswordVC> {
                     obscureText: !showPassword,
                     validator: (value) {
                       if (!(value?.trim().isPassword ?? true)) {
-                        return Validators.passwordValidation(field: "Password");
+                        return Validators.passwordValidation();
                       }
                       return null;
                     },
@@ -135,46 +167,25 @@ class _ResetPasswordVCState extends State<ResetPasswordVC> {
                   Expanded(flex: 3, child: Container()),
                   SizedBox(height: 30),
                   AppButton(
-                    label: "Continue",
+                    label: "Change",
                     backgroundColor: AppColor.primary,
                     onTap: () async {
-                      if (resetPasswordFormKey.currentState!.validate()) {
+                      if (changePasswordFormKey.currentState!.validate()) {
                         loaderController.setLoading(true);
                         var isResetPasswordSuccess = await ApiFunctions.instance
-                            .resetPassword(
+                            .changePassword(
                               context,
-                              email: widget.email,
-                              code: widget.code,
-                              password: passwordController.text.trim(),
+                              oldPassword: oldPasswordController.text.trim(),
+                              newPassword: passwordController.text.trim(),
                               confirmPassword: confirmPasswordController.text
                                   .trim(),
                             );
                         loaderController.setLoading(false);
                         if (isResetPasswordSuccess) {
-                          signIn.off(context);
+                          context.pop();
                         }
                       }
                     },
-                  ),
-                  const SizedBox(height: 30),
-                  Center(
-                    child: Text.rich(
-                      TextSpan(
-                        text: "Part of ${AppConst.appName}? ",
-                        style: AppTextStyle.body16(color: AppColor.gray),
-                        children: [
-                          TextSpan(
-                            text: "Login",
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                AppNavigationModel.untilFirst(context);
-                                signIn.off(context);
-                              },
-                            style: AppTextStyle.body16(color: AppColor.primary),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
 
                   SizedBox(height: 30),

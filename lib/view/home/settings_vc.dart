@@ -1,14 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
+import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
+import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/general_dialog.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../widget/app_button.dart';
 
@@ -22,6 +25,13 @@ class SettingsVC extends StatefulWidget {
 
 class _SettingsVCState extends State<SettingsVC> {
   bool isNotificationOn = false;
+  @override
+  void initState() {
+    isNotificationOn =
+        controller<UserController>().user?.preference?.notification == "y";
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
@@ -44,7 +54,20 @@ class _SettingsVCState extends State<SettingsVC> {
                   isSelected: isNotificationOn,
                   onTap: () {
                     isNotificationOn = !isNotificationOn;
+                    ApiFunctions.instance.updateNotificationPreference(
+                      context,
+                      isActive: isNotificationOn,
+                    );
                     setState(() {});
+                  },
+                ),
+                SizedBox(height: 15),
+                SettingsTile(
+                  iconSize: 20,
+                  icon: AppImage.lockIcon,
+                  label: "Change Password",
+                  onTap: () {
+                    changePassword.go(context);
                   },
                 ),
                 SizedBox(height: 15),
@@ -105,7 +128,7 @@ class _SettingsVCState extends State<SettingsVC> {
                   label: "Privacy & Legal",
                   iconSize: 20,
                   onTap: () {
-                    content.go(context, id: 'p');
+                    content.go(context, id: ContentType.privacyPolicy.slug);
                   },
                 ),
 
@@ -115,35 +138,48 @@ class _SettingsVCState extends State<SettingsVC> {
                   iconSize: 20,
                   label: "Terms of Service",
                   onTap: () {
-                    content.go(context, id: 't');
+                    content.go(
+                      context,
+                      id: ContentType.termsAndConditions.slug,
+                    );
                   },
                 ),
                 SizedBox(height: 30),
                 Expanded(child: Container()),
                 InkWell(
-                  onTap: () {
-                    generalDialog(
+                  onTap: () async {
+                    var result = await generalDialog(
                       context,
                       title: "Logout",
                       message: "Are you sure you want to log out?",
                       submitText: "Logout",
-                      onSubmit: () {},
+                      onSubmit: () {
+                        context.pop(true);
+                      },
                     );
+                    if (result) {
+                      ApiFunctions.instance.logout(context: context);
+                    }
                   },
                   overlayColor: WidgetStatePropertyAll(Colors.transparent),
                   child: Text("Logout", style: AppTextStyle.title16()),
                 ),
                 SizedBox(height: 20),
                 InkWell(
-                  onTap: () {
-                    generalDialog(
+                  onTap: () async {
+                    var result = await generalDialog(
                       context,
                       title: "Delete account",
                       message: "Are you sure you want to Delete your account?",
                       submitText: "Delete",
                       submitColor: AppColor.red,
-                      onSubmit: () {},
+                      onSubmit: () {
+                        context.pop(true);
+                      },
                     );
+                    if (result) {
+                      ApiFunctions.instance.deleteAccount(context: context);
+                    }
                   },
                   overlayColor: WidgetStatePropertyAll(Colors.transparent),
                   child: Text(

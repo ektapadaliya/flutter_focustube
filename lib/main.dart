@@ -12,7 +12,6 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'controller/app_controller.dart';
-import 'controller/user_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +26,10 @@ Future<void> main() async {
     await ApiFunctions.instance.generateToken();
   }
   AppModelFactory.instance.init();
+  if (authCtrl.user != null && authCtrl.token != null) {
+    ApiFunctions.instance.me();
+    await ApiFunctions.instance.getUserInterests(null);
+  }
   runApp(const MyApp());
   if (kIsWeb) {
     usePathUrlStrategy();

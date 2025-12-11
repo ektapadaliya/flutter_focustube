@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/api/api_utils.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
-import 'package:focus_tube_flutter/controller/user_controller.dart';
 
 import 'api_response_model.dart';
 

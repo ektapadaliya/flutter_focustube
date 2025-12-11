@@ -12,7 +12,7 @@ class AppLoader extends StatelessWidget {
     required this.loaderController,
   });
   final Widget child;
-  final LoaderCotroller loaderController;
+  final LoaderController loaderController;
   final Color? overlayColor;
   final Color? loaderContainerColor;
   @override

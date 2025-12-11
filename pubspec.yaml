@@ -53,6 +53,9 @@ dependencies:
   device_info_plus: ^12.3.0
   shared_preferences: ^2.5.4
   another_flushbar: ^1.12.32
+  encrypt: ^5.0.3
+  flutter_html: ^3.0.0
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
@@ -83,8 +86,6 @@ flutter:
     # App Icon
     - assets/app_config/app_icon/dark/
     - assets/app_config/app_icon/light/
-    # User intenst
-    - assets/user_interest/
     # Onboarding
     - assets/onboarding/
     # Root Navigation Icons

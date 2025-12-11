@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class LoaderCotroller extends GetxController {
+class LoaderController extends GetxController {
   RxBool isLoading = false.obs;
 
   void setLoading(bool value) {

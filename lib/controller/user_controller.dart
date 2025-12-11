@@ -106,4 +106,17 @@ class UserController extends GetxController {
       update();
     }
   }
+
+  //Clear User
+  void clear() {
+    _user = null;
+    _token = null;
+    update();
+    SharedPreferenceService.instance.removeDataFromPrefrence(
+      _userPreferenceKey,
+    );
+    SharedPreferenceService.instance.removeDataFromPrefrence(
+      _tokenPreferenceKey,
+    );
+  }
 }

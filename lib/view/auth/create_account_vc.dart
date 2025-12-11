@@ -3,13 +3,13 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/const/validators.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
-import 'package:focus_tube_flutter/controller/loader_cotroller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/service/image_services.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
@@ -39,9 +39,7 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
       passwordController,
       confirmPasswordController;
   GlobalKey<FormState> signUpFormKey = GlobalKey<FormState>();
-  LoaderCotroller loaderCotroller = controller<LoaderCotroller>(
-    tag: "/sign-up",
-  );
+  var loaderController = controller<LoaderController>(tag: "/sign-up");
   @override
   void initState() {
     firstNameController = TextEditingController();
@@ -67,7 +65,7 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
   @override
   Widget build(BuildContext context) {
     return AppLoader(
-      loaderController: loaderCotroller,
+      loaderController: loaderController,
       child: ScreenBackground(
         appBar: customAppBar(context),
         body: SingleChildScrollView(
@@ -147,6 +145,9 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                     controller: firstNameController,
                     keyboardType: TextInputType.name,
                     textInputAction: TextInputAction.next,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                    ],
                     validator: (value) {
                       if (!(value?.trim().nameValidator ?? true)) {
                         return "Please enter your first name";
@@ -161,6 +162,9 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                     controller: lastNameController,
                     keyboardType: TextInputType.name,
                     textInputAction: TextInputAction.next,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                    ],
                     validator: (value) {
                       if (!(value?.trim().nameValidator ?? true)) {
                         return "Please enter your last name";
@@ -219,6 +223,7 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                     textInputAction: TextInputAction.done,
                     hintText: "Enter your password",
                     obscureText: !showConfirmPassword,
+
                     validator: (value) {
                       if (passwordController.text.trim() !=
                           confirmPasswordController.text.trim()) {
@@ -264,7 +269,10 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                content.go(context, id: 't');
+                                content.go(
+                                  context,
+                                  id: ContentType.termsAndConditions.slug,
+                                );
                               },
                           ),
                           TextSpan(
@@ -278,7 +286,10 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                content.go(context, id: 'p');
+                                content.go(
+                                  context,
+                                  id: ContentType.privacyPolicy.slug,
+                                );
                               },
                           ),
                         ],
@@ -292,7 +303,7 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                     onTap: () async {
                       if (signUpFormKey.currentState!.validate()) {
                         if (isTermsAccepted) {
-                          loaderCotroller.setLoading(true);
+                          loaderController.setLoading(true);
                           bool isSignUpSuccess = await ApiFunctions.instance
                               .signUp(
                                 context,
@@ -303,9 +314,9 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                                 confirmPassword: confirmPasswordController.text
                                     .trim(),
                               );
-                          loaderCotroller.setLoading(false);
+                          loaderController.setLoading(false);
                           if (isSignUpSuccess) {
-                            emailVerification.go(context);
+                            emailVerification.off(context);
                           }
                         } else {
                           AppTostMessage.snackBarMessage(
@@ -329,7 +340,7 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                             text: "Login",
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                signIn.replace(context);
+                                signIn.off(context);
                               },
                             style: AppTextStyle.body16(),
                           ),

@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
-import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
+import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/model/interest_model.dart';
+import 'package:focus_tube_flutter/model/user_intrest_model.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
+import 'package:focus_tube_flutter/widget/app_loader.dart';
+import 'package:focus_tube_flutter/widget/app_tost_message.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
+import 'package:focus_tube_flutter/widget/image_classes.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 class ChooseYourInterestVC extends StatefulWidget {
@@ -20,69 +26,128 @@ class ChooseYourInterestVC extends StatefulWidget {
 }
 
 class _ChooseYourInterestVCState extends State<ChooseYourInterestVC> {
-  List<UserInterestModel> selectedItems = [];
+  LoaderController loaderController = controller<LoaderController>(
+    tag: "/interests",
+  );
+  var interestController = controller<InterestController>();
+  List<UserInterestModel> selectedInterests = [];
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () async {
+      loaderController.setLoading(true);
+      if (interestController.interests.isEmpty) {
+        await ApiFunctions.instance.interests(context);
+      }
+      await ApiFunctions.instance.getUserInterests(context);
+      selectedInterests = interestController.userInterests;
+      setState(() {});
+      loaderController.setLoading(false);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ScreenBackground(
-      appBar: widget.isFromEdit
-          ? customAppBar(context, title: "Choose My Interests")
-          : null,
-      body: ExpandedSingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 20),
-            if (!widget.isFromEdit) ...[
-              Text("Choose your Interests", style: AppTextStyle.title28()),
-              Text(
-                "Get personalized recommendations",
-                style: AppTextStyle.body18(color: AppColor.gray),
-              ),
+    return AppLoader(
+      loaderController: loaderController,
+      child: ScreenBackground(
+        appBar: widget.isFromEdit
+            ? customAppBar(context, title: "Choose My Interests")
+            : null,
+        body: ExpandedSingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               SizedBox(height: 20),
-            ],
+              if (!widget.isFromEdit) ...[
+                Text("Choose your Interests", style: AppTextStyle.title28()),
+                Text(
+                  "Get personalized recommendations",
+                  style: AppTextStyle.body18(color: AppColor.gray),
+                ),
+                SizedBox(height: 20),
+              ],
 
-            Wrap(
-              runSpacing: 20,
-              spacing: 15,
-              children: List.generate(AppConst.userInterests.length, (index) {
-                var interest = AppConst.userInterests[index];
-                var isSelected = selectedItems
-                    .where((e) => e.id == interest.id)
-                    .isNotEmpty;
-                return InterestTile(
-                  title: interest.title,
-                  image: interest.image,
-                  isSelected: isSelected,
-                  onTap: () {
-                    if (isSelected) {
-                      selectedItems.removeWhere((e) => e.id == interest.id);
-                    } else {
-                      selectedItems.add(interest);
-                    }
-                    setState(() {});
-                  },
-                );
-              }),
-            ),
-            SizedBox(height: 30),
-            Expanded(child: Container()),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(vertical: 30),
-              child: AppButton(
-                label: widget.isFromEdit ? "Save" : "Continue",
-                backgroundColor: AppColor.primary,
-                onTap: () {
-                  if (widget.isFromEdit) {
-                    context.pop();
-                  } else {
-                    dailyLimit.go(context);
-                  }
+              GetBuilder(
+                init: interestController,
+                builder: (interestController) {
+                  return Wrap(
+                    runSpacing: 20,
+                    spacing: 15,
+                    children: List.generate(
+                      interestController.interests.length,
+                      (index) {
+                        var interest = interestController.interests[index];
+                        return InterestTile(
+                          interest: interest,
+                          isSelected: selectedInterests
+                              .where(
+                                (e) => e.interestId == interest.id.toString(),
+                              )
+                              .isNotEmpty,
+                          onTap: () {
+                            if (selectedInterests
+                                .where(
+                                  (e) => e.interestId == interest.id.toString(),
+                                )
+                                .isNotEmpty) {
+                              selectedInterests.removeWhere(
+                                (e) => e.interestId == interest.id.toString(),
+                              );
+                            } else {
+                              selectedInterests.add(
+                                UserInterestModel(
+                                  interestId: interest.id.toString(),
+                                ),
+                              );
+                            }
+                            setState(() {});
+                          },
+                        );
+                      },
+                    ),
+                  );
                 },
               ),
-            ),
-          ],
+              SizedBox(height: 30),
+              Expanded(child: Container()),
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                child: AppButton(
+                  label: widget.isFromEdit ? "Save" : "Continue",
+                  backgroundColor: AppColor.primary,
+                  onTap: () async {
+                    if (selectedInterests.isNotEmpty) {
+                      loaderController.setLoading(true);
+                      bool isUpdated = await ApiFunctions.instance
+                          .updateInterests(
+                            context,
+                            interestsIds: selectedInterests
+                                .map((e) => e.interestId ?? "")
+                                .toList(),
+                          );
+                      loaderController.setLoading(false);
+                      if (isUpdated) {
+                        if (widget.isFromEdit) {
+                          context.pop();
+                        } else {
+                          dailyLimit.off(context);
+                        }
+                      }
+                    } else {
+                      AppTostMessage.snackBarMessage(
+                        context,
+                        message: "Please select at least one interest",
+                        isError: true,
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -92,14 +157,13 @@ class _ChooseYourInterestVCState extends State<ChooseYourInterestVC> {
 class InterestTile extends StatelessWidget {
   const InterestTile({
     super.key,
-    required this.title,
-    required this.image,
-    required this.isSelected,
+    required this.interest,
     required this.onTap,
+    required this.isSelected,
   });
-  final bool isSelected;
-  final String title, image;
+  final InterestModel interest;
   final void Function() onTap;
+  final bool isSelected;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -117,17 +181,15 @@ class InterestTile extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(
-              image,
+            NetworkImageClass(
+              image: interest.imageUrl ?? "",
               height: 23,
-              colorFilter: ColorFilter.mode(
-                isSelected ? AppColor.white : AppColor.primary,
-                BlendMode.srcIn,
-              ),
+              width: 23,
+              color: isSelected ? AppColor.white : AppColor.primary,
             ),
             SizedBox(width: 10),
             Text(
-              title,
+              interest.title ?? "",
               style: AppTextStyle.body16(
                 color: isSelected ? AppColor.white : null,
               ),
