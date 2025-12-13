@@ -22,7 +22,7 @@ class _MyChannelsVCState extends State<MyChannelsVC> {
         padding: const EdgeInsets.symmetric(horizontal: 30).copyWith(top: 15),
 
         child: ListView.separated(
-          itemBuilder: (context, index) => ChannelTile(value: index),
+          itemBuilder: (context, index) => ChannelTile(),
           separatorBuilder: (context, index) => ChannelDivider(),
           itemCount: 10,
         ),

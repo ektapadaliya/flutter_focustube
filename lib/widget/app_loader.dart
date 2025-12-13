@@ -30,7 +30,7 @@ class AppLoader extends StatelessWidget {
                 child: Container(
                   color:
                       overlayColor ??
-                      AppColor.profileBackground.opacityToAlpha(.2),
+                      AppColor.profileBackground.opacityToAlpha(.05),
                   alignment: Alignment.center,
                   child: Container(),
                 ),

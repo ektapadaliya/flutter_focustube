@@ -249,11 +249,18 @@ class BookmarkVideoTile extends StatelessWidget {
 class VideoTile extends StatefulWidget {
   final bool isSlidable, isFromYoutube;
   final void Function()? onRemoved;
+  final String title;
+  final String thumbnailUrl;
+  final String videoId;
+
   const VideoTile({
     super.key,
     this.onRemoved,
     this.isSlidable = false,
     this.isFromYoutube = false,
+    this.title = "Chemical Bonding: Crash Course",
+    this.thumbnailUrl = "",
+    this.videoId = "",
   });
   @override
   State<VideoTile> createState() => _VideoTileState();
@@ -317,9 +324,9 @@ class _VideoTileState extends State<VideoTile> {
   Widget get child => InkWell(
     onTap: () {
       if (widget.isFromYoutube) {
-        youtubeVideoDetail.go(context);
+        youtubeVideoDetail.go(context, id: widget.videoId);
       } else {
-        videoDetail.go(context);
+        videoDetail.go(context, id: widget.videoId);
       }
     },
     overlayColor: WidgetStatePropertyAll(Colors.transparent),
@@ -336,17 +343,22 @@ class _VideoTileState extends State<VideoTile> {
                 width: 168,
                 borderRadius: BorderRadius.circular(12),
                 placeHolder: AppImage.videoPlaceHolder,
+                image: widget.thumbnailUrl,
               ),
               PlayPauseIcon(),
-              Positioned(
-                top: 8,
-                left: 8,
-                child: SvgPicture.asset(
-                  AppImage.bookmarkIcon,
-                  height: 25,
-                  colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              if (!widget.isFromYoutube)
+                Positioned(
+                  top: 8,
+                  left: 8,
+                  child: SvgPicture.asset(
+                    AppImage.bookmarkIcon,
+                    height: 25,
+                    colorFilter: ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 ),
-              ),
             ],
           ),
           SizedBox(width: 15),
@@ -358,24 +370,25 @@ class _VideoTileState extends State<VideoTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Chemical Bonding: Crash Course",
+                    widget.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyle.title18().copyWith(height: 1.2),
                   ),
                   Expanded(child: Container()),
                   SizedBox(height: 10),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.visibility_outlined, color: AppColor.gray),
-                      SizedBox(width: 5),
-                      Text(
-                        "1423 Views",
-                        style: AppTextStyle.body12(color: AppColor.gray),
-                      ),
-                    ],
-                  ),
+                  if (!widget.isFromYoutube)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.visibility_outlined, color: AppColor.gray),
+                        SizedBox(width: 5),
+                        Text(
+                          "1423 Views",
+                          style: AppTextStyle.body12(color: AppColor.gray),
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ),

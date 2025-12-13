@@ -283,12 +283,22 @@ final AppNavigationModel videos = AppNavigationModel(
 final AppNavigationModel videoDetail = AppNavigationModel(
   label: "Video Details",
   path: VideoDetailVC.id,
-  builder: (context, state) => VideoDetailVC(),
+  builder: (context, state) {
+    return VideoDetailVC(
+      isFromYoutube: false,
+      videoId: state.pathParameters['id'] ?? '',
+    );
+  },
 );
 final AppNavigationModel youtubeVideoDetail = AppNavigationModel(
   label: "Youtube Video Details",
   path: VideoDetailVC.youtubeId,
-  builder: (context, state) => VideoDetailVC(isFromYoutube: true),
+  builder: (context, state) {
+    return VideoDetailVC(
+      isFromYoutube: true,
+      videoId: state.pathParameters['id'] ?? '',
+    );
+  },
 );
 final AppNavigationModel notes = AppNavigationModel(
   label: "Notes",
@@ -407,6 +417,11 @@ final GoRouter router = GoRouter(
             0) ==
         0) {
       return dailyLimit.path;
+    } else if (authCtrl.user != null) {
+      if (authNavigation.where((e) => e.path == state.fullPath).isEmpty) {
+        return state.path;
+      }
+      return home.path;
     }
     return state.path;
   },

@@ -163,17 +163,25 @@ class AutoCompleteField extends StatefulWidget {
   final void Function(String?)? onValueSelect;
 
   @override
-  State<AutoCompleteField> createState() => _AutoCompleteFieldState();
+  State<AutoCompleteField> createState() => AutoCompleteFieldState();
 }
 
-class _AutoCompleteFieldState extends State<AutoCompleteField> {
+class AutoCompleteFieldState extends State<AutoCompleteField> {
   RenderBox? get renderBox => context.findRenderObject() as RenderBox?;
   Size? get size => renderBox?.size;
+  TextEditingController? editingController;
+
   @override
   void setState(VoidCallback fn) {
     if (mounted) {
       super.setState(fn);
     }
+  }
+
+  void clearSearch() {
+    editingController?.clear();
+    widget.onValueSelect!(null);
+    setState(() {});
   }
 
   @override
@@ -240,8 +248,9 @@ class _AutoCompleteFieldState extends State<AutoCompleteField> {
         ),
       ),
       fieldViewBuilder: (context, controller, focusNode, onTap) {
+        editingController = controller;
         return AppTextFormField(
-          controller: controller,
+          controller: editingController,
           focusNode: focusNode,
           label: widget.label,
           textColor: widget.textColor,
@@ -250,10 +259,7 @@ class _AutoCompleteFieldState extends State<AutoCompleteField> {
           suffixIcon: widget.suffixIcon != null
               ? InkWell(
                   overlayColor: WidgetStatePropertyAll(Colors.transparent),
-                  onTap: () {
-                    controller.clear();
-                    widget.onValueSelect!(null);
-                  },
+                  onTap: clearSearch,
                   child: widget.suffixIcon,
                 )
               : null,

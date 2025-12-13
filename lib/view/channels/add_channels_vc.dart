@@ -49,7 +49,7 @@ class _AddChannelsVCState extends State<AddChannelsVC> {
             SizedBox(height: 20),
             Expanded(
               child: ListView.separated(
-                itemBuilder: (context, index) => ChannelTile(value: index),
+                itemBuilder: (context, index) => ChannelTile(),
                 separatorBuilder: (context, index) => ChannelDivider(),
                 itemCount: 10,
               ),

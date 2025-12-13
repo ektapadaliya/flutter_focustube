@@ -5,41 +5,51 @@ import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
+import 'package:focus_tube_flutter/widget/image_classes.dart';
 import 'package:focus_tube_flutter/widget/playlist_widgets.dart';
 import 'package:focus_tube_flutter/widget/video_widgets.dart';
 
 class ChannelTile extends StatelessWidget {
   const ChannelTile({
     super.key,
-    required this.value,
+    this.title = "Channel",
+    this.channelId = "",
+    this.channelImage = "",
     this.showAddChannels = true,
   });
 
-  final int value;
+  final String title;
+  final String channelId;
+  final String channelImage;
   final bool showAddChannels;
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        channelDetail.go(context, id: value.toString());
+        channelDetail.go(context, id: channelId);
       },
       overlayColor: WidgetStatePropertyAll(Colors.transparent),
       child: Row(
         children: [
-          CircleAvatar(radius: 28, backgroundColor: AppColor.lightGray),
+          NetworkImageClass(
+            height: 56,
+            width: 56,
+            image: channelImage,
+            shape: BoxShape.circle,
+          ),
           SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Channel ${value + 1}", style: AppTextStyle.title20()),
-                Wrap(
-                  spacing: 15,
-                  children: [
-                    infoIconText(AppImage.userIcon, "124k Followers"),
-                    infoIconText(AppImage.videoIcon, "120 Videos"),
-                  ],
-                ),
+                Text(title, style: AppTextStyle.title20()),
+                // Wrap(
+                //   spacing: 15,
+                //   children: [
+                //     infoIconText(AppImage.userIcon, "124k Followers"),
+                //     infoIconText(AppImage.videoIcon, "120 Videos"),
+                //   ],
+                // ),
               ],
             ),
           ),
@@ -153,7 +163,9 @@ class ChannelVideos extends StatelessWidget {
 }
 
 class ChannelAbout extends StatelessWidget {
-  const ChannelAbout({super.key});
+  const ChannelAbout({super.key, required this.description});
+
+  final String description;
 
   @override
   Widget build(BuildContext context) {
@@ -165,15 +177,7 @@ class ChannelAbout extends StatelessWidget {
           SizedBox(height: 20),
           Text("About", style: AppTextStyle.title20()),
           SizedBox(height: 5),
-          Text(
-            """Lorem ipsum dolor sit amet consectetur. Ph asellus nisl mi feugiat orci nunc mauris nulla varius. Facilisis porttitor diam risus eu erat tempor. Viverra phasellus quis dignissim adipiscing aenean arcu. Non aliquam laoreet viverra nulla ornare. Et eget laoreet ultrices eu risus.
-
-Lorem ipsum dolor sit amet consectetur. Ph asellus nisl mi feugiat orci nunc mauris nulla varius. Facilisis porttitor diam risus eu erat tempor. Viverra phasellus quis dignissim adipiscing aenean arcu. Non aliquam laoreet viverra nulla ornare. Et eget laoreet ultrices eu risus.
-
-Lorem ipsum dolor sit amet consectetur. Ph asellus nisl mi feugiat orci nunc mauris nulla varius. Facilisis porttitor diam risus eu erat tempor. Viverra phasellus quis dignissim adipiscing aenean arcu. Non aliquam laoreet viverra nulla ornare. Et eget laoreet ultrices eu risus.
-""",
-            style: AppTextStyle.body18(color: AppColor.gray),
-          ),
+          Text(description, style: AppTextStyle.body18(color: AppColor.gray)),
           SizedBox(height: 20),
         ],
       ),
