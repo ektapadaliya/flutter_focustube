@@ -157,7 +157,7 @@ class GoalSubjects extends StatelessWidget {
           totalTargets,
           (index) => Padding(
             padding: EdgeInsetsGeometry.only(top: 15),
-            child: VideoTile(),
+            child: Container() /* VideoTile() */,
           ),
         ),
       ],

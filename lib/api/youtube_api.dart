@@ -154,4 +154,7 @@ class YoutubeApiConst {
     }
     return null;
   }
+
+  static thubnailFromId(String id) =>
+      "https://img.youtube.com/vi/$id/hqdefault.jpg";
 }

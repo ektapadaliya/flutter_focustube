@@ -28,4 +28,10 @@ class ApiUtils {
 
   static const changePassword = "${baseUrl}change-password";
   static const deleteAccount = "${baseUrl}delete-account";
+
+  static const getBookmarkVideos = "${baseUrl}get-bookmark-videos";
+  static const getRecommenedVideos = "${baseUrl}get-recommened-videos";
+  static const getPopularVideos = "${baseUrl}get-popular-videos";
+  static const subjects = "${baseUrl}subjects";
+  static const bookmarkVideo = "${baseUrl}bookmark-video";
 }

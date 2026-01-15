@@ -5,10 +5,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/api/api_manager.dart';
 import 'package:focus_tube_flutter/api/api_utils.dart';
-import 'package:focus_tube_flutter/controller/interest_controller.dart';
+import 'package:focus_tube_flutter/controller/video_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/model/interest_model.dart';
 import 'package:focus_tube_flutter/model/user_intrest_model.dart';
+import 'package:focus_tube_flutter/model/video_model.dart';
 import 'package:focus_tube_flutter/service/uuid_service.dart';
 import 'package:focus_tube_flutter/widget/app_tost_message.dart';
 import 'package:go_router/go_router.dart';
@@ -468,6 +469,133 @@ class ApiFunctions {
       return response.isSuccess;
     } catch (e) {
       debugPrint("Error in changePassword: $e");
+      return false;
+    }
+  }
+
+  //Recommened Videos
+  Future<void> getRecommenedVideos(
+    BuildContext context, {
+    required VideoController controller,
+    int page = 1,
+    int? perPage,
+  }) async {
+    try {
+      controller.setIsLoading(true);
+      var response = await ApiManager.instance.post<VideoModel>(
+        ApiUtils.getRecommenedVideos,
+        body: {
+          if (perPage != null) "per_page": perPage.toString(),
+          "page": page.toString(),
+        },
+      );
+      controller.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            controller.setHasData(false);
+          } else {
+            controller.addVideos(response.data);
+          }
+        } else {
+          controller.setHasData(false);
+        }
+      } else if (response.isError) {
+        controller.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in getRecommenedVideos: $e");
+    }
+  }
+
+  //Popular Videos
+  Future<void> getPopularVideos(
+    BuildContext context, {
+    required VideoController controller,
+    int page = 1,
+    int? perPage,
+  }) async {
+    try {
+      controller.setIsLoading(true);
+      var response = await ApiManager.instance.post<VideoModel>(
+        ApiUtils.getPopularVideos,
+        body: {
+          if (perPage != null) "per_page": perPage.toString(),
+          "page": page.toString(),
+        },
+      );
+      controller.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            controller.setHasData(false);
+          } else {
+            controller.addVideos(response.data);
+          }
+        } else {
+          controller.setHasData(false);
+        }
+      } else if (response.isError) {
+        controller.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in getPopularVideos: $e");
+    }
+  }
+
+  //Bookmark Videos
+  Future<void> getBookmarkVideos(
+    BuildContext context, {
+    required VideoController controller,
+    int page = 1,
+    int? perPage,
+  }) async {
+    try {
+      controller.setIsLoading(true);
+      var response = await ApiManager.instance.post<VideoModel>(
+        ApiUtils.getBookmarkVideos,
+        body: {
+          if (perPage != null) "per_page": perPage.toString(),
+          "page": page.toString(),
+        },
+      );
+      controller.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            controller.setHasData(false);
+          } else {
+            controller.addVideos(response.data);
+          }
+        } else {
+          controller.setHasData(false);
+        }
+      } else if (response.isError) {
+        controller.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in getBookmarkVideos: $e");
+    }
+  }
+
+  //Bookmark Video
+  Future<dynamic> bookmarkVideo(
+    BuildContext context, {
+    required String videoId,
+  }) async {
+    try {
+      var response = await ApiManager.instance.post(
+        ApiUtils.bookmarkVideo,
+        body: {"video_id": videoId},
+      );
+      if (response.isSuccess) {
+        return response.data;
+      }
+    } catch (e) {
+      debugPrint("Error in bookmarkVideo: $e");
       return false;
     }
   }

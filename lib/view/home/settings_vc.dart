@@ -75,7 +75,7 @@ class _SettingsVCState extends State<SettingsVC> {
                   icon: AppImage.historyIcon,
                   label: "My History",
                   onTap: () {
-                    videos.go(context, extra: "My History");
+                    videos.go(context, id: "my_history");
                   },
                 ),
                 SizedBox(height: 15),

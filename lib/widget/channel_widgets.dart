@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
-import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
@@ -151,7 +150,7 @@ class ChannelVideos extends StatelessWidget {
           ListView.separated(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) => VideoTile(),
+            itemBuilder: (context, index) => YoutubeVideoTile(),
             separatorBuilder: (context, index) => SizedBox(height: 15),
             itemCount: 10,
           ),

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:focus_tube_flutter/api/youtube_api.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/model/video_model.dart';
 import 'package:focus_tube_flutter/widget/image_classes.dart';
 
 class AppTitle extends StatelessWidget {
@@ -33,8 +35,9 @@ class AppTitle extends StatelessWidget {
 }
 
 class PopularVideoTile extends StatelessWidget {
-  const PopularVideoTile({super.key});
-
+  const PopularVideoTile({super.key, required this.video, this.onBookmark});
+  final VideoModel video;
+  final void Function(String id)? onBookmark;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -51,18 +54,28 @@ class PopularVideoTile extends StatelessWidget {
               children: [
                 NetworkImageClass(
                   height: 160,
+                  image: YoutubeApiConst.thubnailFromId(video.youtubeId ?? ""),
                   borderRadius: BorderRadius.circular(12),
                   placeHolder: AppImage.videoPlaceHolder,
                 ),
                 Positioned(
                   top: 8,
                   right: 8,
-                  child: SvgPicture.asset(
-                    AppImage.bookmarkIcon,
-                    height: 25,
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
+                  child: GestureDetector(
+                    onTap: () {
+                      if (onBookmark != null) {
+                        onBookmark!(video.id?.toString() ?? "");
+                      }
+                    },
+                    child: SvgPicture.asset(
+                      (video.isBookmark ?? false)
+                          ? AppImage.bookmarkFillIcon
+                          : AppImage.bookmarkIcon,
+                      height: 25,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ),
@@ -81,7 +94,7 @@ class PopularVideoTile extends StatelessWidget {
                         Icon(Icons.visibility_outlined, color: AppColor.white),
                         SizedBox(width: 5),
                         Text(
-                          "1423 Views",
+                          "${video.videoViews ?? 0} Views",
                           style: AppTextStyle.body12(color: AppColor.white),
                         ),
                       ],
@@ -93,7 +106,7 @@ class PopularVideoTile extends StatelessWidget {
             SizedBox(height: 10),
             Expanded(
               child: Text(
-                "Chemical Bonding: Crash Course",
+                video.title ?? "",
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyle.title18().copyWith(height: 1.2),
@@ -170,8 +183,9 @@ class SubjectVideoTile extends StatelessWidget {
 }
 
 class BookmarkVideoTile extends StatelessWidget {
-  const BookmarkVideoTile({super.key});
-
+  const BookmarkVideoTile({super.key, required this.video, this.onBookmark});
+  final VideoModel video;
+  final void Function(String id)? onBookmark;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -190,6 +204,7 @@ class BookmarkVideoTile extends StatelessWidget {
           children: [
             NetworkImageClass(
               height: 230,
+              image: YoutubeApiConst.thubnailFromId(video.youtubeId ?? ""),
               borderRadius: BorderRadius.circular(12),
               placeHolder: AppImage.videoPlaceHolder,
             ),
@@ -200,12 +215,21 @@ class BookmarkVideoTile extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SvgPicture.asset(
-                    AppImage.bookmarkIcon,
-                    height: 30,
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
+                  GestureDetector(
+                    onTap: () {
+                      if (onBookmark != null) {
+                        onBookmark!(video.id?.toString() ?? "");
+                      }
+                    },
+                    child: SvgPicture.asset(
+                      (video.isBookmark ?? false)
+                          ? AppImage.bookmarkFillIcon
+                          : AppImage.bookmarkIcon,
+                      height: 30,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                   Expanded(child: Container()),
@@ -214,7 +238,7 @@ class BookmarkVideoTile extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          "Chemical Bonding: Crash Course",
+                          video.title ?? "",
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyle.title18(
@@ -246,32 +270,38 @@ class BookmarkVideoTile extends StatelessWidget {
   }
 }
 
-class VideoTile extends StatefulWidget {
-  final bool isSlidable, isFromYoutube;
+class YoutubeVideoTile extends StatefulWidget {
+  final bool isSlidable, isFromYoutube, isBookmarked;
   final void Function()? onRemoved;
-  final String title;
+  final String? title;
   final String thumbnailUrl;
   final String videoId;
-
-  const VideoTile({
+  final int? id;
+  final int views;
+  final void Function(String id)? onBookmark;
+  const YoutubeVideoTile({
     super.key,
     this.onRemoved,
+    this.isBookmarked = false,
     this.isSlidable = false,
     this.isFromYoutube = false,
-    this.title = "Chemical Bonding: Crash Course",
+    this.title,
     this.thumbnailUrl = "",
     this.videoId = "",
+    this.views = 0,
+    this.id,
+    this.onBookmark,
   });
   @override
-  State<VideoTile> createState() => _VideoTileState();
+  State<YoutubeVideoTile> createState() => _YoutubeVideoTileState();
 }
 
-class _VideoTileState extends State<VideoTile> {
+class _YoutubeVideoTileState extends State<YoutubeVideoTile> {
   @override
   Widget build(BuildContext context) {
     if (widget.isSlidable) {
       return Slidable(
-        key: UniqueKey(),
+        key: Key("${widget.id}"),
         endActionPane: ActionPane(
           motion: const DrawerMotion(),
           dragDismissible: true,
@@ -350,12 +380,21 @@ class _VideoTileState extends State<VideoTile> {
                 Positioned(
                   top: 8,
                   left: 8,
-                  child: SvgPicture.asset(
-                    AppImage.bookmarkIcon,
-                    height: 25,
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
+                  child: GestureDetector(
+                    onTap: () {
+                      if (widget.onBookmark != null) {
+                        widget.onBookmark!(widget.id?.toString() ?? "");
+                      }
+                    },
+                    child: SvgPicture.asset(
+                      widget.isBookmarked
+                          ? AppImage.bookmarkFillIcon
+                          : AppImage.bookmarkIcon,
+                      height: 25,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ),
@@ -370,7 +409,7 @@ class _VideoTileState extends State<VideoTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.title,
+                    widget.title ?? "",
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyle.title18().copyWith(height: 1.2),
@@ -384,11 +423,165 @@ class _VideoTileState extends State<VideoTile> {
                         Icon(Icons.visibility_outlined, color: AppColor.gray),
                         SizedBox(width: 5),
                         Text(
-                          "1423 Views",
+                          "${widget.views} Views",
                           style: AppTextStyle.body12(color: AppColor.gray),
                         ),
                       ],
                     ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class VideoTile extends StatefulWidget {
+  final VideoModel video;
+  final void Function()? onRemoved;
+  final bool isSlidable;
+  final void Function(String id)? onBookmark;
+  const VideoTile({
+    super.key,
+    required this.video,
+    this.onBookmark,
+    this.onRemoved,
+    this.isSlidable = false,
+  });
+  @override
+  State<VideoTile> createState() => _VideoTileState();
+}
+
+class _VideoTileState extends State<VideoTile> {
+  @override
+  Widget build(BuildContext context) {
+    if (widget.isSlidable) {
+      return Slidable(
+        key: Key("${widget.video.id}"),
+        endActionPane: ActionPane(
+          motion: const DrawerMotion(),
+          dragDismissible: true,
+          dismissible: DismissiblePane(onDismissed: widget.onRemoved ?? () {}),
+          children: [
+            CustomSlidableAction(
+              backgroundColor: Colors.transparent,
+              onPressed: (context) {
+                setState(() {});
+                Slidable.of(context)?.close();
+                if (widget.onRemoved != null) {
+                  widget.onRemoved!();
+                }
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 8),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColor.lightYellow.opacityToAlpha(0),
+                      AppColor.lightYellow.opacityToAlpha(.1),
+                      AppColor.red.opacityToAlpha(.1),
+                      AppColor.red.opacityToAlpha(.3),
+                      AppColor.red.opacityToAlpha(.5),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.horizontal(
+                    right: Radius.circular(12),
+                  ),
+                ),
+                child: Icon(
+                  Icons.delete_outline,
+                  color: AppColor.red,
+                  size: 30,
+                ),
+              ),
+            ),
+          ],
+        ),
+        child: child,
+      );
+    } else {
+      return child;
+    }
+  }
+
+  Widget get child => InkWell(
+    onTap: () {
+      videoDetail.go(context, id: widget.video.id);
+    },
+    overlayColor: WidgetStatePropertyAll(Colors.transparent),
+    child: SizedBox(
+      height: 110,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              NetworkImageClass(
+                height: 110,
+                width: 168,
+                borderRadius: BorderRadius.circular(12),
+                placeHolder: AppImage.videoPlaceHolder,
+                image: YoutubeApiConst.thubnailFromId(widget.video.youtubeId!),
+              ),
+              PlayPauseIcon(),
+
+              Positioned(
+                top: 8,
+                left: 8,
+                child: GestureDetector(
+                  onTap: () {
+                    if (widget.onBookmark != null) {
+                      widget.onBookmark!(widget.video.id.toString());
+                    }
+                  },
+                  child: SvgPicture.asset(
+                    (widget.video.isBookmark ?? false)
+                        ? AppImage.bookmarkFillIcon
+                        : AppImage.bookmarkIcon,
+                    height: 25,
+                    colorFilter: ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(width: 15),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.video.title ?? "",
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyle.title18().copyWith(height: 1.2),
+                  ),
+                  Expanded(child: Container()),
+                  SizedBox(height: 10),
+
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.visibility_outlined, color: AppColor.gray),
+                      SizedBox(width: 5),
+                      Text(
+                        "${widget.video.videoViews ?? 0} Views",
+                        style: AppTextStyle.body12(color: AppColor.gray),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

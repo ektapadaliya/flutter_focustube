@@ -1,37 +1,46 @@
-import 'sub_subject_model.dart';
+import 'package:focus_tube_flutter/model/sub_subject_model.dart';
 
-class Subject {
-  final int id;
-  final String title;
-  final List<SubSubjectModel> subSubjects;
+class SubjectModel {
+  int? id;
+  String? title;
+  String? status;
+  bool? isUserSubject;
+  List<SubSubjectModel>? subSubjects;
+  int? createdAt;
 
-  Subject({required this.id, required this.title, required this.subSubjects});
+  SubjectModel({
+    this.id,
+    this.title,
+    this.status,
+    this.isUserSubject,
+    this.subSubjects,
+    this.createdAt,
+  });
 
-  bool get isSelected => subSubjects.any((e) => e.isSelected == true);
-
-  void onSelectionChanged(bool value) {
-    for (var i = 0; i < subSubjects.length; i++) {
-      subSubjects[i].isSelected = value;
+  SubjectModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    title = json['title'];
+    status = json['status'];
+    isUserSubject = json['is_user_subject'] == 1;
+    if (json['sub_subjects'] != null) {
+      subSubjects = <SubSubjectModel>[];
+      json['sub_subjects'].forEach((v) {
+        subSubjects!.add(SubSubjectModel.fromJson(v));
+      });
     }
+    createdAt = json['created_at'];
   }
 
-  // From JSON
-  factory Subject.fromJson(Map<String, dynamic> json) {
-    return Subject(
-      id: json['id'],
-      title: json['title'],
-      subSubjects: (json['sub_subjects'] as List<dynamic>)
-          .map((e) => SubSubjectModel.fromJson(e))
-          .toList(),
-    );
-  }
-
-  // To JSON
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'sub_subjects': subSubjects.map((e) => e.toJson()).toList(),
-    };
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['status'] = status;
+    data['is_user_subject'] = (isUserSubject ?? false) ? 1 : 0;
+    if (subSubjects != null) {
+      data['sub_subjects'] = subSubjects!.map((v) => v.toJson()).toList();
+    }
+    data['created_at'] = createdAt;
+    return data;
   }
 }

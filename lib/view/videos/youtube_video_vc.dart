@@ -74,7 +74,7 @@ class YoutubeVideoVCState extends State<YoutubeVideoVC>
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                VideoTile(
+                YoutubeVideoTile(
                   isFromYoutube: true,
                   title: video.snippet?.title ?? "",
                   thumbnailUrl: video.snippet?.thumbnails?.high?.url ?? "",

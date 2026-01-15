@@ -1,7 +1,10 @@
 import 'package:focus_tube_flutter/model/content_model.dart';
 import 'package:focus_tube_flutter/model/interest_model.dart';
+import 'package:focus_tube_flutter/model/sub_subject_model.dart';
+import 'package:focus_tube_flutter/model/subject_model.dart';
 import 'package:focus_tube_flutter/model/user_intrest_model.dart';
 import 'package:focus_tube_flutter/model/user_model.dart';
+import 'package:focus_tube_flutter/model/video_model.dart';
 
 /// A factory class for creating and managing app models from JSON data.
 ///
@@ -145,7 +148,10 @@ class AppModelFactory {
 
     // Or use registerAll for bulk registration:
     register<UserModel>(UserModel.fromJson);
+    register<VideoModel>(VideoModel.fromJson);
     register<ContentModel>(ContentModel.fromJson);
+    register<SubjectModel>(SubjectModel.fromJson);
+    register<SubSubjectModel>(SubSubjectModel.fromJson);
     register<InterestModel>(InterestModel.fromJson);
     register<UserInterestModel>(UserInterestModel.fromJson);
   }

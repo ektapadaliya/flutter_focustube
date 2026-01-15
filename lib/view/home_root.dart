@@ -178,14 +178,12 @@ class HomePopupMenu extends StatelessWidget {
         ],
       ),
       onItemPressed: (String item) {
-        if (item == "bookmarks") {
-          videos.go(context, extra: popUpLable(item));
+        if (item == "bookmarks" || item == "history") {
+          videos.go(context, id: item);
         } /* else if (item == "my_subjects") {
           mySubjects.go(context);
         } */ else if (item == "playlist") {
           playlists.go(context);
-        } else if (item == "history") {
-          videos.go(context, extra: popUpLable(item));
         }
       },
       child: Icon(Icons.more_vert),

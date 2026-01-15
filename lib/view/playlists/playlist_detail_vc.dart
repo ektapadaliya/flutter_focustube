@@ -42,13 +42,13 @@ class _PlayListDetailVCState extends State<PlayListDetailVC> {
             Expanded(
               child: ListView.separated(
                 shrinkWrap: true,
-                itemBuilder: (context, index) => VideoTile(
+                itemBuilder: (context, index) => Container() /* VideoTile(
                   isSlidable: true,
                   onRemoved: () {
                     videos.removeAt(index);
                     setState(() {});
                   },
-                ),
+                ) */,
                 separatorBuilder: (context, index) => SizedBox(height: 15),
                 itemCount: videos.length,
               ),

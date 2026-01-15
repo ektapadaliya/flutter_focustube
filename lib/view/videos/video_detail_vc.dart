@@ -228,14 +228,14 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
     AppTitle(
       title: "Recommended video",
       onViewMore: () {
-        videos.go(context, extra: "Recommended");
+        videos.go(context, id: "recommended");
       },
     ),
     SizedBox(height: 10),
     ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) => VideoTile(),
+      itemBuilder: (context, index) => Container() /* VideoTile() */,
       separatorBuilder: (context, index) => SizedBox(height: 15),
       itemCount: 5,
     ),

@@ -40,7 +40,7 @@ class _SubjectDetailVCState extends State<SubjectDetailVC> {
                 10,
                 (index) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: VideoTile(),
+                  child: Container() /* VideoTile() */,
                 ),
               ),
             ],

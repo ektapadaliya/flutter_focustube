@@ -277,8 +277,8 @@ final AppNavigationModel subjectsDetail = AppNavigationModel(
 );
 final AppNavigationModel videos = AppNavigationModel(
   label: "Videos",
-  path: VideoListVC.id,
-  builder: (context, state) => VideoListVC(title: state.extra as String),
+  path: "${VideoListVC.id}/:id",
+  builder: (context, state) => VideoListVC(tag: state.pathParameters['id']!),
 );
 final AppNavigationModel videoDetail = AppNavigationModel(
   label: "Video Details",
@@ -350,14 +350,14 @@ List<AppNavigationModel> authNavigation = [
   forgotPassword,
   forgotPasswordVerification,
   resetPassword,
-  content,
 ];
 final GoRouter router = GoRouter(
   navigatorKey: navigationKey,
   initialLocation: onboarding.path,
   routes: [
     ...[
-      ...authNavigation, emailVerification,
+      ...authNavigation, emailVerification, content,
+
       chooseYourInteres,
       editYourInterest,
       dailyLimit,

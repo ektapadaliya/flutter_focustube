@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:html_unescape/html_unescape.dart';
 
 class YoutubeVideoModel {
