@@ -55,6 +55,7 @@ class VideoController extends GetxController {
   void clear() {
     videos.clear();
     page = 1;
+    hasData = true;
     loaderController.setLoading(false);
     update();
   }

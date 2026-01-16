@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
+import 'package:focus_tube_flutter/controller/subject_video_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/view/subjects/select_subject_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
+import 'package:focus_tube_flutter/widget/app_loader.dart';
+import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 import 'package:focus_tube_flutter/widget/video_widgets.dart';
+import 'package:get/state_manager.dart';
 
 import '../../const/app_text_style.dart';
+import '../../controller/app_controller.dart';
 
 class SubjectVC extends StatefulWidget {
   static const id = "/subjects";
@@ -23,15 +29,11 @@ class SubjectVC extends StatefulWidget {
 }
 
 class _SubjectVCState extends State<SubjectVC> {
-  List<String> subjects = [
-    "Math",
-    "Economics",
-    "Physics",
-    "English",
-    "Art",
-    "Career Development",
-  ];
-  int selectedIndex = 0;
+  ScrollController scrollController = ScrollController();
+  PageController pageController = PageController();
+  int get selectedIndex =>
+      pageController.hasClients ? (pageController.page ?? 0).toInt() : 0;
+
   @override
   Widget build(BuildContext context) {
     var child = SafeArea(
@@ -51,52 +53,20 @@ class _SubjectVCState extends State<SubjectVC> {
                 itemCount: 3,
               ),
             ),
-          if (!widget.isMySubjects && selectedIndex == 0)
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: SelectSubjectVC(isFromNav: true),
-              ),
-            )
-          else ...[
-            SizedBox(height: 20),
-            Expanded(
-              child: ListView.separated(
-                itemBuilder: (context, index) => SizedBox(
-                  height: 230,
-                  child: Column(
-                    children: [
-                      AppTitle(
-                        title: subjects[index],
-                        onViewMore: () {
-                          subjectsDetail.go(
-                            context,
-                            id: subjects[index].toLowerCase().replaceAll(
-                              " ",
-                              "_",
-                            ),
-                            extra: subjects[index],
-                          );
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      Expanded(
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => SubjectVideoTile(),
-                          separatorBuilder: (context, index) =>
-                              SizedBox(width: 15),
-                          itemCount: 10,
-                        ),
-                      ),
-                    ],
-                  ),
+          Expanded(
+            child: PageView(
+              physics: NeverScrollableScrollPhysics(),
+              controller: pageController,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: SelectSubjectVC(isFromNav: true),
                 ),
-                separatorBuilder: (context, index) => SizedBox(height: 30),
-                itemCount: subjects.length,
-              ),
+                SubjectVideoVC(tag: "my-subject"),
+                SubjectVideoVC(tag: "subject"),
+              ],
             ),
-          ],
+          ),
         ],
       ),
     );
@@ -119,7 +89,7 @@ class _SubjectVCState extends State<SubjectVC> {
     bool isSelected = selectedIndex == index;
     return InkWell(
       onTap: () {
-        selectedIndex = index;
+        pageController.jumpToPage(index);
         // Scrollable.ensureVisible(
         //   itemKeys[index].currentContext!,
         //   duration: const Duration(milliseconds: 300),
@@ -161,4 +131,150 @@ class _SubjectVCState extends State<SubjectVC> {
       _ => "",
     };
   }
+}
+
+class SubjectVideoVC extends StatefulWidget {
+  final String tag;
+
+  const SubjectVideoVC({super.key, required this.tag});
+
+  @override
+  State<SubjectVideoVC> createState() => _SubjectVideoVCState();
+}
+
+class _SubjectVideoVCState extends State<SubjectVideoVC>
+    with AutomaticKeepAliveClientMixin {
+  ScrollController scrollController = ScrollController();
+  late SubjectVideoController subjectVideoCtrl;
+
+  @override
+  void initState() {
+    subjectVideoCtrl = controller<SubjectVideoController>(tag: widget.tag);
+    super.initState();
+    Future.delayed(Duration.zero, () async {
+      await callApi();
+    });
+    scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    subjectVideoCtrl.clear();
+    scrollController.removeListener(_scrollListener);
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> onRefresh() async {
+    subjectVideoCtrl.clear();
+    callApi();
+  }
+
+  _scrollListener() async {
+    if (!subjectVideoCtrl.loaderController.isLoading.value &&
+        subjectVideoCtrl.hasData) {
+      if (scrollController.offset >=
+              scrollController.position.maxScrollExtent &&
+          !scrollController.position.outOfRange) {
+        await callApi(page: subjectVideoCtrl.page + 1);
+        if (subjectVideoCtrl.hasData) {
+          subjectVideoCtrl.incPage();
+        }
+      }
+    }
+  }
+
+  Future<void> callApi({int page = 1}) async {
+    if (widget.tag == "subject") {
+      await ApiFunctions.instance.getSubjectVideos(
+        context,
+        controller: subjectVideoCtrl,
+        page: page,
+      );
+    } else {
+      await ApiFunctions.instance.getMySubjectVideos(
+        context,
+        controller: subjectVideoCtrl,
+        page: page,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder(
+      tag: widget.tag,
+      init: subjectVideoCtrl,
+      builder: (controller) {
+        return AppLoader(
+          overlayColor: Colors.transparent,
+          showLoader: controller.subjects.isEmpty,
+          loaderController: controller.loaderController,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: RefreshIndicator(
+              onRefresh: onRefresh,
+              child:
+                  (subjectVideoCtrl.subjects.isEmpty &&
+                      !(subjectVideoCtrl.loaderController.isLoading.value))
+                  ? ExpandedSingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "No videos found",
+                          style: AppTextStyle.body16(color: AppColor.gray),
+                        ),
+                      ),
+                    )
+                  : ListView.separated(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      controller: scrollController,
+                      itemCount: controller.subjects.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 30),
+                      itemBuilder: (context, index) {
+                        final subject = controller.subjects[index];
+
+                        return SizedBox(
+                          height: 230,
+                          child: Column(
+                            children: [
+                              AppTitle(
+                                title: subject.title ?? "",
+                                onViewMore: () {
+                                  subjectsDetail.go(
+                                    context,
+                                    extra: subject.title ?? "",
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                              Expanded(
+                                child: ListView.separated(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: subject.videos?.length ?? 0,
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(width: 15),
+                                  itemBuilder: (context, index) {
+                                    return SubjectVideoTile(
+                                      video: subject.videos![index],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }

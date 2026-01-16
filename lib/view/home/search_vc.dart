@@ -3,10 +3,11 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
+import 'package:focus_tube_flutter/view/videos/video_search_vc.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
 import 'package:focus_tube_flutter/widget/drop_down_field.dart';
-
+import 'package:get/state_manager.dart';
 import '../videos/youtube_video_vc.dart';
 
 class SearchVC extends StatefulWidget {
@@ -22,17 +23,27 @@ class _SearchVCState extends State<SearchVC>
   TextEditingController searchController = TextEditingController();
   String? searchValue;
   LoaderController loaderController = controller<LoaderController>(
-    tag: "search",
+    tag: "search-init",
   );
   YoutubeVideoController youtubeVideoController =
       controller<YoutubeVideoController>(tag: "search");
+  VideoController videoController = controller<VideoController>(tag: "search");
   PageController pageController = PageController(initialPage: 1);
   GlobalKey<YoutubeVideoVCState> youtubeVideoKey =
       GlobalKey<YoutubeVideoVCState>();
-
+  GlobalKey<VideoSearchVCState> videoKey = GlobalKey<VideoSearchVCState>();
+  int get currentPage =>
+      pageController.hasClients ? (pageController.page ?? 0).toInt() : 0;
   @override
   Widget build(BuildContext context) {
-    return AppLoader(
+    return AppSearchLoader(
+      controller: currentPage == 0 ? youtubeVideoController : videoController,
+      tag: "search",
+      /*  showLoader:
+          (currentPage == 0
+                  ? youtubeVideoController.videos
+                  : videoController.videos)
+              .isEmpty, */
       loaderController: loaderController,
       child: Padding(
         padding: EdgeInsetsGeometry.symmetric(horizontal: 30),
@@ -77,6 +88,9 @@ class _SearchVCState extends State<SearchVC>
                         searchController.clear();
                         searchValue = null;
                         setState(() {});
+                        if (!isYoutubeSearch) {
+                          videoKey.currentState?.callSearch();
+                        }
                       },
                       child: Icon(Icons.close, size: 22, color: AppColor.gray),
                     ),
@@ -86,16 +100,19 @@ class _SearchVCState extends State<SearchVC>
             SizedBox(height: 10),
             Expanded(
               child: PageView(
+                physics: NeverScrollableScrollPhysics(),
                 controller: pageController,
                 children: [
                   YoutubeVideoVC(
                     tag: "search",
                     key: youtubeVideoKey,
-                    isLoading: (isLoading) {
-                      changeYoutubeLoader(isLoading);
-                    },
+                    isLoading: changeYoutubeLoader,
                   ),
-                  Container(),
+                  VideoSearchVC(
+                    isLoading: changeLoader,
+                    tag: "search",
+                    key: videoKey,
+                  ),
                 ],
               ),
             ),
@@ -106,10 +123,18 @@ class _SearchVCState extends State<SearchVC>
   }
 
   void changeYoutubeLoader(bool isLoading) {
-    if (youtubeVideoController.videos.isEmpty) {
-      loaderController.setLoading(isLoading);
-    } else {
+    loaderController.setLoading(isLoading);
+    if (youtubeVideoController.videos.isNotEmpty) {
       youtubeVideoController.setIsLoading(isLoading);
+    }
+  }
+
+  void changeLoader(bool isLoading) {
+    if (videoController.videos.isNotEmpty) {
+      loaderController.setLoading(false);
+      videoController.setIsLoading(isLoading);
+    } else {
+      loaderController.setLoading(isLoading);
     }
   }
 
@@ -120,6 +145,8 @@ class _SearchVCState extends State<SearchVC>
     setState(() {});
     if (isYoutubeSearch) {
       youtubeVideoKey.currentState?.callYoutubeSearch(searchValue: searchValue);
+    } else {
+      videoKey.currentState?.callSearch(searchValue: searchValue);
     }
   }
 
@@ -132,6 +159,9 @@ class _SearchVCState extends State<SearchVC>
         youtubeVideoKey.currentState?.callYoutubeSearch(
           searchValue: searchValue,
         );
+      } else {
+        videoController.clear();
+        videoKey.currentState?.callSearch(searchValue: searchValue);
       }
     }
   }
@@ -166,4 +196,32 @@ class _SearchVCState extends State<SearchVC>
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class AppSearchLoader extends StatelessWidget {
+  const AppSearchLoader({
+    super.key,
+    required this.controller,
+    required this.tag,
+    required this.loaderController,
+    required this.child,
+  });
+  final dynamic controller;
+  final String tag;
+  final LoaderController loaderController;
+  final Widget child;
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder(
+      tag: tag,
+      init: controller,
+      builder: (dynamic controller) {
+        return AppLoader(
+          showLoader: controller.videos.isEmpty,
+          loaderController: loaderController,
+          child: child,
+        );
+      },
+    );
+  }
 }

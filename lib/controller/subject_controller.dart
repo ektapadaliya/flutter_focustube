@@ -1,9 +1,13 @@
 import 'package:focus_tube_flutter/model/subject_model.dart';
 import 'package:get/get.dart';
 
+import '../model/sub_subject_model.dart';
 import 'app_controller.dart';
 
 class SubjectController extends GetxController {
+  SubjectController(this.tag);
+  String? tag;
+
   List<SubjectModel> subjcts = [];
 
   void addSubject(List<SubjectModel> subjcts) {
@@ -19,11 +23,9 @@ class SubjectController extends GetxController {
   }
 
   LoaderController get loaderController =>
-      controller<LoaderController>(tag: "subject-selection");
+      controller<LoaderController>(tag: tag);
   void setIsLoading(bool isLoading) {
-    controller<LoaderController>(
-      tag: "subject-selection",
-    ).setLoading(isLoading);
+    controller<LoaderController>(tag: tag).setLoading(isLoading);
   }
 
   bool hasData = true;
@@ -38,6 +40,9 @@ class SubjectController extends GetxController {
     if (index != -1) {
       subjcts[index].isUserSubject =
           value ?? !(subjcts[index].isUserSubject ?? false);
+      for (var element in (subjcts[index].subSubjects ?? <SubSubjectModel>[])) {
+        changeSubSubjectSelectedStatus(id, element.id ?? 0, value: value);
+      }
       update();
     }
   }
@@ -77,6 +82,7 @@ class SubjectController extends GetxController {
   void clear() {
     subjcts.clear();
     page = 1;
+    hasData = true;
     loaderController.setLoading(false);
     update();
   }

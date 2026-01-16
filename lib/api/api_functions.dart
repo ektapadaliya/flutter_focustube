@@ -5,9 +5,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/api/api_manager.dart';
 import 'package:focus_tube_flutter/api/api_utils.dart';
+import 'package:focus_tube_flutter/controller/subject_controller.dart';
+import 'package:focus_tube_flutter/controller/subject_video_controller.dart';
 import 'package:focus_tube_flutter/controller/video_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/model/interest_model.dart';
+import 'package:focus_tube_flutter/model/sub_subject_model.dart';
+import 'package:focus_tube_flutter/model/subject_model.dart';
+import 'package:focus_tube_flutter/model/subject_video_model.dart';
 import 'package:focus_tube_flutter/model/user_intrest_model.dart';
 import 'package:focus_tube_flutter/model/video_model.dart';
 import 'package:focus_tube_flutter/service/uuid_service.dart';
@@ -581,6 +586,78 @@ class ApiFunctions {
     }
   }
 
+  //Bookmark Videos
+  Future<void> getVideos(
+    BuildContext context, {
+    required VideoController controller,
+    String? search,
+    int page = 1,
+  }) async {
+    try {
+      controller.setIsLoading(true);
+      var response = await ApiManager.instance.post<VideoModel>(
+        ApiUtils.getVideos,
+        body: {
+          "page": page.toString(),
+          if (search != null && search.trim().isNotEmpty) ?"search": search,
+        },
+      );
+      controller.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            controller.setHasData(false);
+          } else {
+            controller.addVideos(response.data);
+          }
+        } else {
+          controller.setHasData(false);
+        }
+      } else if (response.isError) {
+        controller.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in getBookmarkVideos: $e");
+    }
+  }
+
+  //Bookmark Videos
+  Future<void> getSubjects(
+    BuildContext context, {
+    required SubjectController controller,
+    int page = 1,
+    int? perPage,
+  }) async {
+    try {
+      controller.setIsLoading(true);
+      var response = await ApiManager.instance.post<SubjectModel>(
+        ApiUtils.subjects,
+        body: {
+          if (perPage != null) "per_page": perPage.toString(),
+          "page": page.toString(),
+        },
+      );
+      controller.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            controller.setHasData(false);
+          } else {
+            controller.addSubject(response.data);
+          }
+        } else {
+          controller.setHasData(false);
+        }
+      } else if (response.isError) {
+        controller.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in getBookmarkVideos: $e");
+    }
+  }
+
   //Bookmark Video
   Future<dynamic> bookmarkVideo(
     BuildContext context, {
@@ -597,6 +674,98 @@ class ApiFunctions {
     } catch (e) {
       debugPrint("Error in bookmarkVideo: $e");
       return false;
+    }
+  }
+
+  //Update Subject
+  Future<void> updateSubject(
+    BuildContext context, {
+    required List<SubSubjectModel> subSubject,
+  }) async {
+    try {
+      var body = {};
+      subSubject.asMap().forEach((index, value) {
+        body["sub_subject_ids[$index][sub_subject_id]"] = value.id.toString();
+        body["sub_subject_ids[$index][subject_id]"] = value.subjectId
+            .toString();
+      });
+
+      var response = await ApiManager.instance.post(
+        ApiUtils.updateSubject,
+        body: body,
+      );
+
+      await AppTostMessage.snackBarMessage(
+        context,
+        message: response.responseMessage,
+        isError: response.isError,
+      );
+    } catch (e) {
+      debugPrint("Error in updateSubject: $e");
+    }
+  }
+
+  //Subject Videos Videos
+  Future<void> getSubjectVideos(
+    BuildContext context, {
+    required SubjectVideoController controller,
+    int page = 1,
+  }) async {
+    try {
+      controller.setIsLoading(true);
+      var response = await ApiManager.instance.post<SubjectVideoModel>(
+        ApiUtils.getSubjectVideos,
+        body: {"page": page.toString()},
+      );
+      controller.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            controller.setHasData(false);
+          } else {
+            controller.addVideos(response.data);
+          }
+        } else {
+          controller.setHasData(false);
+        }
+      } else if (response.isError) {
+        controller.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in getSubjectVideos: $e");
+    }
+  }
+
+  //Subject Videos Videos
+  Future<void> getMySubjectVideos(
+    BuildContext context, {
+    required SubjectVideoController controller,
+    int page = 1,
+  }) async {
+    try {
+      controller.setIsLoading(true);
+      var response = await ApiManager.instance.post<SubjectVideoModel>(
+        ApiUtils.getMySubjectVideos,
+        body: {"page": page.toString()},
+      );
+      controller.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            controller.setHasData(false);
+          } else {
+            controller.addVideos(response.data);
+          }
+        } else {
+          controller.setHasData(false);
+        }
+      } else if (response.isError) {
+        controller.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in getMySubjectVideos: $e");
     }
   }
 

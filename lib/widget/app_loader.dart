@@ -9,11 +9,13 @@ class AppLoader extends StatelessWidget {
     this.overlayColor,
     required this.child,
     this.loaderContainerColor,
+    this.showLoader = true,
     required this.loaderController,
   });
   final Widget child;
   final LoaderController loaderController;
   final Color? overlayColor;
+  final bool showLoader;
   final Color? loaderContainerColor;
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class AppLoader extends StatelessWidget {
         children: [
           child,
           Obx(() {
-            if (loaderController.isLoading.value) {
+            if (loaderController.isLoading.value && showLoader) {
               return InkWell(
                 onTap: () {},
                 child: Container(
@@ -40,7 +42,7 @@ class AppLoader extends StatelessWidget {
             }
           }),
           Obx(() {
-            if (loaderController.isLoading.value) {
+            if (loaderController.isLoading.value && showLoader) {
               return Center(
                 child: Container(
                   height: 100,

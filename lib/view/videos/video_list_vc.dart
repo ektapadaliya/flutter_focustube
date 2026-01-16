@@ -3,14 +3,12 @@ import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
-import 'package:focus_tube_flutter/controller/video_controller.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 import 'package:focus_tube_flutter/widget/video_widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class VideoListVC extends StatefulWidget {
   static const id = "/videos";
@@ -64,17 +62,18 @@ class _VideoListVCState extends State<VideoListVC> {
 
   @override
   Widget build(BuildContext context) {
-    return AppLoader(
-      loaderController: videoController.loaderController,
-      child: ScreenBackground(
-        appBar: customAppBar(context, title: getTitleFromTag(widget.tag)),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-          child: GetBuilder(
-            tag: getTitleFromControllerTag(widget.tag),
-            init: videoController,
-            builder: (context) {
-              return Obx(
+    return GetBuilder(
+      tag: getTitleFromControllerTag(widget.tag),
+      init: videoController,
+      builder: (videoController) {
+        return AppLoader(
+          showLoader: videoController.videos.isEmpty,
+          loaderController: videoController.loaderController,
+          child: ScreenBackground(
+            appBar: customAppBar(context, title: getTitleFromTag(widget.tag)),
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              child: Obx(
                 () => RefreshIndicator(
                   onRefresh: onRefresh,
                   child:
@@ -90,28 +89,46 @@ class _VideoListVCState extends State<VideoListVC> {
                             ),
                           ),
                         )
-                      : ListView.separated(
-                          controller: scrollController,
-                          itemBuilder: (context, index) => VideoTile(
-                            video: videoController.videos[index],
-                            onBookmark: (id) {
-                              videoController.changeBookmarkStatus(id);
-                              ApiFunctions.instance.bookmarkVideo(
-                                context,
-                                videoId: id,
-                              );
-                            },
-                          ),
-                          separatorBuilder: (context, index) =>
-                              SizedBox(height: 15),
-                          itemCount: videoController.videos.length,
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                              child: ListView.separated(
+                                controller: scrollController,
+                                itemBuilder: (context, index) => VideoTile(
+                                  video: videoController.videos[index],
+                                  onBookmark: (id) {
+                                    videoController.changeBookmarkStatus(id);
+                                    ApiFunctions.instance.bookmarkVideo(
+                                      context,
+                                      videoId: id,
+                                    );
+                                  },
+                                ),
+                                separatorBuilder: (context, index) =>
+                                    SizedBox(height: 15),
+                                itemCount: videoController.videos.length,
+                              ),
+                            ),
+                            if (videoController
+                                    .loaderController
+                                    .isLoading
+                                    .value &&
+                                videoController.videos.isNotEmpty)
+                              Container(
+                                height: 50,
+                                width: MediaQuery.sizeOf(context).width,
+                                alignment: Alignment.center,
+                                child: CircularProgressIndicator(),
+                              ),
+                          ],
                         ),
                 ),
-              );
-            },
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

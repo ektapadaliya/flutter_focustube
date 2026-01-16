@@ -19,7 +19,14 @@ class AppTitle extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(child: Text(title, style: AppTextStyle.title20())),
+        Expanded(
+          child: Text(
+            title,
+            style: AppTextStyle.title20(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
         if (onViewMore != null)
           InkWell(
             overlayColor: WidgetStatePropertyAll(Colors.transparent),
@@ -120,13 +127,14 @@ class PopularVideoTile extends StatelessWidget {
 }
 
 class SubjectVideoTile extends StatelessWidget {
-  const SubjectVideoTile({super.key});
-
+  const SubjectVideoTile({super.key, required this.video, this.onBookmark});
+  final VideoModel video;
+  final void Function(String id)? onBookmark;
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        videoDetail.go(context);
+        videoDetail.go(context, id: video.id?.toString());
       },
       overlayColor: WidgetStatePropertyAll(Colors.transparent),
       child: SizedBox(
@@ -139,6 +147,7 @@ class SubjectVideoTile extends StatelessWidget {
               children: [
                 NetworkImageClass(
                   height: 110,
+                  image: YoutubeApiConst.thubnailFromId(video.youtubeId ?? ""),
                   borderRadius: BorderRadius.circular(12),
                   placeHolder: AppImage.videoPlaceHolder,
                 ),
@@ -146,12 +155,21 @@ class SubjectVideoTile extends StatelessWidget {
                 Positioned(
                   top: 8,
                   right: 8,
-                  child: SvgPicture.asset(
-                    AppImage.bookmarkIcon,
-                    height: 25,
-                    colorFilter: ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
+                  child: GestureDetector(
+                    onTap: () {
+                      if (onBookmark != null) {
+                        onBookmark!(video.id?.toString() ?? "");
+                      }
+                    },
+                    child: SvgPicture.asset(
+                      (video.isBookmark ?? false)
+                          ? AppImage.bookmarkFillIcon
+                          : AppImage.bookmarkIcon,
+                      height: 30,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ),
@@ -159,7 +177,7 @@ class SubjectVideoTile extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              "Chemical Bonding: Crash Course",
+              video.title ?? "",
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyle.title18().copyWith(height: 1.2),
@@ -170,7 +188,7 @@ class SubjectVideoTile extends StatelessWidget {
                 Icon(Icons.visibility_outlined, color: AppColor.gray),
                 SizedBox(width: 5),
                 Text(
-                  "1423 Views",
+                  "${video.videoViews ?? 0} Views",
                   style: AppTextStyle.body12(color: AppColor.gray),
                 ),
               ],
