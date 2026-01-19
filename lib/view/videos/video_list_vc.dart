@@ -98,7 +98,13 @@ class _VideoListVCState extends State<VideoListVC> {
                                 itemBuilder: (context, index) => VideoTile(
                                   video: videoController.videos[index],
                                   onBookmark: (id) {
-                                    videoController.changeBookmarkStatus(id);
+                                    if (widget.tag == "bookmark" ||
+                                        widget.tag == "bookmarks") {
+                                      videoController.removeVideo(id);
+                                    } else {
+                                      videoController.changeBookmarkStatus(id);
+                                    }
+
                                     ApiFunctions.instance.bookmarkVideo(
                                       context,
                                       videoId: id,
@@ -133,6 +139,9 @@ class _VideoListVCState extends State<VideoListVC> {
   }
 
   String getTitleFromTag(String tag) {
+    if (tag.contains("-")) {
+      return getTitleFromTag(tag.split("-").first);
+    }
     return switch (tag) {
       "bookmark" => "Bookmarked",
       "popular" => "Popular",
@@ -140,7 +149,7 @@ class _VideoListVCState extends State<VideoListVC> {
       "my_history" => "My History",
       "bookmarks" => "Bookmarks",
       "history" => "History",
-      _ => "",
+      _ => tag,
     };
   }
 
@@ -152,7 +161,7 @@ class _VideoListVCState extends State<VideoListVC> {
       "my_history" => "history",
       "bookmarks" => "bookmark",
       "history" => "history",
-      _ => "",
+      _ => tag,
     };
   }
 
@@ -173,6 +182,13 @@ class _VideoListVCState extends State<VideoListVC> {
       await ApiFunctions.instance.getRecommenedVideos(
         context,
         page: page,
+        controller: videoController,
+      );
+    } else if (widget.tag.contains("recommended") && widget.tag.contains("-")) {
+      await ApiFunctions.instance.getRecommenedVideos(
+        context,
+        page: page,
+        videoId: widget.tag.split("-")[1],
         controller: videoController,
       );
     }

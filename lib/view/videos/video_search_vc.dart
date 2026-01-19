@@ -89,7 +89,16 @@ class VideoSearchVCState extends State<VideoSearchVC>
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          VideoTile(video: video),
+                          VideoTile(
+                            video: video,
+                            onBookmark: (id) {
+                              videoController.changeBookmarkStatus(id);
+                              ApiFunctions.instance.bookmarkVideo(
+                                context,
+                                videoId: id,
+                              );
+                            },
+                          ),
 
                           if (videoController
                                   .loaderController

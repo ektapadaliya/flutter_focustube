@@ -205,11 +205,11 @@ class _SubjectVideoVCState extends State<SubjectVideoVC>
     return GetBuilder(
       tag: widget.tag,
       init: subjectVideoCtrl,
-      builder: (controller) {
+      builder: (subjectVideoCtrl) {
         return AppLoader(
           overlayColor: Colors.transparent,
-          showLoader: controller.subjects.isEmpty,
-          loaderController: controller.loaderController,
+          showLoader: subjectVideoCtrl.subjects.isEmpty,
+          loaderController: subjectVideoCtrl.loaderController,
           child: Padding(
             padding: const EdgeInsets.only(top: 10),
             child: RefreshIndicator(
@@ -230,11 +230,11 @@ class _SubjectVideoVCState extends State<SubjectVideoVC>
                   : ListView.separated(
                       physics: AlwaysScrollableScrollPhysics(),
                       controller: scrollController,
-                      itemCount: controller.subjects.length,
+                      itemCount: subjectVideoCtrl.subjects.length,
                       separatorBuilder: (context, index) =>
                           const SizedBox(height: 30),
                       itemBuilder: (context, index) {
-                        final subject = controller.subjects[index];
+                        final subject = subjectVideoCtrl.subjects[index];
 
                         return SizedBox(
                           height: 230,
@@ -245,7 +245,7 @@ class _SubjectVideoVCState extends State<SubjectVideoVC>
                                 onViewMore: () {
                                   subjectsDetail.go(
                                     context,
-                                    extra: subject.title ?? "",
+                                    id: subject.id ?? "",
                                   );
                                 },
                               ),
@@ -259,6 +259,16 @@ class _SubjectVideoVCState extends State<SubjectVideoVC>
                                   itemBuilder: (context, index) {
                                     return SubjectVideoTile(
                                       video: subject.videos![index],
+                                      onBookmark: (id) {
+                                        subjectVideoCtrl.changeBookmarkStatus(
+                                          subject.id.toString(),
+                                          id,
+                                        );
+                                        ApiFunctions.instance.bookmarkVideo(
+                                          context,
+                                          videoId: id,
+                                        );
+                                      },
                                     );
                                   },
                                 ),

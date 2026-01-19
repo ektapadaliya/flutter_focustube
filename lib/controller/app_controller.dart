@@ -1,3 +1,4 @@
+import 'package:focus_tube_flutter/controller/playlist_controller.dart';
 import 'package:focus_tube_flutter/controller/subject_controller.dart';
 import 'package:focus_tube_flutter/controller/subject_video_controller.dart';
 import 'package:get/get.dart';
@@ -40,6 +41,8 @@ _putController<T>({String? tag}) {
       return Get.put(SubjectController(tag), tag: tag);
     case const (SubjectVideoController):
       return Get.put(SubjectVideoController(tag), tag: tag);
+    case const (PlaylistController):
+      return Get.put(PlaylistController(tag), tag: tag);
     default:
       return null;
   }

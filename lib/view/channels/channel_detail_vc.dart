@@ -4,7 +4,6 @@ import 'package:focus_tube_flutter/api/youtube_api.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
-import 'package:focus_tube_flutter/controller/loader_cotroller.dart';
 import 'package:focus_tube_flutter/model/youtube_channel_detail_model.dart';
 import 'package:focus_tube_flutter/view/videos/youtube_video_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';

@@ -122,8 +122,8 @@ class ChannelPlaylist extends StatelessWidget {
           ListView.separated(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) =>
-                PlayListTile(value: index, onTap: (_) {}),
+            itemBuilder: (context, index) => SizedBox(),
+            /* PlayListTile(value: index, onTap: (_) {}) */
             separatorBuilder: (context, index) => SizedBox(height: 15),
             itemCount: 10,
           ),

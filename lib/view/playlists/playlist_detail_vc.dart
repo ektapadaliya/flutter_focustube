@@ -23,19 +23,19 @@ class _PlayListDetailVCState extends State<PlayListDetailVC> {
         minimum: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         child: Column(
           children: [
-            PlayListTile(
-              onTap: (_) {
-                showDialog(
-                  context: context,
-                  builder: (context) => AddEditPlaylistVC(
-                    playlist:
-                        "PlayList ${(int.tryParse(widget.playListId) ?? 0) + 1}",
-                  ),
-                );
-              },
-              value: int.tryParse(widget.playListId) ?? 0,
-              tileType: PlayListTileType.edit,
-            ),
+            // PlayListTile(
+            //   onTap: (_) {
+            //     showDialog(
+            //       context: context,
+            //       builder: (context) => AddEditPlaylistVC(
+            //         playlist:
+            //             "PlayList ${(int.tryParse(widget.playListId) ?? 0) + 1}",
+            //       ),
+            //     );
+            //   },
+            //   value: int.tryParse(widget.playListId) ?? 0,
+            //   tileType: PlayListTileType.edit,
+            // ),
             SizedBox(height: 20),
             AppTitle(title: "Videos"),
             SizedBox(height: 10),

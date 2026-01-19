@@ -1,5 +1,6 @@
 import 'package:focus_tube_flutter/model/content_model.dart';
 import 'package:focus_tube_flutter/model/interest_model.dart';
+import 'package:focus_tube_flutter/model/playlist_model.dart';
 import 'package:focus_tube_flutter/model/sub_subject_model.dart';
 import 'package:focus_tube_flutter/model/subject_model.dart';
 import 'package:focus_tube_flutter/model/subject_video_model.dart';
@@ -154,6 +155,8 @@ class AppModelFactory {
     register<SubjectModel>(SubjectModel.fromJson);
     register<SubSubjectModel>(SubSubjectModel.fromJson);
     register<SubjectVideoModel>(SubjectVideoModel.fromJson);
+    register<PlaylistModel>(PlaylistModel.fromJson);
+
     register<InterestModel>(InterestModel.fromJson);
     register<UserInterestModel>(UserInterestModel.fromJson);
   }

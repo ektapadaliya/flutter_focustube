@@ -141,7 +141,13 @@ class _FeedbackVCState extends State<FeedbackVC> {
                 ),
 
                 SizedBox(height: 20),
-                AppButton(label: "Submit", backgroundColor: AppColor.primary),
+                AppButton(
+                  label: "Submit",
+                  backgroundColor: AppColor.primary,
+                  onTap: () {
+                    context.pop(feedbackRating(selectedIndex));
+                  },
+                ),
                 SizedBox(height: 20),
               ],
             ),
@@ -178,7 +184,7 @@ class _FeedbackVCState extends State<FeedbackVC> {
       1 => 8,
       2 => 6,
       3 => 4,
-      4 => 3,
+      4 => 2,
       5 => 0,
       _ => 10,
     };

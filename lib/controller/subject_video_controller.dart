@@ -39,6 +39,20 @@ class SubjectVideoController extends GetxController {
     update();
   }
 
+  void changeBookmarkStatus(String subjectId, String videoId, {bool? value}) {
+    var index = subjects.indexWhere((e) => e.id.toString() == subjectId);
+    if (index != -1) {
+      var videoIndex = subjects[index].videos?.indexWhere(
+        (e) => e.id.toString() == videoId,
+      );
+      if (videoIndex != null && videoIndex != -1) {
+        subjects[index].videos![videoIndex].isBookmark =
+            value ?? !(subjects[index].videos![videoIndex].isBookmark ?? false);
+        update();
+      }
+    }
+  }
+
   void clear() {
     subjects.clear();
     page = 1;

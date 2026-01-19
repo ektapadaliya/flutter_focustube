@@ -33,9 +33,13 @@ class ApiUtils {
   static const getRecommenedVideos = "${baseUrl}get-recommened-videos";
   static const getPopularVideos = "${baseUrl}get-popular-videos";
   static const subjects = "${baseUrl}subjects";
+  static const subsubjects = "${baseUrl}subsubjects";
   static const updateSubject = "${baseUrl}update-subject";
   static const bookmarkVideo = "${baseUrl}bookmark-video";
   static const getSubjectVideos = "${baseUrl}get-subject-videos";
   static const getMySubjectVideos = "${baseUrl}get-my-subject-videos";
   static const getVideos = "${baseUrl}get-videos";
+  static const getVideoDetails = "${baseUrl}get-video-details";
+  static const addVideoFeedback = "${baseUrl}add-video-feedback";
+  static const getPlaylist = "${baseUrl}get-playlist";
 }

@@ -273,7 +273,8 @@ final AppNavigationModel selectSubjects = AppNavigationModel(
 final AppNavigationModel subjectsDetail = AppNavigationModel(
   label: "Subject Details",
   path: SubjectDetailVC.id,
-  builder: (context, state) => SubjectDetailVC(title: state.extra as String),
+  builder: (context, state) =>
+      SubjectDetailVC(subjectId: state.pathParameters['id']!),
 );
 final AppNavigationModel videos = AppNavigationModel(
   label: "Videos",

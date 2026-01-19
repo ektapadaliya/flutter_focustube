@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
+import 'package:focus_tube_flutter/model/playlist_model.dart';
 import 'checkbox_tile.dart';
 
 enum PlayListTileType { normal, selection, edit }
@@ -10,15 +11,15 @@ enum PlayListTileType { normal, selection, edit }
 class PlayListTile extends StatelessWidget {
   const PlayListTile({
     super.key,
-    this.selectedValue,
+    this.isSelected = false,
     required this.onTap,
     required this.value,
     this.tileType = PlayListTileType.normal,
   });
-  final int value;
-  final int? selectedValue;
+  final PlaylistModel value;
+  final bool isSelected;
   final PlayListTileType tileType;
-  final void Function(int? index) onTap;
+  final void Function(PlaylistModel? playList) onTap;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -39,9 +40,9 @@ class PlayListTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("PlayList ${value + 1}", style: AppTextStyle.title20()),
+                  Text(value.title ?? "", style: AppTextStyle.title20()),
                   Text(
-                    "${value + 1} videos",
+                    "${value.totalVideos} videos",
                     style: AppTextStyle.body14(color: AppColor.gray),
                   ),
                 ],
@@ -52,7 +53,7 @@ class PlayListTile extends StatelessWidget {
               padding: const EdgeInsets.only(left: 15),
               child: tileType == PlayListTileType.selection
                   ? AppCheckBoxButton(
-                      isSelected: selectedValue == value,
+                      isSelected: isSelected,
                       onChanged: (isSelected) => onTap(value),
                     )
                   : tileType == PlayListTileType.edit

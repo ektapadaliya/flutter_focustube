@@ -55,12 +55,12 @@ class _PlaylistVCState extends State<PlaylistVC> {
             SizedBox(height: 20),
             Expanded(
               child: ListView.separated(
-                itemBuilder: (context, index) => PlayListTile(
+                itemBuilder: (context, index) => Container() /* PlayListTile(
                   onTap: (_) {
                     playListDetail.go(context, id: index.toString());
                   },
                   value: index,
-                ),
+                ) */,
                 separatorBuilder: (context, index) => SizedBox(height: 15),
                 itemCount: 10,
               ),

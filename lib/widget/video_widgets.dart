@@ -49,7 +49,7 @@ class PopularVideoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        videoDetail.go(context);
+        videoDetail.go(context, id: video.id.toString());
       },
       overlayColor: WidgetStatePropertyAll(Colors.transparent),
       child: SizedBox(
@@ -208,7 +208,7 @@ class BookmarkVideoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        videoDetail.go(context);
+        videoDetail.go(context, id: video.id.toString());
       },
       overlayColor: WidgetStatePropertyAll(Colors.transparent),
       child: ConstrainedBox(

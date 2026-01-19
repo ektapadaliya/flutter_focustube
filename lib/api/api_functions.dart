@@ -5,11 +5,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/api/api_manager.dart';
 import 'package:focus_tube_flutter/api/api_utils.dart';
+import 'package:focus_tube_flutter/controller/playlist_controller.dart';
 import 'package:focus_tube_flutter/controller/subject_controller.dart';
 import 'package:focus_tube_flutter/controller/subject_video_controller.dart';
 import 'package:focus_tube_flutter/controller/video_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/model/interest_model.dart';
+import 'package:focus_tube_flutter/model/playlist_model.dart';
 import 'package:focus_tube_flutter/model/sub_subject_model.dart';
 import 'package:focus_tube_flutter/model/subject_model.dart';
 import 'package:focus_tube_flutter/model/subject_video_model.dart';
@@ -482,6 +484,7 @@ class ApiFunctions {
   Future<void> getRecommenedVideos(
     BuildContext context, {
     required VideoController controller,
+    String? videoId,
     int page = 1,
     int? perPage,
   }) async {
@@ -492,6 +495,7 @@ class ApiFunctions {
         body: {
           if (perPage != null) "per_page": perPage.toString(),
           "page": page.toString(),
+          if (videoId != null) "video_id": videoId,
         },
       );
       controller.setIsLoading(false);
@@ -555,6 +559,7 @@ class ApiFunctions {
     BuildContext context, {
     required VideoController controller,
     int page = 1,
+
     int? perPage,
   }) async {
     try {
@@ -586,10 +591,11 @@ class ApiFunctions {
     }
   }
 
-  //Bookmark Videos
+  //Videos
   Future<void> getVideos(
     BuildContext context, {
     required VideoController controller,
+    String? subSubjectId,
     String? search,
     int page = 1,
   }) async {
@@ -599,7 +605,9 @@ class ApiFunctions {
         ApiUtils.getVideos,
         body: {
           "page": page.toString(),
-          if (search != null && search.trim().isNotEmpty) ?"search": search,
+          if (search != null && search.trim().isNotEmpty) "search": search,
+          if (subSubjectId != null && subSubjectId.trim().isNotEmpty)
+            "sub_subject_id": subSubjectId,
         },
       );
       controller.setIsLoading(false);
@@ -618,11 +626,46 @@ class ApiFunctions {
         controller.setHasData(false);
       }
     } catch (e) {
-      debugPrint("Error in getBookmarkVideos: $e");
+      debugPrint("Error in getVideos: $e");
     }
   }
 
-  //Bookmark Videos
+  //Play List
+  Future<void> getPlaylist(
+    BuildContext context, {
+    required PlaylistController controller,
+    String? search,
+    int page = 1,
+  }) async {
+    try {
+      controller.setIsLoading(true);
+      var response = await ApiManager.instance.post<PlaylistModel>(
+        ApiUtils.getPlaylist,
+        body: {
+          "page": page.toString(),
+          if (search != null && search.trim().isNotEmpty) "search": search,
+        },
+      );
+      controller.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            controller.setHasData(false);
+          } else {
+            controller.addPlayList(response.data);
+          }
+        } else {
+          controller.setHasData(false);
+        }
+      } else if (response.isError) {
+        controller.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in getPlaylist: $e");
+    }
+  }
+
   Future<void> getSubjects(
     BuildContext context, {
     required SubjectController controller,
@@ -654,8 +697,30 @@ class ApiFunctions {
         controller.setHasData(false);
       }
     } catch (e) {
-      debugPrint("Error in getBookmarkVideos: $e");
+      debugPrint("Error in getSubjects: $e");
     }
+  }
+
+  Future<List<SubjectModel>?> getSubject(
+    BuildContext context, {
+    required String subjectId,
+  }) async {
+    try {
+      var response = await ApiManager.instance.post<SubjectModel>(
+        ApiUtils.subjects,
+        body: {"subject_id": subjectId},
+      );
+      if (response.isSuccess) return response.data;
+
+      await AppTostMessage.snackBarMessage(
+        context,
+        message: response.responseMessage,
+        isError: response.isError,
+      );
+    } catch (e) {
+      debugPrint("Error in getSubject: $e");
+    }
+    return null;
   }
 
   //Bookmark Video
@@ -673,6 +738,23 @@ class ApiFunctions {
       }
     } catch (e) {
       debugPrint("Error in bookmarkVideo: $e");
+      return false;
+    }
+  }
+
+  Future<bool> addVideoFeedBack(
+    BuildContext context, {
+    required String videoId,
+    required String rating,
+  }) async {
+    try {
+      var response = await ApiManager.instance.post(
+        ApiUtils.addVideoFeedback,
+        body: {"video_id": videoId, "rating": rating},
+      );
+      return response.isSuccess;
+    } catch (e) {
+      debugPrint("Error in addVideoFeedBack: $e");
       return false;
     }
   }
@@ -767,6 +849,31 @@ class ApiFunctions {
     } catch (e) {
       debugPrint("Error in getMySubjectVideos: $e");
     }
+  }
+
+  //Subject Videos Videos
+  Future<VideoModel?> getVideoDetails(
+    BuildContext context, {
+    required String videoId,
+  }) async {
+    try {
+      var response = await ApiManager.instance.post<VideoModel>(
+        ApiUtils.getVideoDetails,
+        body: {"video_id": videoId},
+      );
+      if (response.isSuccess) {
+        return response.data;
+      } else {
+        await AppTostMessage.snackBarMessage(
+          context,
+          message: response.responseMessage,
+          isError: response.isError,
+        );
+      }
+    } catch (e) {
+      debugPrint("Error in getMySubjectVideos: $e");
+    }
+    return null;
   }
 
   //Logout
