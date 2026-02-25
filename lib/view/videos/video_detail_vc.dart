@@ -126,7 +126,7 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
                   InkWell(
                     overlayColor: WidgetStatePropertyAll(Colors.transparent),
                     onTap: () {
-                      notes.go(context);
+                      notes.go(context, id: widget.videoId);
                     },
                     child: Container(
                       padding: const EdgeInsets.only(right: 30),
@@ -244,7 +244,7 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
               isFilled: false,
               fontSize: 18,
               onTap: () async {
-                var value = await showDialog(
+                /*   var value = await showDialog(
                   context: context,
                   builder: (context) => FeedbackVC(),
                 );
@@ -263,7 +263,7 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
                   if (isSuccess) {
                     isRatedNotifier.value = true;
                   }
-                }
+                } */
               },
             ),
           ),
@@ -286,8 +286,12 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
           return ListView.separated(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) =>
-                VideoTile(video: videoController.videos[index]),
+            itemBuilder: (context, index) => VideoTile(
+              video: videoController.videos[index],
+              onBookmark: (value) {
+                videoController.changeBookmarkStatus(value);
+              },
+            ),
             separatorBuilder: (context, index) => SizedBox(height: 15),
             itemCount: videoController.videos.length,
           );

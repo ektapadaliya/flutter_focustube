@@ -11,6 +11,7 @@ import 'package:focus_tube_flutter/controller/subject_video_controller.dart';
 import 'package:focus_tube_flutter/controller/video_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/model/interest_model.dart';
+import 'package:focus_tube_flutter/model/note_model.dart';
 import 'package:focus_tube_flutter/model/playlist_model.dart';
 import 'package:focus_tube_flutter/model/sub_subject_model.dart';
 import 'package:focus_tube_flutter/model/subject_model.dart';
@@ -631,7 +632,7 @@ class ApiFunctions {
   }
 
   //Play List
-  Future<void> getPlaylist(
+  Future<void> playlistList(
     BuildContext context, {
     required PlaylistController controller,
     String? search,
@@ -640,7 +641,7 @@ class ApiFunctions {
     try {
       controller.setIsLoading(true);
       var response = await ApiManager.instance.post<PlaylistModel>(
-        ApiUtils.getPlaylist,
+        ApiUtils.playlistList,
         body: {
           "page": page.toString(),
           if (search != null && search.trim().isNotEmpty) "search": search,
@@ -663,6 +664,134 @@ class ApiFunctions {
       }
     } catch (e) {
       debugPrint("Error in getPlaylist: $e");
+    }
+  }
+
+  //Play List Create
+  Future<void> playlistCreate(
+    BuildContext context, {
+    required String title,
+  }) async {
+    try {
+      var response = await ApiManager.instance.post<PlaylistModel>(
+        ApiUtils.playlistList,
+        body: {"title": title},
+      );
+      if (response.isSuccess) {
+        return response.data;
+      } else {
+        AppTostMessage.snackBarMessage(
+          context,
+          message: response.responseMessage,
+          isError: true,
+        );
+      }
+    } catch (e) {
+      debugPrint("Error in playlistList: $e");
+    }
+  }
+
+  //Play List Add Video
+  Future<void> playlistVideoAdd(
+    BuildContext context, {
+    required String playlistId,
+    required String videoId,
+  }) async {
+    try {
+      var response = await ApiManager.instance.post<PlaylistModel>(
+        ApiUtils.playlistVideoAdd,
+        body: {"playlist_id": playlistId, "video_id": videoId},
+      );
+
+      await AppTostMessage.snackBarMessage(
+        context,
+        message: response.responseMessage,
+        isError: response.isError,
+      );
+    } catch (e) {
+      debugPrint("Error in playlistList: $e");
+    }
+  }
+
+  //Play List Add Video
+  Future<void> noteCreateEdit(
+    BuildContext context, {
+    required String title,
+    required String description,
+    required String id,
+    required bool isAdd,
+  }) async {
+    try {
+      var response = await ApiManager.instance.post<NoteModel>(
+        isAdd ? ApiUtils.noteCreate : ApiUtils.noteEdit,
+        body: {
+          if (isAdd) "video_id": id else 'note_id': id,
+          "description": description,
+          'title': title,
+        },
+      );
+      if (response.isSuccess && response.data is NoteModel) {
+        controller<NoteController>().addNote(response.data);
+      }
+      await AppTostMessage.snackBarMessage(
+        context,
+        message: response.responseMessage,
+        isError: response.isError,
+      );
+    } catch (e) {
+      debugPrint("Error in noteCreate: $e");
+    }
+  }
+
+  Future<void> noteDelete(BuildContext context, {required String id}) async {
+    try {
+      var response = await ApiManager.instance.post<NoteModel>(
+        ApiUtils.noteDelete,
+        body: {'note_id': id},
+      );
+      if (response.isSuccess) {
+        controller<NoteController>().removeNote(id);
+      }
+      await AppTostMessage.snackBarMessage(
+        context,
+        message: response.responseMessage,
+        isError: response.isError,
+      );
+    } catch (e) {
+      debugPrint("Error in noteCreate: $e");
+    }
+  }
+
+  //Play List
+  Future<void> noteList(
+    BuildContext context, {
+    required NoteController controller,
+    required String videoId,
+    int page = 1,
+  }) async {
+    try {
+      controller.setIsLoading(true);
+      var response = await ApiManager.instance.post<NoteModel>(
+        ApiUtils.noteList,
+        body: {"page": page.toString(), 'video_id': videoId},
+      );
+      controller.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            controller.setHasData(false);
+          } else {
+            controller.addNotes(response.data);
+          }
+        } else {
+          controller.setHasData(false);
+        }
+      } else if (response.isError) {
+        controller.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in noteList: $e");
     }
   }
 
@@ -724,7 +853,7 @@ class ApiFunctions {
   }
 
   //Bookmark Video
-  Future<dynamic> bookmarkVideo(
+  Future<bool> bookmarkVideo(
     BuildContext context, {
     required String videoId,
   }) async {
@@ -734,12 +863,12 @@ class ApiFunctions {
         body: {"video_id": videoId},
       );
       if (response.isSuccess) {
-        return response.data;
+        return response.data == 1;
       }
     } catch (e) {
       debugPrint("Error in bookmarkVideo: $e");
-      return false;
     }
+    return false;
   }
 
   Future<bool> addVideoFeedBack(

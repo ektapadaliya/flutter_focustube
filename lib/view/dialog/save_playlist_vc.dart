@@ -70,7 +70,7 @@ class _SavePlaylistVCState extends State<SavePlaylistVC> {
   }
 
   callApi({int page = 1}) async {
-    await ApiFunctions.instance.getPlaylist(
+    await ApiFunctions.instance.playlistList(
       context,
       controller: playlistController,
     );
@@ -142,7 +142,13 @@ class _SavePlaylistVCState extends State<SavePlaylistVC> {
                       ),
                     ),
                     SizedBox(height: 30),
-                    AppButton(label: "Save", backgroundColor: AppColor.primary),
+                    AppButton(
+                      label: "Save",
+                      backgroundColor: AppColor.primary,
+                      onTap: () {
+                        Navigator.of(context).pop(selectedPlayList);
+                      },
+                    ),
 
                     /*   SizedBox(height: 15),
                     AppButton(

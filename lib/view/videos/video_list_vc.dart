@@ -97,7 +97,7 @@ class _VideoListVCState extends State<VideoListVC> {
                                 controller: scrollController,
                                 itemBuilder: (context, index) => VideoTile(
                                   video: videoController.videos[index],
-                                  onBookmark: (id) {
+                                  onBookmark: (id) async {
                                     if (widget.tag == "bookmark" ||
                                         widget.tag == "bookmarks") {
                                       videoController.removeVideo(id);
@@ -105,10 +105,18 @@ class _VideoListVCState extends State<VideoListVC> {
                                       videoController.changeBookmarkStatus(id);
                                     }
 
-                                    ApiFunctions.instance.bookmarkVideo(
-                                      context,
-                                      videoId: id,
-                                    );
+                                    var value = await ApiFunctions.instance
+                                        .bookmarkVideo(context, videoId: id);
+                                    if (widget.tag == "bookmark") {
+                                      controller<VideoController>(
+                                        tag: "${widget.tag}-home",
+                                      ).removeVideo(id);
+                                    } else if (widget.tag == "popular" ||
+                                        widget.tag == "recommended") {
+                                      controller<VideoController>(
+                                        tag: "${widget.tag}-home",
+                                      ).changeBookmarkStatus(id, value: value);
+                                    }
                                   },
                                 ),
                                 separatorBuilder: (context, index) =>

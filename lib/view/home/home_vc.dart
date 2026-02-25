@@ -70,8 +70,9 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
     recommendedVideoCtrl.changeBookmarkStatus(id);
     popularVideoCtrl.changeBookmarkStatus(id);
     var value = await ApiFunctions.instance.bookmarkVideo(context, videoId: id);
-
-    if (value == 0) {
+    recommendedVideoCtrl.changeBookmarkStatus(id, value: value);
+    popularVideoCtrl.changeBookmarkStatus(id, value: value);
+    if (!value) {
       bookmarkVideoCtrl.removeVideo(id);
     }
   }

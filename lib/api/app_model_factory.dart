@@ -1,5 +1,6 @@
 import 'package:focus_tube_flutter/model/content_model.dart';
 import 'package:focus_tube_flutter/model/interest_model.dart';
+import 'package:focus_tube_flutter/model/note_model.dart';
 import 'package:focus_tube_flutter/model/playlist_model.dart';
 import 'package:focus_tube_flutter/model/sub_subject_model.dart';
 import 'package:focus_tube_flutter/model/subject_model.dart';
@@ -159,5 +160,7 @@ class AppModelFactory {
 
     register<InterestModel>(InterestModel.fromJson);
     register<UserInterestModel>(UserInterestModel.fromJson);
+
+    register<NoteModel>(NoteModel.fromJson);
   }
 }

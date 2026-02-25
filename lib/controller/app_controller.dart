@@ -9,6 +9,7 @@ import 'user_controller.dart';
 import 'youtube_video_controller.dart';
 import 'youtube_channel_controller.dart';
 import 'video_controller.dart';
+import 'note_controller.dart';
 
 export 'user_controller.dart';
 export 'loader_cotroller.dart';
@@ -16,6 +17,7 @@ export 'interest_controller.dart';
 export 'youtube_video_controller.dart';
 export 'youtube_channel_controller.dart';
 export 'video_controller.dart';
+export 'note_controller.dart';
 
 T controller<T>({String? tag}) {
   return Get.isRegistered<T>(tag: tag)
@@ -43,6 +45,8 @@ _putController<T>({String? tag}) {
       return Get.put(SubjectVideoController(tag), tag: tag);
     case const (PlaylistController):
       return Get.put(PlaylistController(tag), tag: tag);
+    case const (NoteController):
+      return Get.put(NoteController(), tag: tag);
     default:
       return null;
   }

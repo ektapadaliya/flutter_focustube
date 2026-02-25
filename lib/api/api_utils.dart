@@ -41,5 +41,14 @@ class ApiUtils {
   static const getVideos = "${baseUrl}get-videos";
   static const getVideoDetails = "${baseUrl}get-video-details";
   static const addVideoFeedback = "${baseUrl}add-video-feedback";
-  static const getPlaylist = "${baseUrl}get-playlist";
+  static const playlistList = "${baseUrl}playlist/list";
+  static const playlistEdit = "${baseUrl}playlist/edit";
+  static const playlistDelete = "${baseUrl}playlist/delete";
+  static const playlistVideoAdd = "${baseUrl}playlist/video/add";
+  static const playlistVideoDelete = "${baseUrl}playlist/video/delete";
+  static const playlistVideoList = "${baseUrl}playlist/video/list";
+  static const noteCreate = "${baseUrl}note/create";
+  static const noteEdit = "${baseUrl}note/edit";
+  static const noteDelete = "${baseUrl}note/delete";
+  static const noteList = "${baseUrl}note/list";
 }

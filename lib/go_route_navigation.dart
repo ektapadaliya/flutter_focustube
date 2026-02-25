@@ -303,18 +303,21 @@ final AppNavigationModel youtubeVideoDetail = AppNavigationModel(
 );
 final AppNavigationModel notes = AppNavigationModel(
   label: "Notes",
-  path: NoteListVC.id,
-  builder: (context, state) => NoteListVC(),
+  path: "${NoteListVC.id}/:id",
+  builder: (context, state) =>
+      NoteListVC(videoId: state.pathParameters['id'] ?? ''),
 );
 final AppNavigationModel addNote = AppNavigationModel(
   label: "Add Note",
   path: "${NoteListVC.id}${NoteDetailVC.addId}",
-  builder: (context, state) => NoteDetailVC(),
+  builder: (context, state) =>
+      NoteDetailVC(id: state.pathParameters['id'] ?? "", isAdd: true),
 );
 final AppNavigationModel detailsNote = AppNavigationModel(
   label: "Note Detail",
   path: "${NoteListVC.id}${NoteDetailVC.detailId}",
-  builder: (context, state) => NoteDetailVC(id: state.pathParameters['id']),
+  builder: (context, state) =>
+      NoteDetailVC(id: state.pathParameters['id'] ?? ""),
 );
 final AppNavigationModel profile = AppNavigationModel(
   label: "My Profile",
