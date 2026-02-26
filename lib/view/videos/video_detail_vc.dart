@@ -7,6 +7,7 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
+import 'package:focus_tube_flutter/controller/playlist_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/view/dialog/feedback_vc.dart';
 import 'package:focus_tube_flutter/view/dialog/save_playlist_vc.dart';
@@ -19,6 +20,8 @@ import 'package:focus_tube_flutter/widget/screen_background.dart';
 import 'package:focus_tube_flutter/widget/video_widgets.dart';
 import 'package:get/state_manager.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+import '../../model/playlist_model.dart';
 
 class VideoDetailVC extends StatefulWidget {
   static const id = "/video/:id";
@@ -40,11 +43,13 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
   String? thumbnailUrl;
   String? channelTitle;
   double? aspectRatio;
+  String? playlistId;
   LoaderController loaderController = controller<LoaderController>(
     tag: "video-detail",
   );
   VideoController? videoController;
   late final ValueNotifier<bool> isRatedNotifier;
+
   @override
   void initState() {
     isRatedNotifier = ValueNotifier(false);
@@ -97,17 +102,19 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
       title = video.title ?? "";
       thumbnailUrl = YoutubeApiConst.thubnailFromId(video.youtubeId ?? "");
       channelTitle = video.channelName ?? "";
-
+      playlistId = video.playlistId ?? "";
       isRatedNotifier.value = video.isFeedback ?? false;
 
       setState(() {});
     }
   }
 
+  var playListController = controller<PlaylistController>(tag: "save-playlist");
   @override
   void dispose() {
     _youtubePlayerController?.dispose();
     isRatedNotifier.dispose();
+    playListController.clear();
     super.dispose();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
@@ -222,10 +229,43 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
         Expanded(child: _buildVideoTitle()),
         if (!widget.isFromYoutube)
           InkWell(
-            onTap: () => showDialog(
-              context: context,
-              builder: (context) => SavePlaylistVC(),
-            ),
+            onTap: () async {
+              var result = await showDialog(
+                context: context,
+                builder: (context) => SavePlaylistVC(playList: playlistId),
+              );
+              if (result is PlaylistModel &&
+                  result.id.toString() != playlistId) {
+                var isSuccess = await ApiFunctions.instance
+                    .playlistVideoAddDelete(
+                      context,
+                      videoId: widget.videoId,
+                      playlistId: result.id.toString(),
+                    );
+
+                if (isSuccess) {
+                  playlistId = result.id.toString();
+                  var oldPlayList = playListController.playList
+                      .where((e) => e.id.toString() == playlistId)
+                      .firstOrNull;
+                  if (oldPlayList != null) {
+                    playListController.addPlayList(
+                      oldPlayList
+                        ..totalVideos = (oldPlayList.totalVideos ?? 1) > 0
+                            ? (oldPlayList.totalVideos! - 1)
+                            : 0,
+                    );
+                  }
+                  playListController.addPlayList(
+                    result
+                      ..totalVideos = (result.totalVideos) != null
+                          ? (result.totalVideos! + 1)
+                          : 0,
+                  );
+                  setState(() {});
+                }
+              }
+            },
             child: SvgPicture.asset(AppImage.playListIcon),
           ),
       ],

@@ -14,14 +14,14 @@ import 'package:go_router/go_router.dart';
 import '../../model/playlist_model.dart';
 
 class SavePlaylistVC extends StatefulWidget {
-  const SavePlaylistVC({super.key});
-
+  const SavePlaylistVC({super.key, this.playList});
+  final String? playList;
   @override
   State<SavePlaylistVC> createState() => _SavePlaylistVCState();
 }
 
 class _SavePlaylistVCState extends State<SavePlaylistVC> {
-  PlaylistModel? selectedPlayList;
+  String? selectedPlayListId;
   PlaylistController playlistController = controller<PlaylistController>(
     tag: "save-playlist",
   );
@@ -29,16 +29,18 @@ class _SavePlaylistVCState extends State<SavePlaylistVC> {
 
   @override
   void initState() {
+    selectedPlayListId = widget.playList;
     super.initState();
     Future.delayed(Duration.zero, () async {
-      await callApi();
+      if (playlistController.playList.isEmpty) {
+        await callApi();
+      }
     });
     scrollController.addListener(_scrollListener);
   }
 
   @override
   void dispose() {
-    playlistController.clear();
     scrollController.removeListener(_scrollListener);
     scrollController.dispose();
     super.dispose();
@@ -46,7 +48,7 @@ class _SavePlaylistVCState extends State<SavePlaylistVC> {
 
   void selectIndex(PlaylistModel? value) {
     setState(() {
-      selectedPlayList = value;
+      selectedPlayListId = value?.id?.toString();
     });
   }
 
@@ -131,8 +133,9 @@ class _SavePlaylistVCState extends State<SavePlaylistVC> {
                           onTap: selectIndex,
                           value: playlistController.playList[index],
                           isSelected:
-                              playlistController.playList[index].id ==
-                              selectedPlayList?.id,
+                              playlistController.playList[index].id
+                                  .toString() ==
+                              selectedPlayListId,
                           tileType: PlayListTileType.selection,
                         ),
 
@@ -146,7 +149,13 @@ class _SavePlaylistVCState extends State<SavePlaylistVC> {
                       label: "Save",
                       backgroundColor: AppColor.primary,
                       onTap: () {
-                        Navigator.of(context).pop(selectedPlayList);
+                        Navigator.of(context).pop(
+                          playlistController.playList
+                              .where(
+                                (e) => selectedPlayListId == e.id.toString(),
+                              )
+                              .firstOrNull,
+                        );
                       },
                     ),
 

@@ -5,17 +5,55 @@ import 'package:get/get.dart';
 class PlaylistController extends GetxController {
   PlaylistController(this.tag);
   String? tag;
-  List<PlaylistModel> playList = [];
+  List<PlaylistModel> _playList = [];
+  List<PlaylistModel> _searchPlayList = [];
+  List<PlaylistModel> get playList => (isSearch) ? _searchPlayList : _playList;
 
-  void addPlayList(List<PlaylistModel> playList) {
+  String? searchQuery;
+
+  void setSearchQuery(String? query) {
+    searchQuery = query;
+    update();
+  }
+
+  bool get isSearch => (searchQuery?.trim().isNotEmpty ?? false);
+
+  void addPlayLists(List<PlaylistModel> playList) {
     for (var element in playList) {
-      var index = this.playList.indexWhere((e) => e.id == element.id);
-      if (index == -1) {
-        this.playList.add(element);
+      if (isSearch) {
+        var index = _searchPlayList.indexWhere((e) => e.id == element.id);
+        if (index == -1) {
+          _searchPlayList.add(element);
+        } else {
+          _searchPlayList[index] = element;
+        }
+      }
+      var index = _playList.indexWhere((e) => e.id == element.id);
+      if (index == -1 && !isSearch) {
+        _playList.add(element);
       } else {
-        this.playList[index] = element;
+        _playList[index] = element;
       }
     }
+    update();
+  }
+
+  void addPlayList(PlaylistModel playList) {
+    if (isSearch) {
+      var index = _searchPlayList.indexWhere((e) => e.id == playList.id);
+      if (index == -1) {
+        _searchPlayList.add(playList);
+      } else {
+        _searchPlayList[index] = playList;
+      }
+    }
+    var index = _playList.indexWhere((e) => e.id == playList.id);
+    if (index == -1 && !isSearch) {
+      _playList.add(playList);
+    } else if (index != -1) {
+      _playList[index] = playList;
+    }
+
     update();
   }
 
@@ -25,17 +63,29 @@ class PlaylistController extends GetxController {
     controller<LoaderController>(tag: tag).setLoading(isLoading);
   }
 
-  bool hasData = true;
+  bool _hasData = true;
+  bool _searchHasData = true;
+  bool get hasData => (isSearch) ? _searchHasData : _hasData;
 
   void setHasData(bool hasData) {
-    this.hasData = hasData;
+    if (isSearch) {
+      _searchHasData = hasData;
+    } else {
+      _hasData = hasData;
+    }
     update();
   }
 
-  int page = 1;
+  int _page = 1;
+  int _searchPage = 1;
+  int get page => (isSearch) ? _searchPage : _page;
 
   void incPage() {
-    page++;
+    if (isSearch) {
+      _searchPage++;
+    } else {
+      _page++;
+    }
     update();
   }
 
@@ -45,9 +95,16 @@ class PlaylistController extends GetxController {
   }
 
   void clear() {
-    playList.clear();
-    page = 1;
-    hasData = true;
+    _playList.clear();
+    _page = 1;
+    _hasData = true;
+    clearSearch();
+  }
+
+  void clearSearch() {
+    _searchPlayList.clear();
+    _searchPage = 1;
+    _searchHasData = true;
     loaderController.setLoading(false);
     update();
   }

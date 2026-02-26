@@ -78,6 +78,13 @@ class _AddEditPlaylistVCState extends State<AddEditPlaylistVC> {
                 AppButton(
                   label: widget.playlist != null ? "Change" : "Create",
                   backgroundColor: AppColor.primary,
+                  onTap: () {
+                    Navigator.of(context).pop(
+                      playListNameController.text.trim().isEmpty
+                          ? null
+                          : playListNameController.text.trim(),
+                    );
+                  },
                 ),
                 SizedBox(height: 20),
               ],

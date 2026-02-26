@@ -19,6 +19,17 @@ class VideoController extends GetxController {
     update();
   }
 
+  void addEditVideo(VideoModel video) {
+    var index = videos.indexWhere((e) => e.id == video.id);
+    if (index == -1) {
+      videos.add(video);
+    } else {
+      videos[index] = video;
+    }
+
+    update();
+  }
+
   LoaderController get loaderController =>
       controller<LoaderController>(tag: tag);
   void setIsLoading(bool isLoading) {

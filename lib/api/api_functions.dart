@@ -635,7 +635,6 @@ class ApiFunctions {
   Future<void> playlistList(
     BuildContext context, {
     required PlaylistController controller,
-    String? search,
     int page = 1,
   }) async {
     try {
@@ -644,7 +643,7 @@ class ApiFunctions {
         ApiUtils.playlistList,
         body: {
           "page": page.toString(),
-          if (search != null && search.trim().isNotEmpty) "search": search,
+          if (controller.isSearch) "search": controller.searchQuery?.trim(),
         },
       );
       controller.setIsLoading(false);
@@ -654,7 +653,7 @@ class ApiFunctions {
           if (data.isEmpty) {
             controller.setHasData(false);
           } else {
-            controller.addPlayList(response.data);
+            controller.addPlayLists(response.data);
           }
         } else {
           controller.setHasData(false);
@@ -668,14 +667,15 @@ class ApiFunctions {
   }
 
   //Play List Create
-  Future<void> playlistCreate(
+  Future<PlaylistModel?> playlistCreateEdit(
     BuildContext context, {
+    String? id,
     required String title,
   }) async {
     try {
       var response = await ApiManager.instance.post<PlaylistModel>(
-        ApiUtils.playlistList,
-        body: {"title": title},
+        id != null ? ApiUtils.playlistEdit : ApiUtils.playlistCreate,
+        body: {if (id != null) "playlist_id": id, "title": title},
       );
       if (response.isSuccess) {
         return response.data;
@@ -687,30 +687,87 @@ class ApiFunctions {
         );
       }
     } catch (e) {
-      debugPrint("Error in playlistList: $e");
+      debugPrint("Error in playlistCreateEdit: $e");
     }
+    return null;
   }
 
-  //Play List Add Video
-  Future<void> playlistVideoAdd(
+  Future<PlaylistModel?> playlistDelete(
     BuildContext context, {
-    required String playlistId,
-    required String videoId,
+    required String id,
   }) async {
     try {
-      var response = await ApiManager.instance.post<PlaylistModel>(
-        ApiUtils.playlistVideoAdd,
-        body: {"playlist_id": playlistId, "video_id": videoId},
+      var response = await ApiManager.instance.post(
+        ApiUtils.playlistDetail,
+        body: {"playlist_id": id},
       );
 
       await AppTostMessage.snackBarMessage(
         context,
         message: response.responseMessage,
+        isError: true,
+      );
+    } catch (e) {
+      debugPrint("Error in playlistDelete: $e");
+    }
+    return null;
+  }
+
+  Future<void> playlistVideoList(
+    BuildContext context, {
+    required VideoController controller,
+    required String playlistId,
+    int page = 1,
+  }) async {
+    try {
+      controller.setIsLoading(true);
+      var response = await ApiManager.instance.post<VideoModel>(
+        ApiUtils.playlistVideoList,
+        body: {"page": page.toString(), 'playlist_id': playlistId},
+      );
+      controller.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            controller.setHasData(false);
+          } else {
+            controller.addVideos(response.data);
+          }
+        } else {
+          controller.setHasData(false);
+        }
+      } else if (response.isError) {
+        controller.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in playlistVideoList: $e");
+    }
+  }
+
+  //Play List Add/Delete Video
+  Future<bool> playlistVideoAddDelete(
+    BuildContext context, {
+    required String playlistId,
+    required String videoId,
+    bool isDelete = false,
+  }) async {
+    try {
+      var response = await ApiManager.instance.post<PlaylistModel>(
+        isDelete ? ApiUtils.playlistVideoDelete : ApiUtils.playlistVideoAdd,
+        body: {"playlist_id": playlistId, "video_id": videoId},
+      );
+
+      AppTostMessage.snackBarMessage(
+        context,
+        message: response.responseMessage,
         isError: response.isError,
       );
+      return response.isSuccess;
     } catch (e) {
       debugPrint("Error in playlistList: $e");
     }
+    return false;
   }
 
   //Play List Add Video

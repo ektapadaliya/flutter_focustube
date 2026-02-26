@@ -19,7 +19,7 @@ class PlayListTile extends StatelessWidget {
   final PlaylistModel value;
   final bool isSelected;
   final PlayListTileType tileType;
-  final void Function(PlaylistModel? playList) onTap;
+  final void Function(PlaylistModel playList) onTap;
   @override
   Widget build(BuildContext context) {
     return InkWell(
