@@ -11,7 +11,7 @@ import 'package:focus_tube_flutter/view/channels/channel_detail_vc.dart';
 import 'package:focus_tube_flutter/view/goals/daily_goal_vc.dart';
 import 'package:focus_tube_flutter/view/goals/set_daily_goal_vc.dart';
 import 'package:focus_tube_flutter/view/home_root.dart';
-import 'package:focus_tube_flutter/view/channels/my_channels_vc.dart';
+import 'package:focus_tube_flutter/view/channels/channel_list_vc.dart';
 import 'package:focus_tube_flutter/view/notes/note_detail_vc.dart';
 import 'package:focus_tube_flutter/view/notes/note_list_vc.dart';
 import 'package:focus_tube_flutter/view/playlists/playlist_detail_vc.dart';
@@ -239,11 +239,7 @@ final AppNavigationModel channels = AppNavigationModel(
   path: ChannelsVC.id,
   builder: (context, state) => const ChannelsVC(),
 );
-final AppNavigationModel myChannels = AppNavigationModel(
-  label: "My Channels",
-  path: MyChannelsVC.id,
-  builder: (context, state) => const MyChannelsVC(),
-);
+
 final AppNavigationModel channelDetail = AppNavigationModel(
   label: "Channel Detail",
   path: "${ChannelsVC.id}${ChannelDetailVC.id}",
@@ -379,7 +375,6 @@ final GoRouter router = GoRouter(
       channelDetail,
       profile,
       editProfile,
-      myChannels,
       editDailyLimit,
       selectChannels,
       //dailyGoal,

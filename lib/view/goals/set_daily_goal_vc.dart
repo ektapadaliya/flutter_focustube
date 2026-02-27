@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
+import 'package:focus_tube_flutter/controller/app_controller.dart';
+import 'package:focus_tube_flutter/model/daily_goal_model.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
+import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 class SetDailyGoalVC extends StatefulWidget {
@@ -17,61 +22,165 @@ class SetDailyGoalVC extends StatefulWidget {
 }
 
 class _SetDailyGoalVCState extends State<SetDailyGoalVC> {
-  final goals = [
-    GoalModel(title: "Math", count: 0),
-    GoalModel(title: "Science", count: 0),
-    GoalModel(title: "History", count: 0),
-    GoalModel(title: "Language", count: 0),
-  ];
+  late DailyGoalController goalController;
+  ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    goalController = controller<DailyGoalController>();
+    super.initState();
+    Future.delayed(Duration.zero, () async {
+      goalController.clearNewGoal();
+      if (goalController.goals.isEmpty) {
+        await callApi();
+      }
+    });
+    scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    scrollController.removeListener(_scrollListener);
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> onRefresh() async {
+    goalController.clear();
+    callApi();
+  }
+
+  _scrollListener() async {
+    if (!goalController.loaderController.isLoading.value &&
+        goalController.hasData) {
+      if (scrollController.offset >=
+              scrollController.position.maxScrollExtent &&
+          !scrollController.position.outOfRange) {
+        await callApi(page: goalController.page + 1);
+        if (goalController.hasData) {
+          goalController.incPage();
+        }
+      }
+    }
+  }
+
+  Future<void> callApi({int page = 1}) async {
+    await ApiFunctions.instance.getDailyGoal(context, page: page);
+  }
+
+  bool isUpdate = false;
   @override
   Widget build(BuildContext context) {
-    var child = ExpandedSingleChildScrollView(
-      padding: EdgeInsets.symmetric(
+    return GetBuilder(
+      init: goalController,
+      builder: (goalController) {
+        return AppLoader(
+          showLoader: goalController.goals.isEmpty || isUpdate,
+          loaderController: goalController.loaderController,
+          child: (widget.isFromNav)
+              ? child(goalController)
+              : ScreenBackground(
+                  appBar: customAppBar(context, title: "Set Daily Goals"),
+                  body: child(goalController),
+                ),
+        );
+      },
+    );
+  }
+
+  Widget child(DailyGoalController goalController) {
+    return SafeArea(
+      minimum: EdgeInsets.symmetric(
         horizontal: widget.isFromNav ? 0 : 30,
       ).copyWith(top: widget.isFromNav ? 15 : 0),
-      child: SafeArea(
-        child: FormScreenBoundries(
-          child: Column(
-            children: [
-              ...List.generate(goals.length, (index) {
-                var goal = goals[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 15),
-                  child: SetGoalTile(
-                    goal: goal,
-                    onCountChanged: (newCount) {
-                      setState(() {
-                        goals[index] = goal.copyWith(count: newCount);
-                      });
-                    },
+      child: FormScreenBoundries(
+        child: Obx(
+          () => RefreshIndicator(
+            onRefresh: onRefresh,
+            child:
+                (goalController.goals.isEmpty &&
+                    !(goalController.loaderController.isLoading.value))
+                ? ExpandedSingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "No videos found",
+                        style: AppTextStyle.body16(color: AppColor.gray),
+                      ),
+                    ),
+                  )
+                : Column(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: ListView.builder(
+                                controller: scrollController,
+                                itemCount: goalController.goals.length,
+                                itemBuilder: (context, index) {
+                                  var goal = goalController.goals[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 15),
+                                    child: SetGoalTile(
+                                      goal: goal,
+                                      goalController: goalController,
+                                      onCountChanged: (newCount) {
+                                        goalController.addNewGoal(
+                                          goal.id ?? 0,
+                                          newCount.toString(),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+
+                            if (!isUpdate &&
+                                goalController
+                                    .loaderController
+                                    .isLoading
+                                    .value &&
+                                goalController.goals.isNotEmpty)
+                              Container(
+                                height: 50,
+                                width: MediaQuery.sizeOf(context).width,
+                                alignment: Alignment.center,
+                                child: CircularProgressIndicator(),
+                              ),
+                          ],
+                        ),
+                      ),
+                      if (goalController.goals.isNotEmpty) ...[
+                        SizedBox(height: 20),
+                        AppButton(
+                          label: "Save Goals",
+                          onTap: () async {
+                            setState(() {
+                              isUpdate = true;
+                            });
+                            goalController.setIsLoading(true);
+                            await ApiFunctions.instance.setDailyGoal(context);
+                            goalController.setIsLoading(false);
+                            setState(() {
+                              isUpdate = false;
+                            });
+                            if (!widget.isFromNav) {
+                              context.pop();
+                            }
+                          },
+                          backgroundColor: AppColor.primary,
+                        ),
+                        if (!widget.isFromNav) SizedBox(height: 20),
+                      ],
+                    ],
                   ),
-                );
-              }),
-              Spacer(),
-              SizedBox(height: 20),
-              AppButton(
-                label: "Save Goals",
-                onTap: () {
-                  if (!widget.isFromNav) {
-                    context.pop();
-                  }
-                },
-                backgroundColor: AppColor.primary,
-              ),
-              SizedBox(height: 20),
-            ],
           ),
         ),
       ),
     );
-    if (widget.isFromNav) {
-      return child;
-    } else {
-      return ScreenBackground(
-        appBar: customAppBar(context, title: "Set Daily Goals"),
-        body: child,
-      );
-    }
   }
 }
 
@@ -80,12 +189,23 @@ class SetGoalTile extends StatelessWidget {
     super.key,
     required this.goal,
     required this.onCountChanged,
+    required this.goalController,
   });
-  final GoalModel goal;
+  final DailyGoalModel goal;
   final void Function(int) onCountChanged;
-
+  final DailyGoalController goalController;
   @override
   Widget build(BuildContext context) {
+    var count =
+        int.tryParse(
+          goalController.newGoals
+                  .firstWhereOrNull((e) => e.id == goal.id)
+                  ?.dailyGoal ??
+              goal.dailyGoal ??
+              "0",
+        ) ??
+        0;
+
     return Container(
       decoration: BoxDecoration(
         color: AppColor.tileBackground,
@@ -95,22 +215,24 @@ class SetGoalTile extends StatelessWidget {
       padding: EdgeInsets.all(15),
       child: Row(
         children: [
-          Text(goal.title, style: AppTextStyle.title16()),
-          Spacer(),
+          Expanded(
+            child: Text(goal.title ?? "", style: AppTextStyle.title16()),
+          ),
+
           buildButton(Icons.add, () {
-            onCountChanged(goal.count + 1);
-          }, isDisabled: goal.count >= 10),
+            onCountChanged(count + 1);
+          }, isDisabled: false),
           SizedBox(
             width: 50,
             child: Text(
-              goal.count.toString(),
+              count.toString(),
               textAlign: TextAlign.center,
               style: AppTextStyle.body16(),
             ),
           ),
           buildButton(Icons.remove, () {
-            onCountChanged(goal.count - 1);
-          }, isDisabled: goal.count <= 0),
+            onCountChanged(count - 1);
+          }, isDisabled: count <= 0),
         ],
       ),
     );
@@ -132,25 +254,5 @@ class SetGoalTile extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class GoalModel {
-  final String title;
-  final int count;
-
-  GoalModel({required this.title, required this.count});
-
-  /// Create a copy with updated count
-  GoalModel copyWith({String? title, int? count}) {
-    return GoalModel(title: title ?? this.title, count: count ?? this.count);
-  }
-
-  /// Convert to JSON
-  Map<String, dynamic> toJson() => {'title': title, 'count': count};
-
-  /// Create from JSON
-  factory GoalModel.fromJson(Map<String, dynamic> json) {
-    return GoalModel(title: json['title'], count: json['count']);
   }
 }

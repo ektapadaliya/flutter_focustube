@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
@@ -15,12 +16,14 @@ class ChannelTile extends StatelessWidget {
     this.channelId = "",
     this.channelImage = "",
     this.showAddChannels = true,
+    this.onAddChannel,
   });
 
   final String title;
   final String channelId;
   final String channelImage;
   final bool showAddChannels;
+  final void Function()? onAddChannel;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -57,6 +60,7 @@ class ChannelTile extends StatelessWidget {
               padding: const EdgeInsets.only(left: 10),
               child: AppButton(
                 label: "Add channel",
+                onTap: onAddChannel,
                 radius: 7,
                 alignment: null,
                 backgroundColor: AppColor.primary,

@@ -54,4 +54,13 @@ class ApiUtils {
   static const noteEdit = "${baseUrl}note/edit";
   static const noteDelete = "${baseUrl}note/delete";
   static const noteList = "${baseUrl}note/list";
+  static const setDailyGoal = "${baseUrl}daily-goal/set";
+  static const getDailyGoal = "${baseUrl}daily-goal/list";
+  static const getDailyGoalVideo = "${baseUrl}daily-goal/videos";
+  static const getMyHistory = "${baseUrl}get-my-history";
+
+  static const channelCurated = "${baseUrl}channel/curated";
+  static const channelScholartube = "${baseUrl}channel/scholartube";
+  static const channelMe = "${baseUrl}channel/me";
+  static const channelAdd = "${baseUrl}channel/add";
 }

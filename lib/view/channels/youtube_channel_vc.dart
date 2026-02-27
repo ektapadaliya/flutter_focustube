@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/api/youtube_api.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
@@ -104,11 +105,21 @@ class _YoutubeChannelVCState extends State<YoutubeChannelVC>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ChannelTile(
-                            showAddChannels: true,
                             title: channel.snippet?.title ?? "",
                             channelImage:
                                 channel.snippet?.thumbnails?.high?.url ?? "",
                             channelId: channel.id?.channelId ?? "",
+                            onAddChannel: () {
+                              ApiFunctions.instance.channelAdd(
+                                context,
+                                youtubeId: channel.snippet?.channelId ?? "",
+                                title: channel.snippet?.title ?? "",
+                                imageUrl:
+                                    channel.snippet?.thumbnails?.medium?.url ??
+                                    "",
+                                description: channel.snippet?.description ?? "",
+                              );
+                            },
                           ),
                           if (youtubeChannelController.isLoading &&
                               index ==

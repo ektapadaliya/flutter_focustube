@@ -3,6 +3,8 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/view/channels/youtube_channel_vc.dart';
 
+import '../channels/channel_list_vc.dart';
+
 class ChannelsVC extends StatefulWidget {
   static const id = "/channels";
   const ChannelsVC({super.key});
@@ -45,9 +47,9 @@ class _ChannelsVCState extends State<ChannelsVC> {
             controller: pageController,
             children: [
               YoutubeChannelVC(),
-              Container(),
-              Container(),
-              Container(),
+              ChannelListVC(tag: "channel-me"),
+              ChannelListVC(tag: "channel-curated"),
+              ChannelListVC(tag: "channel-scholartube"),
             ],
           ),
         ),

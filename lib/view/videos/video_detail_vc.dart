@@ -244,7 +244,6 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
                     );
 
                 if (isSuccess) {
-                  playlistId = result.id.toString();
                   var oldPlayList = playListController.playList
                       .where((e) => e.id.toString() == playlistId)
                       .firstOrNull;
@@ -256,6 +255,7 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
                             : 0,
                     );
                   }
+                  playlistId = result.id.toString();
                   playListController.addPlayList(
                     result
                       ..totalVideos = (result.totalVideos) != null

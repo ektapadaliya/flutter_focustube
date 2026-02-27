@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/api/youtube_api.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
@@ -98,6 +99,25 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                                     label: "Add channel",
                                     radius: 7,
                                     alignment: null,
+                                    onTap: () async {
+                                      loaderController.setLoading(true);
+                                      await ApiFunctions.instance.channelAdd(
+                                        context,
+                                        youtubeId: channel?.id ?? "",
+                                        title: channel?.snippet?.title ?? "",
+                                        imageUrl: channel
+                                            ?.snippet
+                                            ?.thumbnails
+                                            ?.medium
+                                            ?.url,
+                                        description:
+                                            channel?.snippet?.description,
+                                        followers: channel
+                                            ?.statistics
+                                            ?.subscriberCount,
+                                      );
+                                      loaderController.setLoading(false);
+                                    },
                                     backgroundColor: AppColor.primary,
                                     height: 32,
                                     padding: EdgeInsets.symmetric(
@@ -125,7 +145,6 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                       unselectedLabelColor: AppColor.gray,
                       tabs: [
                         Tab(text: "Videos"),
-                        // Tab(text: "Playlist"),
                         Tab(text: "About"),
                       ],
                     ),

@@ -199,6 +199,12 @@ class _VideoListVCState extends State<VideoListVC> {
         videoId: widget.tag.split("-")[1],
         controller: videoController,
       );
+    } else if (getTitleFromControllerTag(widget.tag) == "history") {
+      await ApiFunctions.instance.getMyHistory(
+        context,
+        page: page,
+        controller: videoController,
+      );
     }
   }
 }

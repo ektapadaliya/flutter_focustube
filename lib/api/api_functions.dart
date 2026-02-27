@@ -5,11 +5,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/api/api_manager.dart';
 import 'package:focus_tube_flutter/api/api_utils.dart';
-import 'package:focus_tube_flutter/controller/playlist_controller.dart';
-import 'package:focus_tube_flutter/controller/subject_controller.dart';
-import 'package:focus_tube_flutter/controller/subject_video_controller.dart';
-import 'package:focus_tube_flutter/controller/video_controller.dart';
+import 'package:focus_tube_flutter/controller/daily_goal_video_list_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/model/daily_goal_model.dart';
+import 'package:focus_tube_flutter/model/daily_goal_video_list_model.dart';
 import 'package:focus_tube_flutter/model/interest_model.dart';
 import 'package:focus_tube_flutter/model/note_model.dart';
 import 'package:focus_tube_flutter/model/playlist_model.dart';
@@ -23,6 +22,7 @@ import 'package:focus_tube_flutter/widget/app_tost_message.dart';
 import 'package:go_router/go_router.dart';
 
 import '../controller/app_controller.dart';
+import '../model/channel_model.dart';
 import '../model/user_model.dart';
 import '../model/content_model.dart';
 import 'api_response_model.dart';
@@ -517,6 +517,117 @@ class ApiFunctions {
     } catch (e) {
       debugPrint("Error in getRecommenedVideos: $e");
     }
+  }
+
+  //history
+  Future<void> getMyHistory(
+    BuildContext context, {
+    required VideoController controller,
+    String? videoId,
+    int page = 1,
+    int? perPage,
+  }) async {
+    try {
+      controller.setIsLoading(true);
+      var response = await ApiManager.instance.post<VideoModel>(
+        ApiUtils.getMyHistory,
+        body: {
+          if (perPage != null) "per_page": perPage.toString(),
+          "page": page.toString(),
+          if (videoId != null) "video_id": videoId,
+        },
+      );
+      controller.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            controller.setHasData(false);
+          } else {
+            controller.addVideos(response.data);
+          }
+        } else {
+          controller.setHasData(false);
+        }
+      } else if (response.isError) {
+        controller.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in getMyHistory: $e");
+    }
+  }
+
+  //My Channel
+  Future<void> channelList(
+    BuildContext context, {
+    required ChannelController controller,
+    int page = 1,
+    int? perPage,
+  }) async {
+    try {
+      controller.setIsLoading(true);
+      var response = await ApiManager.instance.post<ChannelModel>(
+        controller.tag == "channel-me"
+            ? ApiUtils.channelMe
+            : controller.tag == "channel-scholartube"
+            ? ApiUtils.channelScholartube
+            : ApiUtils.channelCurated,
+        body: {
+          if (perPage != null) "per_page": perPage.toString(),
+          "page": page.toString(),
+        },
+      );
+      controller.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            controller.setHasData(false);
+          } else {
+            controller.addChannel(response.data);
+          }
+        } else {
+          controller.setHasData(false);
+        }
+      } else if (response.isError) {
+        controller.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in channelList: $e");
+    }
+  }
+
+  Future<bool> channelAdd(
+    BuildContext context, {
+    required String youtubeId,
+    required String title,
+    required String? imageUrl,
+    String? description,
+
+    String? followers,
+  }) async {
+    try {
+      var response = await ApiManager.instance.post(
+        ApiUtils.channelAdd,
+        body: {
+          "youtube_id": youtubeId,
+          "title": title,
+          "image_url": imageUrl,
+          if (description != null) "description": description,
+          if (followers != null) "followers": followers,
+        },
+      );
+
+      AppTostMessage.snackBarMessage(
+        context,
+        message: response.responseMessage,
+        isError: response.isError,
+      );
+      return response.isSuccess;
+    } catch (e) {
+      debugPrint("Error in channelAdd: $e");
+    }
+    return false;
   }
 
   //Popular Videos
@@ -1060,6 +1171,99 @@ class ApiFunctions {
       debugPrint("Error in getMySubjectVideos: $e");
     }
     return null;
+  }
+
+  //Get Daily Goals
+  Future<DailyGoalModel?> getDailyGoal(context, {int page = 1}) async {
+    var goalController = controller<DailyGoalController>();
+    try {
+      goalController.setIsLoading(true);
+      var response = await ApiManager.instance.post<DailyGoalModel>(
+        ApiUtils.getDailyGoal,
+        body: {"page": page.toString()},
+      );
+      goalController.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            goalController.setHasData(false);
+          } else {
+            goalController.addGoals(response.data);
+          }
+        } else {
+          goalController.setHasData(false);
+        }
+      } else if (response.isError) {
+        goalController.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in getDailyGoal: $e");
+    }
+    return null;
+  }
+
+  //Get Daily Goal Videos
+  Future<DailyGoalModel?> getDailyGoalVideo(context, {int page = 1}) async {
+    var goalController = controller<DailyGoalVideoController>();
+    try {
+      goalController.setIsLoading(true);
+      var response = await ApiManager.instance.post<DailyGoalVideoListModel>(
+        ApiUtils.getDailyGoalVideo,
+        body: {"page": page.toString()},
+      );
+      goalController.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (response.response != null) {
+          goalController.setTotalDailyGoal(
+            (response.response)!['total_daily_goal'],
+            (response.response)!['total_daily_completed_goal'],
+          );
+        }
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            goalController.setHasData(false);
+          } else {
+            goalController.addGoalVideos(response.data);
+          }
+        } else {
+          goalController.setHasData(false);
+        }
+      } else if (response.isError) {
+        goalController.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in getDailyGoal: $e");
+    }
+    return null;
+  }
+
+  //Set Daily Goals
+  Future<bool> setDailyGoal(context) async {
+    var goalController = controller<DailyGoalController>();
+    try {
+      var body = {};
+      for (var element in goalController.newGoals.asMap().entries) {
+        body.addAll({
+          'subjects[${element.key}][id]': element.value.id?.toString(),
+          'subjects[${element.key}][daily_goal]': element.value.dailyGoal
+              ?.toString(),
+        });
+      }
+      print(body);
+      var response = await ApiManager.instance.post(
+        ApiUtils.setDailyGoal,
+        body: body,
+      );
+      if (response.isSuccess) {
+        goalController.setNewGoalInGoal();
+      }
+      return response.isSuccess;
+    } catch (e) {
+      debugPrint("Error in getDailyGoal: $e");
+    }
+    return false;
   }
 
   //Logout

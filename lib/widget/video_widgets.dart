@@ -461,9 +461,11 @@ class VideoTile extends StatefulWidget {
   final void Function()? onRemoved;
   final bool isSlidable;
   final void Function(String id)? onBookmark;
+  final void Function()? onVideoSeen;
   const VideoTile({
     super.key,
     required this.video,
+    this.onVideoSeen,
     this.onBookmark,
     this.onRemoved,
     this.isSlidable = false,
@@ -529,6 +531,9 @@ class _VideoTileState extends State<VideoTile> {
 
   Widget get child => InkWell(
     onTap: () {
+      if (widget.onVideoSeen != null) {
+        widget.onVideoSeen!();
+      }
       videoDetail.go(context, id: widget.video.id);
     },
     overlayColor: WidgetStatePropertyAll(Colors.transparent),

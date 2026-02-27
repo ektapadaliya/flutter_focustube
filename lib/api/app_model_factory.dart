@@ -1,4 +1,7 @@
+import 'package:focus_tube_flutter/model/channel_model.dart';
 import 'package:focus_tube_flutter/model/content_model.dart';
+import 'package:focus_tube_flutter/model/daily_goal_model.dart';
+import 'package:focus_tube_flutter/model/daily_goal_video_list_model.dart';
 import 'package:focus_tube_flutter/model/interest_model.dart';
 import 'package:focus_tube_flutter/model/note_model.dart';
 import 'package:focus_tube_flutter/model/playlist_model.dart';
@@ -162,5 +165,8 @@ class AppModelFactory {
     register<UserInterestModel>(UserInterestModel.fromJson);
 
     register<NoteModel>(NoteModel.fromJson);
+    register<DailyGoalModel>(DailyGoalModel.fromJson);
+    register<DailyGoalVideoListModel>(DailyGoalVideoListModel.fromJson);
+    register<ChannelModel>(ChannelModel.fromJson);
   }
 }
