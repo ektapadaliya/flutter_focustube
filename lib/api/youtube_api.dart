@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/model/youtube_channel_detail_model.dart';
 import 'package:focus_tube_flutter/model/youtube_channel_model.dart';
+import 'package:focus_tube_flutter/model/youtube_playlist_item_model.dart';
 import 'package:focus_tube_flutter/widget/app_tost_message.dart';
 
 import '../model/youtube_video_model.dart';
@@ -28,6 +29,7 @@ class YoutubeApiConst {
   static const baseUrl = "https://$domain/youtube/$apiVersion";
   static const searchUrl = "$baseUrl/search";
   static const channelUrl = "$baseUrl/channels";
+  static const playlistItems = "$baseUrl/playlistItems";
 
   static String searchVideoUrl({
     String? query,
@@ -50,6 +52,21 @@ class YoutubeApiConst {
         "&type=${YoutubeSearchType.channel.type}"
         "&maxResults=$maxResults"
         "${_queryParam('q', query)}"
+        "${_queryParam('pageToken', nextPageToken)}"
+        "&key=$key";
+  }
+
+  static String playlistItemsUrl({
+    String? query,
+    String? nextPageToken,
+    String? playlistId,
+  }) {
+    return "$playlistItems"
+        "?part=snippet"
+        "&type=${YoutubeSearchType.channel.type}"
+        "&maxResults=$maxResults"
+        "${_queryParam('q', query)}"
+        "${_queryParam('playlistId', playlistId)}"
         "${_queryParam('pageToken', nextPageToken)}"
         "&key=$key";
   }
@@ -90,6 +107,41 @@ class YoutubeApiConst {
       final data = jsonDecode(response.body);
       final videos = (data['items'] as List)
           .map((e) => YoutubeVideoModel.fromJson(e))
+          .toList();
+      return {"videos": videos, "nextPageToken": data['nextPageToken']};
+    } else {
+      await AppTostMessage.snackBarMessage(
+        context,
+        message: "Failed to load videos",
+        isError: true,
+      );
+    }
+    return null;
+  }
+
+  /// Fetches youtube videos
+  static Future<Map<String, dynamic>?> fetchPlayListItems(
+    BuildContext context, {
+    String? query,
+    String? nextPageToken,
+    String? playlistId,
+  }) async {
+    final response = await http.get(
+      Uri.parse(
+        YoutubeApiConst.playlistItemsUrl(
+          query: query,
+          nextPageToken: nextPageToken,
+          playlistId: playlistId,
+        ),
+      ),
+    );
+    debugPrint("Youtube api Url :${response.request?.url.toString()}");
+    debugPrint("Youtube api Status Code :${response.statusCode}");
+    debugPrint("Youtube api Body :${response.body}");
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final videos = (data['items'] as List)
+          .map((e) => YoutubePlaylistModel.fromJson(e))
           .toList();
       return {"videos": videos, "nextPageToken": data['nextPageToken']};
     } else {

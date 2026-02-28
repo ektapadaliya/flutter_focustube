@@ -26,6 +26,7 @@ import '../model/channel_model.dart';
 import '../model/user_model.dart';
 import '../model/content_model.dart';
 import 'api_response_model.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class ApiFunctions {
   // Singleton instance of the ApiFunctions.
@@ -1266,6 +1267,25 @@ class ApiFunctions {
     return false;
   }
 
+  //set device toekn
+  Future<void> setDeviceToken(String token) async {
+    var packageInfo = await PackageInfo.fromPlatform();
+    try {
+      var response = await ApiManager.instance.post(
+        ApiUtils.setDeviceToken,
+        body: {
+          'device_token': token,
+          'device_type': Platform.isAndroid ? "a" : "i",
+          'app_version': "${packageInfo.version}(${packageInfo.buildNumber})",
+          'device_model': (await UuidService.deviceModel()),
+        },
+      );
+      if (response.isSuccess) {}
+    } catch (e) {
+      debugPrint("Error in getDailyGoal: $e");
+    }
+  }
+
   //Logout
   void logout({BuildContext? context}) async {
     ApiManager.instance.post(ApiUtils.logout);
@@ -1281,6 +1301,37 @@ class ApiFunctions {
   void logoutfn({BuildContext? context}) {
     controller<UserController>().clear();
     controller<InterestController>().clear();
+    for (var tag in ['channel-me', 'channel-curated', 'channel-scholartube']) {
+      controller<ChannelController>(tag: tag).clear();
+    }
+    controller<YoutubeChannelController>().clear();
+    for (var tag in ['save-playlist', 'playlist-list']) {
+      controller<PlaylistController>(tag: tag).clear();
+    }
+    controller<DailyGoalController>().clear();
+    controller<DailyGoalVideoController>().clear();
+    for (var tag in [
+      'bookmark-home',
+      'popular-home',
+      'recommended-home',
+      'search',
+      'bookmark',
+      'popular',
+      'recommended',
+      'history',
+    ]) {
+      controller<VideoController>(tag: tag).clear();
+    }
+    for (var tag in ['search']) {
+      controller<YoutubeVideoController>(tag: tag).clear();
+    }
+    controller<NoteController>().clear();
+    for (var tag in ['select-subject-home', 'select-subject']) {
+      controller<SubjectController>(tag: tag).clear();
+    }
+    for (var tag in ['my-subject', 'subject']) {
+      controller<SubjectVideoController>(tag: tag).clear();
+    }
     context?.go(signIn.path);
   }
 }

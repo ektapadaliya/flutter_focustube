@@ -1,9 +1,11 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/push_notification/push_notification.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/filter_pop_up.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
@@ -17,6 +19,25 @@ class HomeRoot extends StatefulWidget {
 }
 
 class HomeRootState extends State<HomeRoot> {
+  @override
+  void initState() {
+    super.initState();
+    PushNotificationsManager.shared.firebaseCloudMessaging_Listeners();
+    FirebaseMessaging.instance.getInitialMessage().then((
+      RemoteMessage? message,
+    ) async {
+      if (message?.data != null) {
+        openApp(message!.data);
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) async {
+      if (message?.data != null) {
+        openApp(message!.data);
+      }
+    });
+  }
+
   @override
   void didChangeDependencies() {
     precacheImage(AssetImage(AppImage.home), context);
