@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/api/api_manager.dart';
 import 'package:focus_tube_flutter/api/api_utils.dart';
 import 'package:focus_tube_flutter/controller/daily_goal_video_list_controller.dart';
+import 'package:focus_tube_flutter/controller/youtube_playlist_video_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/model/daily_goal_model.dart';
 import 'package:focus_tube_flutter/model/daily_goal_video_list_model.dart';
@@ -1322,9 +1323,9 @@ class ApiFunctions {
     ]) {
       controller<VideoController>(tag: tag).clear();
     }
-    for (var tag in ['search']) {
-      controller<YoutubeVideoController>(tag: tag).clear();
-    }
+
+    controller<YoutubeVideoController>(tag: 'search').clear();
+    controller<YoutubePlaylistVideoController>(tag: 'channel').clear();
     controller<NoteController>().clear();
     for (var tag in ['select-subject-home', 'select-subject']) {
       controller<SubjectController>(tag: tag).clear();

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/image_classes.dart';
-import 'package:focus_tube_flutter/widget/playlist_widgets.dart';
 import 'package:focus_tube_flutter/widget/video_widgets.dart';
 
 class ChannelTile extends StatelessWidget {
@@ -105,61 +103,6 @@ class ChannelDivider extends StatelessWidget {
           ],
           stops: [0, .2, .5, .8, 1],
         ),
-      ),
-    );
-  }
-}
-
-class ChannelPlaylist extends StatelessWidget {
-  const ChannelPlaylist({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 20),
-          Text("Playlist", style: AppTextStyle.title20()),
-          SizedBox(height: 15),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) => SizedBox(),
-            /* PlayListTile(value: index, onTap: (_) {}) */
-            separatorBuilder: (context, index) => SizedBox(height: 15),
-            itemCount: 10,
-          ),
-          SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
-}
-
-class ChannelVideos extends StatelessWidget {
-  const ChannelVideos({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 20),
-          Text("Videos", style: AppTextStyle.title20()),
-          SizedBox(height: 15),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) => YoutubeVideoTile(),
-            separatorBuilder: (context, index) => SizedBox(height: 15),
-            itemCount: 10,
-          ),
-          SizedBox(height: 20),
-        ],
       ),
     );
   }

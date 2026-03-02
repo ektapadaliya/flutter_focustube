@@ -5,14 +5,16 @@ import 'package:focus_tube_flutter/api/youtube_api.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
+import 'package:focus_tube_flutter/controller/youtube_playlist_video_controller.dart';
 import 'package:focus_tube_flutter/model/youtube_channel_detail_model.dart';
-import 'package:focus_tube_flutter/view/videos/youtube_video_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/channel_widgets.dart';
 import 'package:focus_tube_flutter/widget/image_classes.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
+
+import '../videos/youtube_playlist_video_vc.dart';
 
 class ChannelDetailVC extends StatefulWidget {
   static const id = "/detail/:id";
@@ -45,8 +47,8 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
     });
   }
 
-  YoutubeVideoController youtubeVideoController =
-      controller<YoutubeVideoController>(tag: "channel");
+  YoutubePlaylistVideoController youtubeVideoController =
+      controller<YoutubePlaylistVideoController>(tag: "channel");
   @override
   Widget build(BuildContext context) {
     return AppLoader(
@@ -157,9 +159,12 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                               horizontal: 15,
                               vertical: 15,
                             ),
-                            child: YoutubeVideoVC(
+                            child: YoutubePlayListVideoVC(
                               tag: "channel",
-                              channelId: widget.channelId,
+                              channelId: channel
+                                  ?.contentDetails
+                                  ?.relatedPlaylists
+                                  ?.uploads,
                               isLoading: (isLoading) {
                                 changeYoutubeLoader(isLoading);
                               },
@@ -180,7 +185,7 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
   }
 
   void changeYoutubeLoader(bool isLoading) {
-    if (youtubeVideoController.videos.isEmpty) {
+    if (youtubeVideoController.playListVideos.isEmpty) {
       loaderController.setLoading(isLoading);
     } else {
       youtubeVideoController.setIsLoading(isLoading);

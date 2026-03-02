@@ -121,33 +121,6 @@ class PushNotificationsManager {
       var data = message.data;
       List<DarwinNotificationAttachment>? attachments;
 
-      if (notification?.apple?.imageUrl != null) {
-        final String filePath = await _downloadAndSaveFile(
-          notification!.apple!.imageUrl!,
-          'attachment',
-        );
-
-        attachments = [DarwinNotificationAttachment(filePath)];
-      }
-      BigPictureStyleInformation? bigPictureStyle;
-
-      if (android?.imageUrl != null) {
-        final String largeIconPath = await _downloadAndSaveFile(
-          android!.imageUrl!,
-          'largeIcon',
-        );
-        final String bigPicturePath = await _downloadAndSaveFile(
-          android.imageUrl!,
-          'bigPicture',
-        );
-
-        bigPictureStyle = BigPictureStyleInformation(
-          FilePathAndroidBitmap(bigPicturePath),
-          largeIcon: FilePathAndroidBitmap(largeIconPath),
-          contentTitle: notification?.title,
-          summaryText: notification?.body,
-        );
-      }
       if (notification != null) {
         flutterLocalNotificationsPlugin.show(
           id: notification.hashCode,
@@ -158,7 +131,6 @@ class PushNotificationsManager {
               presentAlert: true,
               presentBadge: true,
               presentSound: true,
-              attachments: attachments,
             ),
             android: AndroidNotificationDetails(
               channel.id,
@@ -166,7 +138,6 @@ class PushNotificationsManager {
               sound: channel.sound,
               playSound: true,
               icon: '@drawable/ic_state_name',
-              styleInformation: bigPictureStyle,
             ),
           ),
           payload: jsonEncode(message.data),
@@ -194,7 +165,7 @@ class PushNotificationsManager {
   }
 
   Future<String> _downloadAndSaveFile(String url, String fileName) async {
-    final Directory directory = await getTemporaryDirectory();
+    final Directory directory = await getApplicationCacheDirectory();
     final String filePath = '${directory.path}/$fileName';
     final http.Response response = await http.get(Uri.parse(url));
     final File file = File(filePath);

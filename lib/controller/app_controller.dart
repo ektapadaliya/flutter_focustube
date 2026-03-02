@@ -1,3 +1,4 @@
+import 'package:focus_tube_flutter/controller/youtube_playlist_video_controller.dart';
 import 'package:get/get.dart';
 
 import 'daily_goal_controller.dart';
@@ -44,6 +45,8 @@ _putController<T>({String? tag}) {
       return Get.put(InterestController(), tag: tag);
     case const (YoutubeVideoController):
       return Get.put(YoutubeVideoController(), tag: tag);
+    case const (YoutubePlaylistVideoController):
+      return Get.put(YoutubePlaylistVideoController(), tag: tag);
     case const (YoutubeChannelController):
       return Get.put(YoutubeChannelController(), tag: tag);
     case const (VideoController):

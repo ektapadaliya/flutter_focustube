@@ -7,15 +7,13 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
-import 'package:focus_tube_flutter/controller/playlist_controller.dart';
+import 'package:focus_tube_flutter/controller/youtube_playlist_video_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
-import 'package:focus_tube_flutter/view/dialog/feedback_vc.dart';
 import 'package:focus_tube_flutter/view/dialog/save_playlist_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
-import 'package:focus_tube_flutter/widget/image_classes.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 import 'package:focus_tube_flutter/widget/video_widgets.dart';
 import 'package:get/state_manager.dart';
@@ -26,12 +24,14 @@ import '../../model/playlist_model.dart';
 class VideoDetailVC extends StatefulWidget {
   static const id = "/video/:id";
   static const youtubeId = "/youtube-video/:id";
+  static const chanelYoutubeId = "/channel-youtube-video/:id";
   const VideoDetailVC({
     super.key,
+    this.isFromChannel = false,
     this.isFromYoutube = false,
     required this.videoId,
   });
-  final bool isFromYoutube;
+  final bool isFromYoutube, isFromChannel;
   final String videoId;
   @override
   State<VideoDetailVC> createState() => _VideoDetailVCState();
@@ -56,9 +56,17 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
     super.initState();
     Future.delayed(Duration.zero, () async {
       if (widget.isFromYoutube) {
-        var video = controller<YoutubeVideoController>().videos
-            .where((e) => e.id?.videoId == widget.videoId)
-            .firstOrNull;
+        var video;
+        if (widget.isFromChannel) {
+          video = controller<YoutubePlaylistVideoController>(tag: "channel")
+              .playListVideos
+              .where((e) => e.snippet?.resourceId?.videoId == widget.videoId)
+              .firstOrNull;
+        } else {
+          video = controller<YoutubeVideoController>(
+            tag: "search",
+          ).videos.where((e) => e.id?.videoId == widget.videoId).firstOrNull;
+        }
         if (video != null) {
           aspectRatio = Size(
             (video.snippet?.thumbnails?.high?.width ?? 0).toDouble(),
@@ -71,6 +79,7 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
             initialVideoId: widget.videoId,
             flags: const YoutubePlayerFlags(autoPlay: true),
           );
+          setState(() {});
         }
       } else {
         loaderController.setLoading(true);

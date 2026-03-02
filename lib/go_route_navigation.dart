@@ -11,7 +11,6 @@ import 'package:focus_tube_flutter/view/channels/channel_detail_vc.dart';
 import 'package:focus_tube_flutter/view/goals/daily_goal_vc.dart';
 import 'package:focus_tube_flutter/view/goals/set_daily_goal_vc.dart';
 import 'package:focus_tube_flutter/view/home_root.dart';
-import 'package:focus_tube_flutter/view/channels/channel_list_vc.dart';
 import 'package:focus_tube_flutter/view/notes/note_detail_vc.dart';
 import 'package:focus_tube_flutter/view/notes/note_list_vc.dart';
 import 'package:focus_tube_flutter/view/playlists/playlist_detail_vc.dart';
@@ -297,6 +296,17 @@ final AppNavigationModel youtubeVideoDetail = AppNavigationModel(
     );
   },
 );
+final AppNavigationModel channelVideoDetail = AppNavigationModel(
+  label: "Youtube Video Details",
+  path: VideoDetailVC.chanelYoutubeId,
+  builder: (context, state) {
+    return VideoDetailVC(
+      isFromChannel: true,
+      isFromYoutube: true,
+      videoId: state.pathParameters['id'] ?? '',
+    );
+  },
+);
 final AppNavigationModel notes = AppNavigationModel(
   label: "Notes",
   path: "${NoteListVC.id}/:id",
@@ -378,6 +388,7 @@ final GoRouter router = GoRouter(
       editDailyLimit,
       selectChannels,
       //dailyGoal,
+      channelVideoDetail,
       youtubeVideoDetail,
       setDailyGoal,
       selectSubjects,

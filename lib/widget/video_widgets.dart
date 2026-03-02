@@ -289,7 +289,7 @@ class BookmarkVideoTile extends StatelessWidget {
 }
 
 class YoutubeVideoTile extends StatefulWidget {
-  final bool isSlidable, isFromYoutube, isBookmarked;
+  final bool isSlidable, isFromYoutube, isBookmarked, isFromChannel;
   final void Function()? onRemoved;
   final String? title;
   final String thumbnailUrl;
@@ -302,6 +302,7 @@ class YoutubeVideoTile extends StatefulWidget {
     this.onRemoved,
     this.isBookmarked = false,
     this.isSlidable = false,
+    this.isFromChannel = false,
     this.isFromYoutube = false,
     this.title,
     this.thumbnailUrl = "",
@@ -371,7 +372,9 @@ class _YoutubeVideoTileState extends State<YoutubeVideoTile> {
 
   Widget get child => InkWell(
     onTap: () {
-      if (widget.isFromYoutube) {
+      if (widget.isFromChannel) {
+        channelVideoDetail.go(context, id: widget.videoId);
+      } else if (widget.isFromYoutube) {
         youtubeVideoDetail.go(context, id: widget.videoId);
       } else {
         videoDetail.go(context, id: widget.videoId);
