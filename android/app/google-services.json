@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "930365102222",
-    "project_id": "focustube-us",
-    "storage_bucket": "focustube-us.firebasestorage.app"
+    "project_number": "640500058658",
+    "project_id": "focustube-co-in",
+    "storage_bucket": "focustube-co-in.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:930365102222:android:af288c510a46511c22d1df",
+        "mobilesdk_app_id": "1:640500058658:android:797a2f2d5ff14995bc587b",
         "android_client_info": {
           "package_name": "com.heelfinfotech.focustube"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAwYEouHgv-CUN7B7Bk_dXKMP5aCjFF4Xo"
+          "current_key": "AIzaSyBBKOBdFX9LCAzjf7qBg_BHSGxZa1a8OhU"
         }
       ],
       "services": {
