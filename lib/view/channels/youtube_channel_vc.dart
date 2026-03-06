@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 
 import '../../const/app_image.dart';
 import '../../widget/app_text_form_field.dart';
+import '../../widget/expandable_scollview.dart';
 
 class YoutubeChannelVC extends StatefulWidget {
   static const id = "/channels";
@@ -59,6 +60,11 @@ class _YoutubeChannelVCState extends State<YoutubeChannelVC>
     super.dispose();
   }
 
+  Future<void> onRefresh() async {
+    youtubeChannelController.clear();
+    callYoutubeSearch();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppLoader(
@@ -96,47 +102,85 @@ class _YoutubeChannelVCState extends State<YoutubeChannelVC>
                 Text("Search Results", style: AppTextStyle.title20()),
                 SizedBox(height: 20),
                 Expanded(
-                  child: ListView.separated(
-                    physics: BouncingScrollPhysics(),
-                    controller: youtubeScrollController,
-                    itemBuilder: (context, index) {
-                      var channel = youtubeChannelController.channels[index];
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ChannelTile(
-                            title: channel.snippet?.title ?? "",
-                            channelImage:
-                                channel.snippet?.thumbnails?.high?.url ?? "",
-                            channelId: channel.id?.channelId ?? "",
-                            onAddChannel: () {
-                              ApiFunctions.instance.channelAdd(
-                                context,
-                                youtubeId: channel.snippet?.channelId ?? "",
-                                title: channel.snippet?.title ?? "",
-                                imageUrl:
-                                    channel.snippet?.thumbnails?.medium?.url ??
-                                    "",
-                                description: channel.snippet?.description ?? "",
-                              );
-                            },
-                          ),
-                          if (youtubeChannelController.isLoading &&
-                              index ==
-                                  youtubeChannelController.channels.length - 1)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
+                  child: Obx(
+                    () => RefreshIndicator(
+                      onRefresh: onRefresh,
+                      child:
+                          (youtubeChannelController.channels.isEmpty &&
+                              !(loaderController.isLoading.value))
+                          ? ExpandedSingleChildScrollView(
+                              physics: AlwaysScrollableScrollPhysics(),
                               child: Container(
-                                height: 50,
                                 alignment: Alignment.center,
-                                child: CircularProgressIndicator(),
+                                child: Text(
+                                  "No Channels found",
+                                  style: AppTextStyle.body16(
+                                    color: AppColor.gray,
+                                  ),
+                                ),
                               ),
+                            )
+                          : ListView.separated(
+                              physics: BouncingScrollPhysics(),
+                              controller: youtubeScrollController,
+                              itemBuilder: (context, index) {
+                                var channel =
+                                    youtubeChannelController.channels[index];
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ChannelTile(
+                                      title: channel.snippet?.title ?? "",
+                                      channelImage:
+                                          channel
+                                              .snippet
+                                              ?.thumbnails
+                                              ?.high
+                                              ?.url ??
+                                          "",
+                                      channelId: channel.id?.channelId ?? "",
+                                      onAddChannel: () {
+                                        ApiFunctions.instance.channelAdd(
+                                          context,
+                                          youtubeId:
+                                              channel.snippet?.channelId ?? "",
+                                          title: channel.snippet?.title ?? "",
+                                          imageUrl:
+                                              channel
+                                                  .snippet
+                                                  ?.thumbnails
+                                                  ?.medium
+                                                  ?.url ??
+                                              "",
+                                          description:
+                                              channel.snippet?.description ??
+                                              "",
+                                        );
+                                      },
+                                    ),
+                                    if (youtubeChannelController.isLoading &&
+                                        index ==
+                                            youtubeChannelController
+                                                    .channels
+                                                    .length -
+                                                1)
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        child: Container(
+                                          height: 50,
+                                          alignment: Alignment.center,
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
+                              separatorBuilder: (context, index) =>
+                                  ChannelDivider(),
+                              itemCount:
+                                  youtubeChannelController.channels.length,
                             ),
-                        ],
-                      );
-                    },
-                    separatorBuilder: (context, index) => ChannelDivider(),
-                    itemCount: youtubeChannelController.channels.length,
+                    ),
                   ),
                 ),
               ],
@@ -166,7 +210,7 @@ class _YoutubeChannelVCState extends State<YoutubeChannelVC>
     }
     var value = await YoutubeApiConst.fetchYoutubeChannels(
       context,
-      query: searchValue == null ? "Recommended" : searchValue!,
+      query: searchValue,
       nextPageToken: youtubeChannelController.nextPageToken,
     );
     changeYoutubeLoader(false);

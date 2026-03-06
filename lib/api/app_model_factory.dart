@@ -12,6 +12,8 @@ import 'package:focus_tube_flutter/model/user_intrest_model.dart';
 import 'package:focus_tube_flutter/model/user_model.dart';
 import 'package:focus_tube_flutter/model/video_model.dart';
 
+import '../model/daily_video_limit_model.dart';
+
 /// A factory class for creating and managing app models from JSON data.
 ///
 /// This factory uses a singleton pattern and provides a centralized way to
@@ -168,5 +170,6 @@ class AppModelFactory {
     register<DailyGoalModel>(DailyGoalModel.fromJson);
     register<DailyGoalVideoListModel>(DailyGoalVideoListModel.fromJson);
     register<ChannelModel>(ChannelModel.fromJson);
+    register<DailyVideoLimitModel>(DailyVideoLimitModel.fromJson);
   }
 }

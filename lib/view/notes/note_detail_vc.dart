@@ -52,7 +52,7 @@ class _NoteDetailVCState extends State<NoteDetailVC> {
           title: widget.isAdd ? "Add note" : "Note",
           actions: [
             if (!widget.isAdd)
-              InkWell(
+              AppInkWell(
                 onTap: () async {
                   var value = await generalDialog(
                     context,

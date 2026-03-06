@@ -3,6 +3,7 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/view/auth/daily_limit_vc.dart';
 import 'package:focus_tube_flutter/view/goals/daily_goal_video_vc.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 
 import 'set_daily_goal_vc.dart';
 
@@ -50,7 +51,7 @@ class _DailyGoalVCState extends State<DailyGoalVC> {
   buildCategoryTile(int index) {
     bool isSelected =
         (pageController.hasClients ? (pageController.page ?? 1) : 1) == index;
-    return InkWell(
+    return AppInkWell(
       onTap: () {
         pageController.jumpToPage(index);
         // Scrollable.ensureVisible(

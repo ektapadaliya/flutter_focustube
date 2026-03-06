@@ -245,6 +245,14 @@ final AppNavigationModel channelDetail = AppNavigationModel(
   builder: (context, state) =>
       ChannelDetailVC(channelId: state.pathParameters['id'] ?? ""),
 );
+final AppNavigationModel youtubeChannelDetail = AppNavigationModel(
+  label: "Channel Detail",
+  path: "/youtube-channels${ChannelDetailVC.id}",
+  builder: (context, state) => ChannelDetailVC(
+    channelId: state.pathParameters['id'] ?? "",
+    showAddButton: true,
+  ),
+);
 final AppNavigationModel settings = AppNavigationModel(
   label: "Settings",
   path: SettingsVC.id,

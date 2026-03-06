@@ -33,9 +33,9 @@ class AppButton extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return AppInkWell(
       onTap: isDisable ? null : onTap,
-      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+
       child: Container(
         height: height,
         constraints: AppConst.isLandscape(context)
@@ -98,6 +98,20 @@ class AppSwitch extends StatelessWidget {
         inactiveTrackColor: AppColor.lightGray.opacityToAlpha(.4),
         onChanged: onChanged,
       ),
+    );
+  }
+}
+
+class AppInkWell extends StatelessWidget {
+  const AppInkWell({super.key, this.onTap, this.child});
+  final void Function()? onTap;
+  final Widget? child;
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+      onTap: onTap,
+      child: child,
     );
   }
 }

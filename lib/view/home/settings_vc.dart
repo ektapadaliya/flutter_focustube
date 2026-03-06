@@ -146,7 +146,7 @@ class _SettingsVCState extends State<SettingsVC> {
                 ),
                 SizedBox(height: 30),
                 Expanded(child: Container()),
-                InkWell(
+                AppInkWell(
                   onTap: () async {
                     var result = await generalDialog(
                       context,
@@ -161,11 +161,11 @@ class _SettingsVCState extends State<SettingsVC> {
                       ApiFunctions.instance.logout(context: context);
                     }
                   },
-                  overlayColor: WidgetStatePropertyAll(Colors.transparent),
+
                   child: Text("Logout", style: AppTextStyle.title16()),
                 ),
                 SizedBox(height: 20),
-                InkWell(
+                AppInkWell(
                   onTap: () async {
                     var result = await generalDialog(
                       context,
@@ -181,7 +181,7 @@ class _SettingsVCState extends State<SettingsVC> {
                       ApiFunctions.instance.deleteAccount(context: context);
                     }
                   },
-                  overlayColor: WidgetStatePropertyAll(Colors.transparent),
+
                   child: Text(
                     "Delete account",
                     style: AppTextStyle.title16(color: AppColor.red),
@@ -212,9 +212,8 @@ class SettingsTile extends StatelessWidget {
   final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return AppInkWell(
       onTap: onTap,
-      overlayColor: WidgetStatePropertyAll(Colors.transparent),
       child: Container(
         decoration: BoxDecoration(
           color: AppColor.tileBackground,

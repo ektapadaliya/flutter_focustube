@@ -239,7 +239,7 @@ class SetGoalTile extends StatelessWidget {
   }
 
   buildButton(IconData icon, void Function() onTap, {bool isDisabled = false}) {
-    return InkWell(
+    return AppInkWell(
       onTap: isDisabled ? null : onTap,
       child: AnimatedContainer(
         duration: Duration(milliseconds: 200),

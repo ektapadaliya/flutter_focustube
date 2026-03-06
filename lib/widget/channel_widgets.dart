@@ -4,8 +4,8 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
+import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
 import 'package:focus_tube_flutter/widget/image_classes.dart';
-import 'package:focus_tube_flutter/widget/video_widgets.dart';
 
 class ChannelTile extends StatelessWidget {
   const ChannelTile({
@@ -24,11 +24,15 @@ class ChannelTile extends StatelessWidget {
   final void Function()? onAddChannel;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return AppInkWell(
       onTap: () {
-        channelDetail.go(context, id: channelId);
+        if (showAddChannels) {
+          youtubeChannelDetail.go(context);
+        } else {
+          channelDetail.go(context, id: channelId);
+        }
       },
-      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+
       child: Row(
         children: [
           NetworkImageClass(
@@ -42,7 +46,11 @@ class ChannelTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTextStyle.title20()),
+                Text(
+                  firstLatterCapitalize(title.trim()),
+                  style: AppTextStyle.title20(),
+                ),
+
                 // Wrap(
                 //   spacing: 15,
                 //   children: [
@@ -53,20 +61,20 @@ class ChannelTile extends StatelessWidget {
               ],
             ),
           ),
-          if (showAddChannels)
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: AppButton(
-                label: "Add channel",
-                onTap: onAddChannel,
-                radius: 7,
-                alignment: null,
-                backgroundColor: AppColor.primary,
-                height: 32,
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                fontSize: 12,
-              ),
-            ),
+          // if (showAddChannels)
+          //   Padding(
+          //     padding: const EdgeInsets.only(left: 10),
+          //     child: AppButton(
+          //       label: "Add channel",
+          //       onTap: onAddChannel,
+          //       radius: 7,
+          //       alignment: null,
+          //       backgroundColor: AppColor.primary,
+          //       height: 32,
+          //       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+          //       fontSize: 12,
+          //     ),
+          //   ),
         ],
       ),
     );

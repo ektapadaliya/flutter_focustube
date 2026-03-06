@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:focus_tube_flutter/api/api_functions.dart';
+import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/model/youtube_channel_detail_model.dart';
 import 'package:focus_tube_flutter/model/youtube_channel_model.dart';
 import 'package:focus_tube_flutter/model/youtube_playlist_item_model.dart';
 import 'package:focus_tube_flutter/widget/app_tost_message.dart';
+import 'package:get/get.dart';
 
 import '../model/youtube_video_model.dart';
 import 'package:http/http.dart' as http;
@@ -159,6 +163,25 @@ class YoutubeApiConst {
     String? query,
     String? nextPageToken,
   }) async {
+    var subCtrl = controller<SubjectController>(tag: 'select-subject-home');
+    if ((query == null || query.trim().isEmpty)) {
+      if (subCtrl.subjcts.isEmpty) {
+        await ApiFunctions.instance.getSubjects(
+          context,
+          controller: controller<SubjectController>(tag: 'select-subject-home'),
+        );
+      }
+      var subjects = subCtrl.subjcts.where(
+        (element) => element.isUserSubject ?? false,
+      );
+
+      if (subjects.isEmpty) {
+        query = subCtrl.subjcts.map((e) => e.title).toList().join(", ");
+      } else {
+        query = subjects.map((e) => e.title).toList().join(", ");
+      }
+    }
+
     final response = await http.get(
       Uri.parse(
         YoutubeApiConst.searchChannelUrl(
@@ -167,6 +190,7 @@ class YoutubeApiConst {
         ),
       ),
     );
+
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final channels = (data['items'] as List)

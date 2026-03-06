@@ -46,9 +46,8 @@ class _FeedbackVCState extends State<FeedbackVC> {
                     Expanded(child: Container(width: 35)),
                     Text("Feedback", style: AppTextStyle.title20()),
                     Expanded(child: Container(width: 10)),
-                    InkWell(
+                    AppInkWell(
                       onTap: context.pop,
-                      overlayColor: WidgetStatePropertyAll(Colors.transparent),
                       child: Icon(
                         Icons.close,
                         color: AppColor.primary,
@@ -69,7 +68,7 @@ class _FeedbackVCState extends State<FeedbackVC> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(
                     3,
-                    (index) => InkWell(
+                    (index) => AppInkWell(
                       onTap: () {
                         setState(() {
                           selectedIndex = index;
@@ -106,7 +105,7 @@ class _FeedbackVCState extends State<FeedbackVC> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(3, (index) {
                     var tIndex = index + 3;
-                    return InkWell(
+                    return AppInkWell(
                       onTap: () {
                         setState(() {
                           selectedIndex = tIndex;

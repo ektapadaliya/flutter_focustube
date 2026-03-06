@@ -83,7 +83,7 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                   ),
                   SizedBox(height: 25),
                   Center(
-                    child: InkWell(
+                    child: AppInkWell(
                       onTap: () async {
                         var image = await ImageService.pickImage(context);
                         if (image != null) {
@@ -200,7 +200,7 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                       }
                       return null;
                     },
-                    suffixIcon: InkWell(
+                    suffixIcon: AppInkWell(
                       onTap: () {
                         setState(() {
                           showPassword = !showPassword;
@@ -235,7 +235,7 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                       }
                       return null;
                     },
-                    suffixIcon: InkWell(
+                    suffixIcon: AppInkWell(
                       onTap: () {
                         setState(() {
                           showConfirmPassword = !showConfirmPassword;

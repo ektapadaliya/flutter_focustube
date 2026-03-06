@@ -7,6 +7,7 @@ import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/push_notification/push_notification.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/filter_pop_up.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 import 'package:go_router/go_router.dart';
@@ -67,7 +68,7 @@ class HomeRootState extends State<HomeRoot> {
 
                 Padding(
                   padding: const EdgeInsets.only(right: 30),
-                  child: InkWell(
+                  child: AppInkWell(
                     onTap: () {
                       settings.go(context);
                     },
@@ -128,9 +129,9 @@ class _HomeBottomNavigationBar extends StatelessWidget {
 
   _buildBottomNavigationBarItem({required int index}) {
     bool isSelected = index == currentIndex;
-    return InkWell(
+    return AppInkWell(
       onTap: () => onTap(index),
-      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

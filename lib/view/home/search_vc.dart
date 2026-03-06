@@ -4,6 +4,7 @@ import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/view/videos/video_search_vc.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
 import 'package:focus_tube_flutter/widget/drop_down_field.dart';
@@ -83,7 +84,7 @@ class _SearchVCState extends State<SearchVC>
               prefixIcon: Image.asset(AppImage.search, height: 35),
               suffixIcon: searchValue == null
                   ? null
-                  : InkWell(
+                  : AppInkWell(
                       onTap: () {
                         searchController.clear();
                         searchValue = null;

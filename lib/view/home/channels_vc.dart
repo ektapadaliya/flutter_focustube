@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/view/channels/youtube_channel_vc.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 
 import '../channels/channel_list_vc.dart';
 
@@ -61,7 +62,7 @@ class _ChannelsVCState extends State<ChannelsVC> {
     bool isSelected = pageController.hasClients
         ? (pageController.page?.round() ?? 0) == index
         : false;
-    return InkWell(
+    return AppInkWell(
       onTap: () {
         pageController.jumpToPage(index);
         // Scrollable.ensureVisible(

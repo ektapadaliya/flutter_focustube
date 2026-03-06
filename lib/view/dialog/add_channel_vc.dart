@@ -36,9 +36,8 @@ class AddChannelVC extends StatelessWidget {
                   children: [
                     Text("Add channel", style: AppTextStyle.title20()),
                     Expanded(child: Container(width: 10)),
-                    InkWell(
+                    AppInkWell(
                       onTap: context.pop,
-                      overlayColor: WidgetStatePropertyAll(Colors.transparent),
                       child: Icon(
                         Icons.close,
                         color: AppColor.primary,

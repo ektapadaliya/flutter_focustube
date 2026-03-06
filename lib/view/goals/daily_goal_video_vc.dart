@@ -93,18 +93,18 @@ class _DailyGoalVideoVCState extends State<DailyGoalVideoVC> {
                         : Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
+                              SizedBox(height: 15),
                               Expanded(
-                                child: ListView.builder(
+                                child: ListView.separated(
                                   controller: scrollController,
+                                  separatorBuilder: (context, index) =>
+                                      SizedBox(height: 15),
                                   itemCount: goalVideoController
                                       .subjectGoalVideos
                                       .length,
-                                  itemBuilder: (context, index) => Padding(
-                                    padding: const EdgeInsets.only(top: 20),
-                                    child: GoalSubjects(
-                                      dailyGoalVideoList: goalVideoController
-                                          .subjectGoalVideos[index],
-                                    ),
+                                  itemBuilder: (context, index) => GoalSubjects(
+                                    dailyGoalVideoList: goalVideoController
+                                        .subjectGoalVideos[index],
                                   ),
                                 ),
                               ),
@@ -157,20 +157,50 @@ class GoalSubjects extends StatelessWidget {
             ),
           ],
         ),
-        ...List.generate(
-          dailyGoalVideoList.videos?.length ?? 0,
-          (index) => Padding(
-            padding: EdgeInsetsGeometry.only(top: 15),
-            child: VideoTile(
-              video: dailyGoalVideoList.videos![index],
-              onVideoSeen: () =>
-                  controller<DailyGoalVideoController>().setVideoSeen(
-                    dailyGoalVideoList.subjectId ?? "",
-                    dailyGoalVideoList.videos![index].id.toString(),
-                  ),
+        if (dailyGoalVideoList.videos?.isNotEmpty ?? false)
+          ...List.generate(
+            dailyGoalVideoList.videos?.length ?? 0,
+            (index) => Padding(
+              padding: EdgeInsetsGeometry.symmetric(
+                horizontal: 5,
+              ).add(EdgeInsetsGeometry.only(top: 10)),
+              child: VideoTile(
+                video: dailyGoalVideoList.videos![index],
+                onVideoSeen: () =>
+                    controller<DailyGoalVideoController>().setVideoSeen(
+                      dailyGoalVideoList.subjectId ?? "",
+                      dailyGoalVideoList.videos![index].id.toString(),
+                    ),
+              ),
+            ),
+          )
+        else
+          Container(
+            decoration: BoxDecoration(
+              color: AppColor.white,
+              border: Border.all(
+                color: AppColor.profileBackground.opacityToAlpha(.3),
+                width: .4,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColor.profileBackground.opacityToAlpha(.1),
+                  blurRadius: 1,
+                  spreadRadius: 1,
+                ),
+              ],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: EdgeInsets.symmetric(
+              horizontal: 2,
+            ).add(EdgeInsetsGeometry.only(top: 10)),
+            padding: EdgeInsets.all(12),
+            alignment: Alignment.center,
+            child: Text(
+              "${dailyGoalVideoList.subjectTitle} videos goal completed",
+              style: AppTextStyle.body14(color: AppColor.gray),
             ),
           ),
-        ),
       ],
     );
   }

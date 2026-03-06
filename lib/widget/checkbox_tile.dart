@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 
 enum AppCheckBoxTileAlign { left, right }
 
@@ -24,8 +25,7 @@ class AppCheckBoxTile extends StatelessWidget {
       const SizedBox(width: 7),
       if (isExpaned) Expanded(child: title) else Flexible(child: title),
     ];
-    return InkWell(
-      overlayColor: WidgetStateProperty.all(Colors.transparent),
+    return AppInkWell(
       onTap: () {
         onChanged(!isSelected);
       },
@@ -92,8 +92,7 @@ class AppRadioButton<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var isSelected = value == groupValue;
-    return InkWell(
-      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+    return AppInkWell(
       onTap: () {
         onChanged(value);
       },

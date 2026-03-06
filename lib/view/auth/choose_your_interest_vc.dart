@@ -166,8 +166,7 @@ class InterestTile extends StatelessWidget {
   final bool isSelected;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+    return AppInkWell(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(

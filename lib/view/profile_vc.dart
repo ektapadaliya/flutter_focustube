@@ -131,7 +131,7 @@ class _ProfileVCState extends State<ProfileVC> {
                         Positioned(
                           top: -65,
                           left: (MediaQuery.of(context).size.width / 2) - 65,
-                          child: InkWell(
+                          child: AppInkWell(
                             onTap: () async {
                               image = await ImageService.pickImage(context);
                               setState(() {});

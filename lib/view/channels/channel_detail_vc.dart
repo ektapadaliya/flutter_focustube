@@ -18,8 +18,14 @@ import '../videos/youtube_playlist_video_vc.dart';
 
 class ChannelDetailVC extends StatefulWidget {
   static const id = "/detail/:id";
-  const ChannelDetailVC({super.key, required this.channelId});
+
+  const ChannelDetailVC({
+    super.key,
+    required this.channelId,
+    this.showAddButton = false,
+  });
   final String channelId;
+  final bool showAddButton;
   @override
   State<ChannelDetailVC> createState() => _ChannelDetailVCState();
 }
@@ -97,37 +103,38 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                                     ),
                                   ),
                                   Expanded(child: Container()),
-                                  AppButton(
-                                    label: "Add channel",
-                                    radius: 7,
-                                    alignment: null,
-                                    onTap: () async {
-                                      loaderController.setLoading(true);
-                                      await ApiFunctions.instance.channelAdd(
-                                        context,
-                                        youtubeId: channel?.id ?? "",
-                                        title: channel?.snippet?.title ?? "",
-                                        imageUrl: channel
-                                            ?.snippet
-                                            ?.thumbnails
-                                            ?.medium
-                                            ?.url,
-                                        description:
-                                            channel?.snippet?.description,
-                                        followers: channel
-                                            ?.statistics
-                                            ?.subscriberCount,
-                                      );
-                                      loaderController.setLoading(false);
-                                    },
-                                    backgroundColor: AppColor.primary,
-                                    height: 32,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 5,
+                                  if (widget.showAddButton)
+                                    AppButton(
+                                      label: "Add channel",
+                                      radius: 7,
+                                      alignment: null,
+                                      onTap: () async {
+                                        loaderController.setLoading(true);
+                                        await ApiFunctions.instance.channelAdd(
+                                          context,
+                                          youtubeId: channel?.id ?? "",
+                                          title: channel?.snippet?.title ?? "",
+                                          imageUrl: channel
+                                              ?.snippet
+                                              ?.thumbnails
+                                              ?.medium
+                                              ?.url,
+                                          description:
+                                              channel?.snippet?.description,
+                                          followers: channel
+                                              ?.statistics
+                                              ?.subscriberCount,
+                                        );
+                                        loaderController.setLoading(false);
+                                      },
+                                      backgroundColor: AppColor.primary,
+                                      height: 32,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 5,
+                                      ),
+                                      fontSize: 12,
                                     ),
-                                    fontSize: 12,
-                                  ),
                                 ],
                               ),
                             ),

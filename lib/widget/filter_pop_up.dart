@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 
 class AppPopupOverlay<T> extends StatefulWidget {
   const AppPopupOverlay({
@@ -81,10 +82,7 @@ class _AppPopupOverlayState<T> extends State<AppPopupOverlay<T>> {
                                     ? 12
                                     : 0,
                               ),
-                              child: InkWell(
-                                overlayColor: WidgetStatePropertyAll(
-                                  Colors.transparent,
-                                ),
+                              child: AppInkWell(
                                 onTap: () {
                                   widget.onItemPressed(widget.items[index]);
                                   _toggleAppPopupOverlay();
@@ -128,11 +126,7 @@ class _AppPopupOverlayState<T> extends State<AppPopupOverlay<T>> {
   Widget build(BuildContext context) {
     return CompositedTransformTarget(
       link: _layerLink,
-      child: InkWell(
-        overlayColor: WidgetStatePropertyAll(Colors.transparent),
-        onTap: _toggleAppPopupOverlay,
-        child: widget.child,
-      ),
+      child: AppInkWell(onTap: _toggleAppPopupOverlay, child: widget.child),
     );
   }
 }

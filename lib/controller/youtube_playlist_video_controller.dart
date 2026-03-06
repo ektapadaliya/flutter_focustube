@@ -18,8 +18,8 @@ class YoutubePlaylistVideoController extends GetxController {
     update();
   }
 
-  void setNextPageToken(String nextPageToken) {
-    this.nextPageToken = nextPageToken;
+  void setNextPageToken(String? nextPageToken) {
+    this.nextPageToken = nextPageToken ?? '';
     update();
   }
 

@@ -85,7 +85,7 @@ class _ChangePasswordVCState extends State<ChangePasswordVC> {
                       }
                       return null;
                     },
-                    suffixIcon: InkWell(
+                    suffixIcon: AppInkWell(
                       onTap: () {
                         setState(() {
                           showOldPassword = !showOldPassword;
@@ -114,7 +114,7 @@ class _ChangePasswordVCState extends State<ChangePasswordVC> {
                       }
                       return null;
                     },
-                    suffixIcon: InkWell(
+                    suffixIcon: AppInkWell(
                       onTap: () {
                         setState(() {
                           showPassword = !showPassword;
@@ -148,7 +148,7 @@ class _ChangePasswordVCState extends State<ChangePasswordVC> {
                       }
                       return null;
                     },
-                    suffixIcon: InkWell(
+                    suffixIcon: AppInkWell(
                       onTap: () {
                         setState(() {
                           showConfirmPassword = !showConfirmPassword;

@@ -93,7 +93,7 @@ class _LoginVCState extends State<LoginVC> {
                       }
                       return null;
                     },
-                    suffixIcon: InkWell(
+                    suffixIcon: AppInkWell(
                       onTap: () {
                         setState(() {
                           showPassword = !showPassword;

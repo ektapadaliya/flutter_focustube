@@ -40,7 +40,9 @@ class _DailyLimitVCState extends State<DailyLimitVC> {
   @override
   Widget build(BuildContext context) {
     var child = ExpandedSingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+      padding: widget.isFromGoal
+          ? const EdgeInsets.only(top: 20)
+          : const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
       child: Column(
         children: [
           Center(
@@ -87,7 +89,9 @@ class _DailyLimitVCState extends State<DailyLimitVC> {
             style: AppTextStyle.body16(color: AppColor.gray),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30),
+            padding: EdgeInsets.symmetric(
+              vertical: widget.isFromGoal ? 15 : 30,
+            ),
             child: AppButton(
               label: widget.isFromEdit ? "Save" : "Continue",
               backgroundColor: AppColor.primary,
@@ -158,8 +162,7 @@ class VideoSelectionTile extends StatelessWidget {
   final void Function() onTap;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+    return AppInkWell(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(

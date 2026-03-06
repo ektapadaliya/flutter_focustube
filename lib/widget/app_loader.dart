@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/controller/loader_cotroller.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class AppLoader extends StatelessWidget {
@@ -27,7 +28,7 @@ class AppLoader extends StatelessWidget {
           child,
           Obx(() {
             if (loaderController.isLoading.value && showLoader) {
-              return InkWell(
+              return AppInkWell(
                 onTap: () {},
                 child: Container(
                   color:

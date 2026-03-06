@@ -4,7 +4,6 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/controller/playlist_controller.dart';
-import 'package:focus_tube_flutter/view/dialog/add_edit_playlist_vc.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/playlist_widgets.dart';
@@ -112,11 +111,9 @@ class _SavePlaylistVCState extends State<SavePlaylistVC> {
                       children: [
                         Text("Save to playlist", style: AppTextStyle.title20()),
                         Expanded(child: Container(width: 10)),
-                        InkWell(
+                        AppInkWell(
                           onTap: context.pop,
-                          overlayColor: WidgetStatePropertyAll(
-                            Colors.transparent,
-                          ),
+
                           child: Icon(
                             Icons.close,
                             color: AppColor.primary,

@@ -9,6 +9,7 @@ import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/controller/youtube_playlist_video_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/model/daily_video_limit_model.dart';
 import 'package:focus_tube_flutter/view/dialog/save_playlist_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
@@ -49,42 +50,51 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
   );
   VideoController? videoController;
   late final ValueNotifier<bool> isRatedNotifier;
-
+  bool reachedLimit = false;
   @override
   void initState() {
     isRatedNotifier = ValueNotifier(false);
     super.initState();
     Future.delayed(Duration.zero, () async {
-      if (widget.isFromYoutube) {
-        var video;
-        if (widget.isFromChannel) {
-          video = controller<YoutubePlaylistVideoController>(tag: "channel")
-              .playListVideos
-              .where((e) => e.snippet?.resourceId?.videoId == widget.videoId)
-              .firstOrNull;
+      DailyVideoLimitModel? limit = await ApiFunctions.instance.getDailyLimit(
+        context,
+      );
+      reachedLimit =
+          (limit?.dailyViews ?? 0) >=
+          (int.tryParse(limit?.dailyVideoLimit ?? "1") ?? 1);
+      setState(() {});
+      if (!reachedLimit) {
+        if (widget.isFromYoutube) {
+          var video;
+          if (widget.isFromChannel) {
+            video = controller<YoutubePlaylistVideoController>(tag: "channel")
+                .playListVideos
+                .where((e) => e.snippet?.resourceId?.videoId == widget.videoId)
+                .firstOrNull;
+          } else {
+            video = controller<YoutubeVideoController>(
+              tag: "search",
+            ).videos.where((e) => e.id?.videoId == widget.videoId).firstOrNull;
+          }
+          if (video != null) {
+            aspectRatio = Size(
+              (video.snippet?.thumbnails?.high?.width ?? 0).toDouble(),
+              (video.snippet?.thumbnails?.high?.height ?? 0).toDouble(),
+            ).aspectRatio;
+            title = video.snippet?.title ?? "";
+            thumbnailUrl = video.snippet?.thumbnails?.high?.url ?? "";
+            channelTitle = video.snippet?.channelTitle ?? "";
+            _youtubePlayerController = YoutubePlayerController(
+              initialVideoId: widget.videoId,
+              flags: const YoutubePlayerFlags(autoPlay: true),
+            );
+            setState(() {});
+          }
         } else {
-          video = controller<YoutubeVideoController>(
-            tag: "search",
-          ).videos.where((e) => e.id?.videoId == widget.videoId).firstOrNull;
+          loaderController.setLoading(true);
+          await callVideoDetailsApi();
+          loaderController.setLoading(false);
         }
-        if (video != null) {
-          aspectRatio = Size(
-            (video.snippet?.thumbnails?.high?.width ?? 0).toDouble(),
-            (video.snippet?.thumbnails?.high?.height ?? 0).toDouble(),
-          ).aspectRatio;
-          title = video.snippet?.title ?? "";
-          thumbnailUrl = video.snippet?.thumbnails?.high?.url ?? "";
-          channelTitle = video.snippet?.channelTitle ?? "";
-          _youtubePlayerController = YoutubePlayerController(
-            initialVideoId: widget.videoId,
-            flags: const YoutubePlayerFlags(autoPlay: true),
-          );
-          setState(() {});
-        }
-      } else {
-        loaderController.setLoading(true);
-        await callVideoDetailsApi();
-        loaderController.setLoading(false);
       }
     });
   }
@@ -135,12 +145,11 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
       child: ScreenBackground(
         appBar: customAppBar(
           context,
-          title: title,
-          actions: widget.isFromYoutube
+          title: reachedLimit ? "Limit Reached" : title,
+          actions: (reachedLimit || widget.isFromYoutube)
               ? null
               : [
-                  InkWell(
-                    overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                  AppInkWell(
                     onTap: () {
                       notes.go(context, id: widget.videoId);
                     },
@@ -154,7 +163,14 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
         body: SafeArea(
           minimum: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
           top: false,
-          child: widget.isFromYoutube
+          child: reachedLimit
+              ? Center(
+                  child: Text(
+                    "You reached your daily video limit",
+                    style: AppTextStyle.body14(color: AppColor.gray),
+                  ),
+                )
+              : widget.isFromYoutube
               ? ExpandedSingleChildScrollView(
                   physics:
                       MediaQuery.of(context).orientation ==
@@ -237,7 +253,7 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
       children: [
         Expanded(child: _buildVideoTitle()),
         if (!widget.isFromYoutube)
-          InkWell(
+          AppInkWell(
             onTap: () async {
               var result = await showDialog(
                 context: context,

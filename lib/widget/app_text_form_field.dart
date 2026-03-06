@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 
 class AppTextFormField extends StatelessWidget {
   AppTextFormField({
@@ -257,11 +258,7 @@ class AutoCompleteFieldState extends State<AutoCompleteField> {
           hintTextColor: widget.hintTextColor,
           prefixIcon: widget.prefixIcon,
           suffixIcon: widget.suffixIcon != null
-              ? InkWell(
-                  overlayColor: WidgetStatePropertyAll(Colors.transparent),
-                  onTap: clearSearch,
-                  child: widget.suffixIcon,
-                )
+              ? AppInkWell(onTap: clearSearch, child: widget.suffixIcon)
               : null,
           radius: widget.radius,
           onFieldSubmitted: (value) {
@@ -312,7 +309,7 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 
 String firstLatterCapitalize(String value) {
   if (value.trim().isEmpty) return "";
-  return "${value[0]}${value.substring(1)}";
+  return "${value[0].toUpperCase()}${value.substring(1)}";
 }
 
 String everyWordCapitalize(String value) {

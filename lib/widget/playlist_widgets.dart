@@ -4,6 +4,7 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/model/playlist_model.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'checkbox_tile.dart';
 
 enum PlayListTileType { normal, selection, edit }
@@ -22,8 +23,7 @@ class PlayListTile extends StatelessWidget {
   final void Function(PlaylistModel playList) onTap;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+    return AppInkWell(
       onTap: tileType == PlayListTileType.edit ? null : () => onTap(value),
       child: Container(
         decoration: BoxDecoration(
@@ -57,7 +57,7 @@ class PlayListTile extends StatelessWidget {
                       onChanged: (isSelected) => onTap(value),
                     )
                   : tileType == PlayListTileType.edit
-                  ? InkWell(
+                  ? AppInkWell(
                       onTap: () => onTap(value),
                       child: SvgPicture.asset(AppImage.editIcon, height: 20),
                     )

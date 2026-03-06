@@ -10,6 +10,7 @@ import 'package:focus_tube_flutter/controller/youtube_playlist_video_controller.
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/model/daily_goal_model.dart';
 import 'package:focus_tube_flutter/model/daily_goal_video_list_model.dart';
+import 'package:focus_tube_flutter/model/daily_video_limit_model.dart';
 import 'package:focus_tube_flutter/model/interest_model.dart';
 import 'package:focus_tube_flutter/model/note_model.dart';
 import 'package:focus_tube_flutter/model/playlist_model.dart';
@@ -615,7 +616,8 @@ class ApiFunctions {
           "youtube_id": youtubeId,
           "title": title,
           "image_url": imageUrl,
-          if (description != null) "description": description,
+          if (description != null && description.trim().isNotEmpty)
+            "description": description,
           if (followers != null) "followers": followers,
         },
       );
@@ -1175,6 +1177,26 @@ class ApiFunctions {
     return null;
   }
 
+  Future<DailyVideoLimitModel?> getDailyLimit(BuildContext context) async {
+    try {
+      var response = await ApiManager.instance.post<DailyVideoLimitModel>(
+        ApiUtils.getDailyLimit,
+      );
+      if (response.isSuccess) {
+        return response.data;
+      } else {
+        await AppTostMessage.snackBarMessage(
+          context,
+          message: response.responseMessage,
+          isError: response.isError,
+        );
+      }
+    } catch (e) {
+      debugPrint("Error in getDailyLimit: $e");
+    }
+    return null;
+  }
+
   //Get Daily Goals
   Future<DailyGoalModel?> getDailyGoal(context, {int page = 1}) async {
     var goalController = controller<DailyGoalController>();
@@ -1206,7 +1228,7 @@ class ApiFunctions {
   }
 
   //Get Daily Goal Videos
-  Future<DailyGoalModel?> getDailyGoalVideo(context, {int page = 1}) async {
+  Future<void> getDailyGoalVideo(context, {int page = 1}) async {
     var goalController = controller<DailyGoalVideoController>();
     try {
       goalController.setIsLoading(true);

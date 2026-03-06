@@ -57,9 +57,8 @@ class _AddEditPlaylistVCState extends State<AddEditPlaylistVC> {
                       style: AppTextStyle.title20(),
                     ),
                     Expanded(child: Container(width: 10)),
-                    InkWell(
+                    AppInkWell(
                       onTap: context.pop,
-                      overlayColor: WidgetStatePropertyAll(Colors.transparent),
                       child: Icon(
                         Icons.close,
                         color: AppColor.primary,

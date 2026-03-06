@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 import 'package:get/get.dart';
@@ -92,7 +93,7 @@ class _PlaylistVCState extends State<PlaylistVC> {
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(right: 30),
-                  child: InkWell(
+                  child: AppInkWell(
                     onTap: () async {
                       var value = await showDialog(
                         context: context,

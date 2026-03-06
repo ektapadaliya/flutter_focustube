@@ -7,6 +7,7 @@ import 'package:focus_tube_flutter/controller/loader_cotroller.dart';
 import 'package:focus_tube_flutter/model/sub_subject_model.dart';
 import 'package:focus_tube_flutter/model/subject_model.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
@@ -104,7 +105,7 @@ class _SubjectDetailVCState extends State<SubjectDetailVC> {
 
   buildCategoryTile(int index) {
     bool isSelected = index == selectedIndex;
-    return InkWell(
+    return AppInkWell(
       onTap: () {
         pageController.jumpToPage(index);
         setState(() {});

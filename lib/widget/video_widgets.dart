@@ -8,6 +8,7 @@ import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/model/video_model.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/image_classes.dart';
 
 class AppTitle extends StatelessWidget {
@@ -28,8 +29,7 @@ class AppTitle extends StatelessWidget {
           ),
         ),
         if (onViewMore != null)
-          InkWell(
-            overlayColor: WidgetStatePropertyAll(Colors.transparent),
+          AppInkWell(
             onTap: onViewMore,
             child: Text(
               "View More",
@@ -47,11 +47,11 @@ class PopularVideoTile extends StatelessWidget {
   final void Function(String id)? onBookmark;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return AppInkWell(
       onTap: () {
         videoDetail.go(context, id: video.id.toString());
       },
-      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+
       child: SizedBox(
         width: 210,
         child: Column(
@@ -132,11 +132,11 @@ class SubjectVideoTile extends StatelessWidget {
   final void Function(String id)? onBookmark;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return AppInkWell(
       onTap: () {
         videoDetail.go(context, id: video.id?.toString());
       },
-      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+
       child: SizedBox(
         width: 170,
         child: Column(
@@ -206,11 +206,11 @@ class BookmarkVideoTile extends StatelessWidget {
   final void Function(String id)? onBookmark;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return AppInkWell(
       onTap: () {
         videoDetail.go(context, id: video.id.toString());
       },
-      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: AppConst.maxWidth(context) > 450
@@ -370,7 +370,7 @@ class _YoutubeVideoTileState extends State<YoutubeVideoTile> {
     }
   }
 
-  Widget get child => InkWell(
+  Widget get child => AppInkWell(
     onTap: () {
       if (widget.isFromChannel) {
         channelVideoDetail.go(context, id: widget.videoId);
@@ -380,7 +380,7 @@ class _YoutubeVideoTileState extends State<YoutubeVideoTile> {
         videoDetail.go(context, id: widget.videoId);
       }
     },
-    overlayColor: WidgetStatePropertyAll(Colors.transparent),
+
     child: SizedBox(
       height: 110,
       child: Row(
@@ -532,14 +532,13 @@ class _VideoTileState extends State<VideoTile> {
     }
   }
 
-  Widget get child => InkWell(
+  Widget get child => AppInkWell(
     onTap: () {
       if (widget.onVideoSeen != null) {
         widget.onVideoSeen!();
       }
       videoDetail.go(context, id: widget.video.id);
     },
-    overlayColor: WidgetStatePropertyAll(Colors.transparent),
     child: SizedBox(
       height: 110,
       child: Row(

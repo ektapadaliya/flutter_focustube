@@ -9,6 +9,7 @@ import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/controller/video_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/view/home_root.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/video_widgets.dart';
 import 'package:get/get.dart';
@@ -243,16 +244,21 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
               ),
               SizedBox(width: 10),
               Expanded(
-                child: Text(
-                  "Leslie Alexander",
-                  style: AppTextStyle.title28(),
-                  overflow: TextOverflow.ellipsis,
+                child: GetBuilder(
+                  init: controller<UserController>(),
+                  builder: (userController) {
+                    return Text(
+                      "${userController.user?.firstName ?? ''} ${userController.user?.lastName ?? ''}",
+                      style: AppTextStyle.title28(),
+                      overflow: TextOverflow.ellipsis,
+                    );
+                  },
                 ),
               ),
               SizedBox(width: 10),
               HomePopupMenu(),
               SizedBox(width: 15),
-              InkWell(
+              AppInkWell(
                 onTap: () {
                   settings.go(context);
                 },

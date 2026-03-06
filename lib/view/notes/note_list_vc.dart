@@ -8,6 +8,7 @@ import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/model/note_model.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 import 'package:get/get.dart';
@@ -128,7 +129,7 @@ class NoteTile extends StatelessWidget {
   final NoteModel note;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return AppInkWell(
       onTap: () {
         detailsNote.go(context, id: note.id.toString());
       },

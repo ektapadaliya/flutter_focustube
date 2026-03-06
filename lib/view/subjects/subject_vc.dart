@@ -5,6 +5,7 @@ import 'package:focus_tube_flutter/controller/subject_video_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/view/subjects/select_subject_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
+import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
@@ -87,7 +88,7 @@ class _SubjectVCState extends State<SubjectVC> {
 
   buildCategoryTile(int index) {
     bool isSelected = selectedIndex == index;
-    return InkWell(
+    return AppInkWell(
       onTap: () {
         pageController.jumpToPage(index);
         // Scrollable.ensureVisible(
