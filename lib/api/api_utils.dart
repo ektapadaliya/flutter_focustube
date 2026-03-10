@@ -63,6 +63,7 @@ class ApiUtils {
   static const channelScholartube = "${baseUrl}channel/scholartube";
   static const channelMe = "${baseUrl}channel/me";
   static const channelAdd = "${baseUrl}channel/add";
+  static const channelIsMyChannel = "${baseUrl}channel/is-my-channel";
   static const setDeviceToken = "${baseUrl}set-device-token";
   static const pushNotification = "${baseUrl}push-notification";
   static const getDailyLimit = "${baseUrl}get-daily-limit";

@@ -239,18 +239,37 @@ final AppNavigationModel channels = AppNavigationModel(
   builder: (context, state) => const ChannelsVC(),
 );
 
-final AppNavigationModel channelDetail = AppNavigationModel(
+final AppNavigationModel channelMeDetail = AppNavigationModel(
   label: "Channel Detail",
-  path: "${ChannelsVC.id}${ChannelDetailVC.id}",
-  builder: (context, state) =>
-      ChannelDetailVC(channelId: state.pathParameters['id'] ?? ""),
+  path: "/channels/me${ChannelDetailVC.id}",
+  builder: (context, state) => ChannelDetailVC(
+    channelId: state.pathParameters['id'] ?? "",
+    tag: "channel-me",
+  ),
+);
+final AppNavigationModel channelCuratedDetail = AppNavigationModel(
+  label: "Channel Detail",
+  path: "/channels/curated${ChannelDetailVC.id}",
+
+  builder: (context, state) => ChannelDetailVC(
+    channelId: state.pathParameters['id'] ?? "",
+    tag: "channel-curated",
+  ),
+);
+final AppNavigationModel channelScholartubeDetail = AppNavigationModel(
+  label: "Channel Detail",
+  path: "/channels/scholartube${ChannelDetailVC.id}",
+  builder: (context, state) => ChannelDetailVC(
+    channelId: state.pathParameters['id'] ?? "",
+    tag: "channel-scholartube",
+  ),
 );
 final AppNavigationModel youtubeChannelDetail = AppNavigationModel(
   label: "Channel Detail",
-  path: "/youtube-channels${ChannelDetailVC.id}",
+  path: "/channels/youtube${ChannelDetailVC.id}",
   builder: (context, state) => ChannelDetailVC(
     channelId: state.pathParameters['id'] ?? "",
-    showAddButton: true,
+    tag: "channel-youtube",
   ),
 );
 final AppNavigationModel settings = AppNavigationModel(
@@ -370,6 +389,7 @@ List<AppNavigationModel> authNavigation = [
   resetPassword,
 ];
 final GoRouter router = GoRouter(
+  routerNeglect: true,
   navigatorKey: navigationKey,
   initialLocation: onboarding.path,
   routes: [
@@ -390,7 +410,10 @@ final GoRouter router = GoRouter(
       addNote,
       detailsNote,
       playListDetail,
-      channelDetail,
+      channelMeDetail,
+      channelCuratedDetail,
+      channelScholartubeDetail,
+      youtubeChannelDetail,
       profile,
       editProfile,
       editDailyLimit,

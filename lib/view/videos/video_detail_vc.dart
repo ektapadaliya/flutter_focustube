@@ -10,6 +10,8 @@ import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/controller/youtube_playlist_video_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/model/daily_video_limit_model.dart';
+import 'package:focus_tube_flutter/model/youtube_playlist_item_model.dart';
+import 'package:focus_tube_flutter/model/youtube_video_model.dart';
 import 'package:focus_tube_flutter/view/dialog/save_playlist_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
@@ -21,6 +23,7 @@ import 'package:get/state_manager.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../model/playlist_model.dart';
+import '../dialog/feedback_vc.dart';
 
 class VideoDetailVC extends StatefulWidget {
   static const id = "/video/:id";
@@ -49,6 +52,7 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
     tag: "video-detail",
   );
   VideoController? videoController;
+  List<YoutubePlaylistModel> youtubeRecomeneded = [];
   late final ValueNotifier<bool> isRatedNotifier;
   bool reachedLimit = false;
   @override
@@ -56,6 +60,7 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
     isRatedNotifier = ValueNotifier(false);
     super.initState();
     Future.delayed(Duration.zero, () async {
+      loaderController.setLoading(true);
       DailyVideoLimitModel? limit = await ApiFunctions.instance.getDailyLimit(
         context,
       );
@@ -64,39 +69,46 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
           (int.tryParse(limit?.dailyVideoLimit ?? "1") ?? 1);
       setState(() {});
       if (!reachedLimit) {
+        loaderController.setLoading(true);
         if (widget.isFromYoutube) {
-          var video;
-          if (widget.isFromChannel) {
-            video = controller<YoutubePlaylistVideoController>(tag: "channel")
-                .playListVideos
-                .where((e) => e.snippet?.resourceId?.videoId == widget.videoId)
-                .firstOrNull;
-          } else {
-            video = controller<YoutubeVideoController>(
-              tag: "search",
-            ).videos.where((e) => e.id?.videoId == widget.videoId).firstOrNull;
-          }
-          if (video != null) {
-            aspectRatio = Size(
-              (video.snippet?.thumbnails?.high?.width ?? 0).toDouble(),
-              (video.snippet?.thumbnails?.high?.height ?? 0).toDouble(),
-            ).aspectRatio;
-            title = video.snippet?.title ?? "";
-            thumbnailUrl = video.snippet?.thumbnails?.high?.url ?? "";
-            channelTitle = video.snippet?.channelTitle ?? "";
-            _youtubePlayerController = YoutubePlayerController(
-              initialVideoId: widget.videoId,
-              flags: const YoutubePlayerFlags(autoPlay: true),
-            );
-            setState(() {});
-          }
+          await callYoutubeVideoDetailApi();
         } else {
-          loaderController.setLoading(true);
           await callVideoDetailsApi();
-          loaderController.setLoading(false);
         }
+        loaderController.setLoading(false);
       }
+      loaderController.setLoading(false);
     });
+  }
+
+  Future<void> callYoutubeVideoDetailApi() async {
+    var video = await YoutubeApiConst.fetchYoutubeVideoDetails(
+      context,
+      id: widget.videoId,
+    );
+    if (video != null) {
+      aspectRatio = Size(
+        (video.snippet?.thumbnails?.high?.width ?? 0).toDouble(),
+        (video.snippet?.thumbnails?.high?.height ?? 0).toDouble(),
+      ).aspectRatio;
+      title = video.snippet?.title ?? "";
+      thumbnailUrl = video.snippet?.thumbnails?.high?.url ?? "";
+      channelTitle = video.snippet?.channelTitle ?? "";
+      _youtubePlayerController = YoutubePlayerController(
+        initialVideoId: widget.videoId,
+        flags: const YoutubePlayerFlags(autoPlay: true),
+      );
+      setState(() {});
+      YoutubeApiConst.fetchPlayListItems(
+        context,
+        playlistId: "UU${video.snippet?.channelId?.toString().substring(2)}",
+      ).then((value) {
+        if (value?.containsKey("videos") ?? false) {
+          youtubeRecomeneded = value!['videos'];
+          setState(() {});
+        }
+      });
+    }
   }
 
   Future<void> callVideoDetailsApi() async {
@@ -117,7 +129,7 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
         initialVideoId: video.youtubeId ?? "",
         flags: const YoutubePlayerFlags(autoPlay: true),
       );
-      loaderController.setLoading(false);
+
       title = video.title ?? "";
       thumbnailUrl = YoutubeApiConst.thubnailFromId(video.youtubeId ?? "");
       channelTitle = video.channelName ?? "";
@@ -172,11 +184,8 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
                 )
               : widget.isFromYoutube
               ? ExpandedSingleChildScrollView(
-                  physics:
-                      MediaQuery.of(context).orientation ==
-                          Orientation.landscape
-                      ? const AlwaysScrollableScrollPhysics()
-                      : NeverScrollableScrollPhysics(),
+                  physics: const AlwaysScrollableScrollPhysics(),
+
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -196,6 +205,17 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
                       ),
                       SizedBox(height: 20),
                       _buildVideoTitle(),
+                      SizedBox(height: 20),
+                      if (youtubeRecomeneded.isNotEmpty)
+                        _buildYoutubeRecomenededList(
+                          youtubeRecomeneded
+                              .where(
+                                (e) =>
+                                    e.snippet?.resourceId?.videoId !=
+                                    widget.videoId,
+                              )
+                              .toList(),
+                        ),
                     ],
                   ),
                 )
@@ -213,6 +233,35 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
               : Container(),
         ),
       ),
+    );
+  }
+
+  Widget _buildYoutubeRecomenededList(
+    List<YoutubePlaylistModel> youtubeRecomeneded,
+  ) {
+    return Column(
+      children: [
+        AppTitle(title: "Recommended video"),
+        Column(
+          children: List.generate(
+            youtubeRecomeneded.length,
+            (index) => Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: YoutubeVideoTile(
+                thumbnailUrl:
+                    youtubeRecomeneded[index].snippet?.thumbnails?.high?.url ??
+                    "",
+                title: youtubeRecomeneded[index].snippet?.title,
+                videoId:
+                    youtubeRecomeneded[index].snippet?.resourceId?.videoId ??
+                    "",
+
+                isFromYoutube: true,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -309,7 +358,7 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
               isFilled: false,
               fontSize: 18,
               onTap: () async {
-                /*   var value = await showDialog(
+                var value = await showDialog(
                   context: context,
                   builder: (context) => FeedbackVC(),
                 );
@@ -328,7 +377,7 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
                   if (isSuccess) {
                     isRatedNotifier.value = true;
                   }
-                } */
+                }
               },
             ),
           ),

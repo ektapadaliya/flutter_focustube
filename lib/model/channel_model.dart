@@ -5,6 +5,7 @@ class ChannelModel {
   String? description;
   String? imageUrl;
   String? followers;
+  String? youtubePlaylistId;
   int? totalVideos;
   int? createdAt;
 
@@ -15,6 +16,7 @@ class ChannelModel {
     this.description,
     this.imageUrl,
     this.followers,
+    this.youtubePlaylistId,
     this.totalVideos,
     this.createdAt,
   });
@@ -26,6 +28,7 @@ class ChannelModel {
     description = json['description'];
     imageUrl = json['image_url'];
     followers = json['followers'];
+    youtubePlaylistId = json['youtube_playlist_id'];
     totalVideos = json['total_videos'];
     createdAt = json['created_at'];
   }
@@ -38,6 +41,7 @@ class ChannelModel {
     data['description'] = description;
     data['image_url'] = imageUrl;
     data['followers'] = followers;
+    data['youtube_playlist_id'] = youtubePlaylistId;
     data['total_videos'] = totalVideos;
     data['created_at'] = createdAt;
     return data;

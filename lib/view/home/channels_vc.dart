@@ -47,7 +47,7 @@ class _ChannelsVCState extends State<ChannelsVC> {
             physics: NeverScrollableScrollPhysics(),
             controller: pageController,
             children: [
-              YoutubeChannelVC(),
+              YoutubeChannelVC(isFirstTime: true),
               ChannelListVC(tag: "channel-me"),
               ChannelListVC(tag: "channel-curated"),
               ChannelListVC(tag: "channel-scholartube"),
@@ -119,6 +119,3 @@ class _ChannelsVCState extends State<ChannelsVC> {
     };
   }
 }
-/* 
-Hi, may I please take leave? I need to accompany my father for his MRI and thyroid report, Sorry for urgent request hope you understand.
- */

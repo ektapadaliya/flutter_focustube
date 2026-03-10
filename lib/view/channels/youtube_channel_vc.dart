@@ -14,8 +14,8 @@ import '../../widget/expandable_scollview.dart';
 
 class YoutubeChannelVC extends StatefulWidget {
   static const id = "/channels";
-  const YoutubeChannelVC({super.key});
-
+  YoutubeChannelVC({super.key, this.isFirstTime = false});
+  bool isFirstTime;
   @override
   State<YoutubeChannelVC> createState() => _YoutubeChannelVCState();
 }
@@ -25,6 +25,7 @@ class _YoutubeChannelVCState extends State<YoutubeChannelVC>
   TextEditingController searchController = TextEditingController();
   String? searchValue;
   int selectedIndex = 0;
+
   LoaderController loaderController = controller<LoaderController>(
     tag: "youtube_channel",
   );
@@ -102,12 +103,13 @@ class _YoutubeChannelVCState extends State<YoutubeChannelVC>
                 Text("Search Results", style: AppTextStyle.title20()),
                 SizedBox(height: 20),
                 Expanded(
-                  child: Obx(
-                    () => RefreshIndicator(
+                  child: Obx(() {
+                    bool isLoading = loaderController.isLoading.value;
+                    return RefreshIndicator(
                       onRefresh: onRefresh,
                       child:
                           (youtubeChannelController.channels.isEmpty &&
-                              !(loaderController.isLoading.value))
+                              !(isLoading))
                           ? ExpandedSingleChildScrollView(
                               physics: AlwaysScrollableScrollPhysics(),
                               child: Container(
@@ -138,6 +140,7 @@ class _YoutubeChannelVCState extends State<YoutubeChannelVC>
                                               ?.high
                                               ?.url ??
                                           "",
+                                      tag: "channel-youtube",
                                       channelId: channel.id?.channelId ?? "",
                                       onAddChannel: () {
                                         ApiFunctions.instance.channelAdd(
@@ -180,8 +183,8 @@ class _YoutubeChannelVCState extends State<YoutubeChannelVC>
                               itemCount:
                                   youtubeChannelController.channels.length,
                             ),
-                    ),
-                  ),
+                    );
+                  }),
                 ),
               ],
             );
@@ -201,13 +204,15 @@ class _YoutubeChannelVCState extends State<YoutubeChannelVC>
 
   Future<void> callYoutubeSearch() async {
     changeYoutubeLoader(true);
-    if (youtubeChannelController.channels.isNotEmpty) {
+    if (youtubeChannelController.channels.isNotEmpty && !widget.isFirstTime) {
       youtubeScrollController.animateTo(
         youtubeScrollController.offset + 60,
         duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     }
+    widget.isFirstTime = false;
+    setState(() {});
     var value = await YoutubeApiConst.fetchYoutubeChannels(
       context,
       query: searchValue,

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../api/youtube_api.dart';
 import '../../controller/app_controller.dart';
+import '../../model/youtube_playlist_item_model.dart';
 import '../../widget/video_widgets.dart';
 
 class YoutubePlayListVideoVC extends StatefulWidget {
@@ -72,33 +73,37 @@ class YoutubePlayListVideoVCState extends State<YoutubePlayListVideoVC>
           controller: youtubeScrollController,
           itemBuilder: (context, index) {
             var playList = youtubeVideoController.playListVideos[index];
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                YoutubeVideoTile(
-                  isFromYoutube: true,
-                  isFromChannel: true,
-                  title: playList.snippet?.title ?? "",
-                  thumbnailUrl: playList.snippet?.thumbnails?.high?.url ?? "",
-                  videoId: playList.snippet?.resourceId?.videoId ?? "",
-                ),
-                if (youtubeVideoController.isLoading &&
-                    index == youtubeVideoController.playListVideos.length - 1)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Container(
-                      height: 50,
-                      alignment: Alignment.center,
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-              ],
-            );
+            return _buildListItem(playList, index);
           },
           separatorBuilder: (context, index) => SizedBox(height: 15),
           itemCount: youtubeVideoController.playListVideos.length,
         );
       },
+    );
+  }
+
+  Widget _buildListItem(YoutubePlaylistModel playList, int index) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        YoutubeVideoTile(
+          isFromYoutube: true,
+          isFromChannel: true,
+          title: playList.snippet?.title ?? "",
+          thumbnailUrl: playList.snippet?.thumbnails?.high?.url ?? "",
+          videoId: playList.snippet?.resourceId?.videoId ?? "",
+        ),
+        if (youtubeVideoController.isLoading &&
+            index == youtubeVideoController.playListVideos.length - 1)
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Container(
+              height: 50,
+              alignment: Alignment.center,
+              child: CircularProgressIndicator(),
+            ),
+          ),
+      ],
     );
   }
 

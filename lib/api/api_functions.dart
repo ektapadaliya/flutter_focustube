@@ -419,6 +419,30 @@ class ApiFunctions {
     }
   }
 
+  Future<bool> channelIsMyChannel(
+    BuildContext? context, {
+    required String youtubeId,
+  }) async {
+    try {
+      var response = await ApiManager.instance.post(
+        ApiUtils.channelIsMyChannel,
+        body: {"youtube_id": youtubeId},
+      );
+      if (response.isSuccess) {
+        return response.data['is_my_channel'] == 1;
+      } else if (response.code != 3 && context != null) {
+        await AppTostMessage.snackBarMessage(
+          context,
+          message: response.responseMessage,
+          isError: response.isError,
+        );
+      }
+    } catch (e) {
+      debugPrint("Error in getUserInterests: $e");
+    }
+    return false;
+  }
+
   //Edit Profile
   Future<bool> editProfile(
     BuildContext context, {

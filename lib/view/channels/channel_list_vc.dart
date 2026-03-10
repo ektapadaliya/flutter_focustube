@@ -112,9 +112,7 @@ class _ChannelListVCState extends State<ChannelListVC>
                                     title: channel.title ?? "",
                                     channelId: channel.youtubeId ?? "",
                                     channelImage: channel.imageUrl ?? "",
-                                    showAddChannels:
-                                        channelController.tag ==
-                                        "channel-scholartube",
+                                    tag: channelController.tag!,
                                   );
                                 },
                                 separatorBuilder: (context, index) =>

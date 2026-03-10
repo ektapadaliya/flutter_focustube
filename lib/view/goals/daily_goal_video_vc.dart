@@ -167,10 +167,17 @@ class GoalSubjects extends StatelessWidget {
               child: VideoTile(
                 video: dailyGoalVideoList.videos![index],
                 onVideoSeen: () =>
-                    controller<DailyGoalVideoController>().setVideoSeen(
-                      dailyGoalVideoList.subjectId ?? "",
-                      dailyGoalVideoList.videos![index].id.toString(),
-                    ),
+                    ApiFunctions.instance.getDailyLimit(context).then((value) {
+                      var reachedLimit =
+                          (value?.dailyViews ?? 0) >=
+                          (int.tryParse(value?.dailyVideoLimit ?? "1") ?? 1);
+                      if (!reachedLimit) {
+                        controller<DailyGoalVideoController>().setVideoSeen(
+                          dailyGoalVideoList.subjectId ?? "",
+                          dailyGoalVideoList.videos![index].id.toString(),
+                        );
+                      }
+                    }),
               ),
             ),
           )
@@ -197,7 +204,11 @@ class GoalSubjects extends StatelessWidget {
             padding: EdgeInsets.all(12),
             alignment: Alignment.center,
             child: Text(
-              "${dailyGoalVideoList.subjectTitle} videos goal completed",
+              (dailyGoalVideoList.totalDailyCompletedGoalBySubject ?? 0) <
+                      int.parse(dailyGoalVideoList.dailyGoal ?? "0")
+                  ? "You’ve watched all available ${dailyGoalVideoList.subjectTitle} videos."
+                  : "${dailyGoalVideoList.subjectTitle} videos goal achieved",
+              textAlign: TextAlign.center,
               style: AppTextStyle.body14(color: AppColor.gray),
             ),
           ),

@@ -6,14 +6,13 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/controller/youtube_playlist_video_controller.dart';
-import 'package:focus_tube_flutter/model/youtube_channel_detail_model.dart';
+import 'package:focus_tube_flutter/model/channel_model.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/channel_widgets.dart';
 import 'package:focus_tube_flutter/widget/image_classes.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
-
 import '../videos/youtube_playlist_video_vc.dart';
 
 class ChannelDetailVC extends StatefulWidget {
@@ -22,10 +21,10 @@ class ChannelDetailVC extends StatefulWidget {
   const ChannelDetailVC({
     super.key,
     required this.channelId,
-    this.showAddButton = false,
+    required this.tag,
   });
   final String channelId;
-  final bool showAddButton;
+  final String tag;
   @override
   State<ChannelDetailVC> createState() => _ChannelDetailVCState();
 }
@@ -33,24 +32,48 @@ class ChannelDetailVC extends StatefulWidget {
 class _ChannelDetailVCState extends State<ChannelDetailVC>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  YoutubeChannelDetailModel? channel;
+  bool showAddChannel = false;
+  ChannelModel? channel;
   LoaderController loaderController = controller<LoaderController>(
     tag: "channel-detail",
   );
+
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
 
     super.initState();
     Future.delayed(Duration.zero, () async {
-      loaderController.setLoading(true);
-      channel = await YoutubeApiConst.fetchYoutubeChannelDetails(
-        context,
-        id: widget.channelId,
-      );
+      await getChannelDetails();
+
       loaderController.setLoading(false);
       setState(() {});
     });
+  }
+
+  Future<void> getChannelDetails() async {
+    ApiFunctions.instance
+        .channelIsMyChannel(context, youtubeId: widget.channelId)
+        .then((value) {
+          showAddChannel = !value;
+          setState(() {});
+        });
+    if (widget.tag == "channel-youtube") {
+      loaderController.setLoading(true);
+      var details = await YoutubeApiConst.fetchYoutubeChannelDetails(
+        context,
+        id: widget.channelId,
+      );
+      if (details != null) {
+        channel = details.channelModel;
+      }
+      loaderController.setLoading(false);
+    } else {
+      channel = controller<ChannelController>(
+        tag: widget.tag,
+      ).channels.where((e) => e.youtubeId == widget.channelId).firstOrNull;
+    }
+    setState(() {});
   }
 
   YoutubePlaylistVideoController youtubeVideoController =
@@ -75,8 +98,7 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                             height: 120,
                             width: 120,
                             shape: BoxShape.circle,
-                            image:
-                                channel?.snippet?.thumbnails?.high?.url ?? "",
+                            image: channel?.imageUrl ?? "",
                           ),
                           Expanded(
                             child: Container(
@@ -90,41 +112,42 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   AutoSizeText(
-                                    channel?.snippet?.title ?? "",
+                                    channel?.title ?? "",
                                     maxFontSize: 24,
                                     minFontSize: 18,
                                     style: AppTextStyle.title24(),
                                     maxLines: 2,
                                   ),
                                   Text(
-                                    "${channel?.statistics?.formattedSubscriberCount ?? "0"} Followers",
+                                    "${formattedSubscriberCount(channel?.followers ?? "0")} Followers",
                                     style: AppTextStyle.body16(
                                       color: AppColor.gray,
                                     ),
                                   ),
                                   Expanded(child: Container()),
-                                  if (widget.showAddButton)
+                                  if (widget.tag == "channel-youtube" &&
+                                      showAddChannel)
                                     AppButton(
                                       label: "Add channel",
                                       radius: 7,
                                       alignment: null,
                                       onTap: () async {
                                         loaderController.setLoading(true);
-                                        await ApiFunctions.instance.channelAdd(
-                                          context,
-                                          youtubeId: channel?.id ?? "",
-                                          title: channel?.snippet?.title ?? "",
-                                          imageUrl: channel
-                                              ?.snippet
-                                              ?.thumbnails
-                                              ?.medium
-                                              ?.url,
-                                          description:
-                                              channel?.snippet?.description,
-                                          followers: channel
-                                              ?.statistics
-                                              ?.subscriberCount,
-                                        );
+                                        var isSuccess = await ApiFunctions
+                                            .instance
+                                            .channelAdd(
+                                              context,
+                                              youtubeId:
+                                                  channel?.youtubeId ?? "",
+                                              title: channel?.title ?? "",
+                                              imageUrl: channel?.imageUrl,
+                                              description: channel?.description,
+                                              followers: channel?.followers,
+                                            );
+                                        if (isSuccess) {
+                                          showAddChannel = false;
+                                          setState(() {});
+                                        }
                                         loaderController.setLoading(false);
                                       },
                                       backgroundColor: AppColor.primary,
@@ -168,18 +191,13 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                             ),
                             child: YoutubePlayListVideoVC(
                               tag: "channel",
-                              channelId: channel
-                                  ?.contentDetails
-                                  ?.relatedPlaylists
-                                  ?.uploads,
+                              channelId: channel?.youtubePlaylistId,
                               isLoading: (isLoading) {
                                 changeYoutubeLoader(isLoading);
                               },
                             ),
                           ),
-                          ChannelAbout(
-                            description: channel?.snippet?.description ?? "",
-                          ),
+                          ChannelAbout(description: channel?.description ?? ""),
                         ],
                       ),
                     ),
@@ -196,6 +214,21 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
       loaderController.setLoading(isLoading);
     } else {
       youtubeVideoController.setIsLoading(isLoading);
+    }
+  }
+
+  String formattedSubscriberCount(String? subscriberCount) {
+    if (subscriberCount == null) return "0";
+    double count = double.tryParse(subscriberCount) ?? 0;
+
+    if (count >= 1000000000) {
+      return "${(count / 1000000000).toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')}B";
+    } else if (count >= 1000000) {
+      return "${(count / 1000000).toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')}M";
+    } else if (count >= 1000) {
+      return "${(count / 1000).toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')}K";
+    } else {
+      return count.toStringAsFixed(0);
     }
   }
 }

@@ -13,23 +13,27 @@ class ChannelTile extends StatelessWidget {
     this.title = "Channel",
     this.channelId = "",
     this.channelImage = "",
-    this.showAddChannels = true,
+    required this.tag,
     this.onAddChannel,
   });
 
   final String title;
   final String channelId;
   final String channelImage;
-  final bool showAddChannels;
+  final String tag;
   final void Function()? onAddChannel;
   @override
   Widget build(BuildContext context) {
     return AppInkWell(
       onTap: () {
-        if (showAddChannels) {
-          youtubeChannelDetail.go(context);
-        } else {
-          channelDetail.go(context, id: channelId);
+        if (tag == "channel-youtube") {
+          youtubeChannelDetail.go(context, id: channelId);
+        } else if (tag == "channel-me") {
+          channelMeDetail.go(context, id: channelId);
+        } else if (tag == "channel-curated") {
+          channelCuratedDetail.go(context, id: channelId);
+        } else if (tag == "channel-scholartube") {
+          channelScholartubeDetail.go(context, id: channelId);
         }
       },
 

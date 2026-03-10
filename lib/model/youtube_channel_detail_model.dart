@@ -1,3 +1,4 @@
+import 'package:focus_tube_flutter/model/channel_model.dart';
 import 'package:html_unescape/html_unescape.dart';
 
 class YoutubeChannelDetailModel {
@@ -47,6 +48,18 @@ class YoutubeChannelDetailModel {
       data['statistics'] = statistics!.toJson();
     }
     return data;
+  }
+
+  ChannelModel get channelModel {
+    return ChannelModel(
+      youtubeId: id,
+      title: snippet?.title,
+      description: snippet?.description,
+      imageUrl: snippet?.thumbnails?.medium?.url,
+      followers: statistics?.subscriberCount,
+      totalVideos: int.tryParse(statistics?.videoCount ?? "0"),
+      youtubePlaylistId: contentDetails?.relatedPlaylists?.uploads,
+    );
   }
 }
 
@@ -239,20 +252,5 @@ class _Statistics {
     data['hiddenSubscriberCount'] = hiddenSubscriberCount;
     data['videoCount'] = videoCount;
     return data;
-  }
-
-  String get formattedSubscriberCount {
-    if (subscriberCount == null) return "0";
-    double count = double.tryParse(subscriberCount!) ?? 0;
-
-    if (count >= 1000000000) {
-      return "${(count / 1000000000).toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')}B";
-    } else if (count >= 1000000) {
-      return "${(count / 1000000).toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')}M";
-    } else if (count >= 1000) {
-      return "${(count / 1000).toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')}K";
-    } else {
-      return count.toStringAsFixed(0);
-    }
   }
 }

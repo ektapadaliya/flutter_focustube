@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/api/api_functions.dart';
@@ -7,8 +6,8 @@ import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/model/youtube_channel_detail_model.dart';
 import 'package:focus_tube_flutter/model/youtube_channel_model.dart';
 import 'package:focus_tube_flutter/model/youtube_playlist_item_model.dart';
+import 'package:focus_tube_flutter/model/youtube_video_details_model.dart';
 import 'package:focus_tube_flutter/widget/app_tost_message.dart';
-import 'package:get/get.dart';
 
 import '../model/youtube_video_model.dart';
 import 'package:http/http.dart' as http;
@@ -33,6 +32,8 @@ class YoutubeApiConst {
   static const baseUrl = "https://$domain/youtube/$apiVersion";
   static const searchUrl = "$baseUrl/search";
   static const channelUrl = "$baseUrl/channels";
+  static const videosUrl = "$baseUrl/videos";
+
   static const playlistItems = "$baseUrl/playlistItems";
 
   static String searchVideoUrl({
@@ -82,6 +83,13 @@ class YoutubeApiConst {
         "&key=$key";
   }
 
+  static String videoDetailsUrl({required String id}) {
+    return "$videosUrl"
+        "?part=snippet,statistics,contentDetails"
+        "&id=$id"
+        "&key=$key";
+  }
+
   /// Builds query param only when value is valid
   static String _queryParam(String key, String? value) {
     if (value == null || value.trim().isEmpty) return "";
@@ -104,9 +112,7 @@ class YoutubeApiConst {
         ),
       ),
     );
-    debugPrint("Youtube api Url :${response.request?.url.toString()}");
-    debugPrint("Youtube api Status Code :${response.statusCode}");
-    debugPrint("Youtube api Body :${response.body}");
+
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final videos = (data['items'] as List)
@@ -139,9 +145,7 @@ class YoutubeApiConst {
         ),
       ),
     );
-    debugPrint("Youtube api Url :${response.request?.url.toString()}");
-    debugPrint("Youtube api Status Code :${response.statusCode}");
-    debugPrint("Youtube api Body :${response.body}");
+
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final videos = (data['items'] as List)
@@ -221,6 +225,30 @@ class YoutubeApiConst {
           .toList()
           .firstOrNull;
       return channel;
+    } else {
+      await AppTostMessage.snackBarMessage(
+        context,
+        message: "Failed to load channel details",
+        isError: true,
+      );
+    }
+    return null;
+  }
+
+  static Future<YoutubeVideoDetailModel?> fetchYoutubeVideoDetails(
+    BuildContext context, {
+    required String id,
+  }) async {
+    final response = await http.get(
+      Uri.parse(YoutubeApiConst.videoDetailsUrl(id: id)),
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final video = (data['items'] as List)
+          .map((e) => YoutubeVideoDetailModel.fromJson(e))
+          .toList()
+          .firstOrNull;
+      return video;
     } else {
       await AppTostMessage.snackBarMessage(
         context,
