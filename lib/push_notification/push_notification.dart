@@ -13,6 +13,8 @@ import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
+const String pushNotificationChannel = "notification";
+
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
   'high_importance_channel', // id
   'High Importance Notifications', // title// description

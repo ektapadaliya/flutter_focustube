@@ -24,6 +24,7 @@ class HomeRootState extends State<HomeRoot> {
   void initState() {
     super.initState();
     PushNotificationsManager.shared.firebaseCloudMessaging_Listeners();
+    FirebaseMessaging.instance.subscribeToTopic(pushNotificationChannel);
     FirebaseMessaging.instance.getInitialMessage().then((
       RemoteMessage? message,
     ) async {
