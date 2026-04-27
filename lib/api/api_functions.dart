@@ -1224,7 +1224,7 @@ class ApiFunctions {
   }
 
   //Get Daily Goals
-  Future<DailyGoalModel?> getDailyGoal(context, {int page = 1}) async {
+  Future<void> getDailyGoal(context, {int page = 1}) async {
     var goalController = controller<DailyGoalController>();
     try {
       goalController.setIsLoading(true);
@@ -1250,7 +1250,6 @@ class ApiFunctions {
     } catch (e) {
       debugPrint("Error in getDailyGoal: $e");
     }
-    return null;
   }
 
   //Get Daily Goal Videos
