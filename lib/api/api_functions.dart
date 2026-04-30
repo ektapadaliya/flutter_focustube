@@ -21,6 +21,7 @@ import 'package:focus_tube_flutter/model/subject_video_model.dart';
 import 'package:focus_tube_flutter/model/user_intrest_model.dart';
 import 'package:focus_tube_flutter/model/video_model.dart';
 import 'package:focus_tube_flutter/push_notification/push_notification.dart';
+import 'package:focus_tube_flutter/service/shared_preference_service.dart';
 import 'package:focus_tube_flutter/service/uuid_service.dart';
 import 'package:focus_tube_flutter/widget/app_tost_message.dart';
 import 'package:go_router/go_router.dart';
@@ -1346,8 +1347,9 @@ class ApiFunctions {
     logoutfn(context: context);
   }
 
-  void logoutfn({BuildContext? context}) {
+  void logoutfn({BuildContext? context}) async {
     FirebaseMessaging.instance.unsubscribeFromTopic(pushNotificationChannel);
+
     controller<UserController>().clear();
     controller<InterestController>().clear();
     for (var tag in ['channel-me', 'channel-curated', 'channel-scholartube']) {
@@ -1381,6 +1383,7 @@ class ApiFunctions {
     for (var tag in ['my-subject', 'subject']) {
       controller<SubjectVideoController>(tag: tag).clear();
     }
+
     context?.go(signIn.path);
   }
 }

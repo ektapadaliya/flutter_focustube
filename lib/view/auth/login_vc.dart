@@ -11,6 +11,7 @@ import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
+import 'package:focus_tube_flutter/widget/checkbox_tile.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 
@@ -29,7 +30,7 @@ class _LoginVCState extends State<LoginVC> {
   LoaderController loaderController = controller<LoaderController>(
     tag: "/sign-in",
   );
-
+  bool isRemberMe = false;
   GlobalKey<FormState> signInFormKey = GlobalKey<FormState>();
   @override
   void initState() {
@@ -37,6 +38,18 @@ class _LoginVCState extends State<LoginVC> {
     emailController = TextEditingController();
     passwordController = TextEditingController();
     super.initState();
+    Future.delayed(Duration.zero, () async {
+      var userController = controller<UserController>();
+      isRemberMe = await userController.getRemberMe();
+      if (isRemberMe) {
+        var loginCred = await userController.getLoginCred();
+        emailController.text = loginCred?["email"] ?? "";
+        passwordController.text = loginCred?["password"] ?? "";
+        setState(() {});
+      } else {
+        userController.clearRemberMe();
+      }
+    });
   }
 
   @override
@@ -108,17 +121,33 @@ class _LoginVCState extends State<LoginVC> {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      child: Text(
-                        "Forgot password?",
-                        style: AppTextStyle.body16(color: AppColor.gray),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AppCheckBoxTile(
+                          isSelected: isRemberMe,
+                          title: Text(
+                            "Rember me",
+                            style: AppTextStyle.body16(color: AppColor.gray),
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              isRemberMe = value ?? false;
+                            });
+                          },
+                        ),
                       ),
-                      onPressed: () {
-                        forgotPassword.go(context);
-                      },
-                    ),
+                      SizedBox(width: 10),
+                      TextButton(
+                        child: Text(
+                          "Forgot password?",
+                          style: AppTextStyle.body16(color: AppColor.gray),
+                        ),
+                        onPressed: () {
+                          forgotPassword.go(context);
+                        },
+                      ),
+                    ],
                   ),
                   Expanded(child: Container()),
                   SizedBox(height: 30),
@@ -135,8 +164,15 @@ class _LoginVCState extends State<LoginVC> {
                         );
                         loaderController.setLoading(false);
                         if (isLoginSuccess) {
-                          if (controller<UserController>().user?.emailActive !=
-                              "y") {
+                          var userController = controller<UserController>();
+                          if (isRemberMe) {
+                            userController.setRemberMe();
+                            userController.setLoginCred(
+                              emailController.text,
+                              passwordController.text,
+                            );
+                          }
+                          if (userController.user?.emailActive != "y") {
                             ApiFunctions.instance.resendVerifyCode(context);
                             emailVerification.off(context);
                           } else {

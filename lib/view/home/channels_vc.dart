@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
+import 'package:focus_tube_flutter/controller/app_controller.dart';
+import 'package:focus_tube_flutter/controller/channels_vc_controller.dart';
 import 'package:focus_tube_flutter/view/channels/youtube_channel_vc.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
-
+import 'package:get/get.dart';
 import '../channels/channel_list_vc.dart';
 
 class ChannelsVC extends StatefulWidget {
@@ -15,68 +17,78 @@ class ChannelsVC extends StatefulWidget {
 }
 
 class _ChannelsVCState extends State<ChannelsVC> {
-  TextEditingController searchController = TextEditingController();
-  String? searchValue;
-  PageController pageController = PageController(initialPage: 0);
-  //List<GlobalKey> itemKeys = [];
+  late ChannelsVCController channelVController;
   @override
   void initState() {
-    //itemKeys = List.generate(5, (index) => GlobalKey());
+    channelVController = controller<ChannelsVCController>();
+    channelVController.init();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30).copyWith(top: 15),
-          child: SizedBox(
-            height: 40,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) => buildCategoryTile(index),
-              separatorBuilder: (context, index) => SizedBox(width: 10),
-              itemCount: 4,
+    return GetBuilder(
+      init: channelVController,
+      builder: (channelVController) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 30,
+              ).copyWith(top: 15),
+              child: SizedBox(
+                height: 40,
+                child: ListView.separated(
+                  controller: channelVController.categoryScrollController,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  separatorBuilder: (_, __) => const SizedBox(width: 10),
+                  itemBuilder: (_, index) => Container(
+                    key: channelVController.categoryKeys[index],
+                    child: _CategoryTile(
+                      index: index,
+                      controller: channelVController,
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-        Expanded(
-          child: PageView(
-            physics: NeverScrollableScrollPhysics(),
-            controller: pageController,
-            children: [
-              YoutubeChannelVC(isFirstTime: true),
-              ChannelListVC(tag: "channel-me"),
-              ChannelListVC(tag: "channel-curated"),
-              ChannelListVC(tag: "channel-scholartube"),
-            ],
-          ),
-        ),
-      ],
+            Expanded(
+              child: PageView(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: channelVController.pageController,
+                children: [
+                  YoutubeChannelVC(isFirstTime: true),
+                  ChannelListVC(tag: "channel-me"),
+                  ChannelListVC(tag: "channel-curated"),
+                  ChannelListVC(tag: "channel-scholartube"),
+                  Container(),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
+}
 
-  buildCategoryTile(int index) {
-    bool isSelected = pageController.hasClients
-        ? (pageController.page?.round() ?? 0) == index
-        : false;
+class _CategoryTile extends StatelessWidget {
+  final int index;
+  final ChannelsVCController controller;
+
+  const _CategoryTile({required this.index, required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    final isSelected = controller.selectedIndex == index;
+
     return AppInkWell(
-      onTap: () {
-        pageController.jumpToPage(index);
-        // Scrollable.ensureVisible(
-        //   itemKeys[index].currentContext!,
-        //   duration: const Duration(milliseconds: 300),
-        //   alignment: .5, // 0.0 = left, 1.0 = right, 0.5 = center
-        //   curve: Curves.easeInOut,
-        // );
-        setState(() {});
-      },
+      onTap: () => controller.jumpToPage(index),
       child: Container(
-        //key: itemKeys[index],
         height: 40,
-        padding: EdgeInsets.symmetric(horizontal: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 30),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
           color: isSelected ? AppColor.primary : null,
@@ -86,7 +98,7 @@ class _ChannelsVCState extends State<ChannelsVC> {
         ),
         alignment: Alignment.center,
         child: Text(
-          _channelsType(index),
+          _label(index),
           style: AppTextStyle.title16(
             color: isSelected ? AppColor.white : AppColor.gray,
           ),
@@ -95,27 +107,12 @@ class _ChannelsVCState extends State<ChannelsVC> {
     );
   }
 
-  _channelsType(int index) {
-    return switch (index) {
-      // 0 => "Channels",
-      0 => "Select Channels",
-      1 => "My Channels",
-      2 => "Curated Channels",
-      3 => "Scholar Tube",
-      //4 => "Select Channels",
-      _ => "",
-    };
-  }
-
-  _channelsResults(int index) {
-    return switch (index) {
-      //0 => "Channels",
-      0 => "Search Results",
-      1 => "My Channels",
-      2 => "Curated Channels",
-      3 => "Scholar Tube",
-      // 4 => "Search Results",
-      _ => "",
-    };
-  }
+  String _label(int index) => switch (index) {
+    0 => "Select Channels",
+    1 => "My Channels",
+    2 => "Curated Channels",
+    3 => "Scholar Tube",
+    4 => "KidsTube",
+    _ => "",
+  };
 }

@@ -11,6 +11,8 @@ import 'package:focus_tube_flutter/model/video_model.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/image_classes.dart';
 
+import '../controller/app_controller.dart';
+
 class AppTitle extends StatelessWidget {
   const AppTitle({super.key, required this.title, this.onViewMore});
   final String title;
@@ -208,7 +210,12 @@ class BookmarkVideoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppInkWell(
       onTap: () {
-        videoDetail.go(context, id: video.id.toString());
+        controller<UserController>().showLoginDialog(
+          context,
+          onSucess: () {
+            videoDetail.go(context, id: video.id.toString());
+          },
+        );
       },
 
       child: ConstrainedBox(

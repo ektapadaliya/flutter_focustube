@@ -14,6 +14,7 @@ import 'video_controller.dart';
 import 'note_controller.dart';
 import 'daily_goal_video_list_controller.dart';
 import 'channel_controller.dart';
+import 'channels_vc_controller.dart';
 
 export 'daily_goal_controller.dart';
 export 'playlist_controller.dart';
@@ -28,6 +29,7 @@ export 'video_controller.dart';
 export 'note_controller.dart';
 export 'daily_goal_video_list_controller.dart';
 export 'channel_controller.dart';
+export 'channels_vc_controller.dart';
 
 T controller<T>({String? tag}) {
   return Get.isRegistered<T>(tag: tag)
@@ -65,6 +67,8 @@ _putController<T>({String? tag}) {
       return Get.put(DailyGoalVideoController(), tag: tag);
     case const (ChannelController):
       return Get.put(ChannelController(tag), tag: tag);
+    case const (ChannelsVCController):
+      return Get.put(ChannelsVCController(), tag: tag);
     default:
       return null;
   }

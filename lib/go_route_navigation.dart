@@ -216,7 +216,11 @@ final AppNavigationModel home = AppNavigationModel(
   path: HomeVC.id,
   builder: (context, state) => const HomeVC(),
 );
-
+final AppNavigationModel guest = AppNavigationModel(
+  label: "Home",
+  path: GuestVC.id,
+  builder: (context, state) => const GuestVC(),
+);
 final AppNavigationModel search = AppNavigationModel(
   label: "Search",
   path: SearchVC.id,
@@ -236,7 +240,7 @@ final AppNavigationModel playListDetail = AppNavigationModel(
 final AppNavigationModel channels = AppNavigationModel(
   label: "Channels",
   path: ChannelsVC.id,
-  builder: (context, state) => const ChannelsVC(),
+  builder: (context, state) => ChannelsVC(),
 );
 
 final AppNavigationModel channelMeDetail = AppNavigationModel(
@@ -387,11 +391,12 @@ List<AppNavigationModel> authNavigation = [
   forgotPassword,
   forgotPasswordVerification,
   resetPassword,
+  guest,
 ];
 final GoRouter router = GoRouter(
   routerNeglect: true,
   navigatorKey: navigationKey,
-  initialLocation: onboarding.path,
+  initialLocation: guest.path,
   routes: [
     ...[
       ...authNavigation, emailVerification, content,
@@ -436,7 +441,7 @@ final GoRouter router = GoRouter(
       ].map((e) => StatefulShellBranch(routes: [e.toGoRoute()])).toList(),
       pageBuilder: (context, state, navigationShell) => MaterialPage(
         key: state.pageKey,
-        child: HomeRoot(navigationShell: navigationShell),
+        child: HomeRoot(key: homeRootKey, navigationShell: navigationShell),
       ),
     ),
   ],

@@ -80,6 +80,98 @@ class AppButton extends StatelessWidget {
   }
 }
 
+class AppButtonWithIcon extends StatelessWidget {
+  const AppButtonWithIcon({
+    super.key,
+    this.isFilled = true,
+    required this.label,
+    required this.backgroundColor,
+    this.isDisable = false,
+    this.disableBackgroundColor,
+    this.textColor,
+    this.borderColor,
+    this.onTap,
+    this.alignment = Alignment.center,
+    this.fontSize,
+    this.height = 70,
+    this.radius = 50,
+    this.padding,
+    this.maxWidth = AppConst.kMaxLandscapeFormWidth,
+
+    // NEW
+    this.icon,
+    this.iconSize,
+    this.spacing = 8,
+  });
+
+  final String label;
+  final IconData? icon;
+  final double spacing;
+  final double? iconSize;
+
+  final bool isFilled, isDisable;
+  final Color? textColor, borderColor, disableBackgroundColor;
+  final Color backgroundColor;
+  final void Function()? onTap;
+  final AlignmentGeometry? alignment;
+  final double? fontSize;
+  final double height, maxWidth, radius;
+  final EdgeInsetsGeometry? padding;
+
+  @override
+  Widget build(BuildContext context) {
+    final Color effectiveTextColor =
+        textColor ?? (isFilled ? AppColor.white : backgroundColor);
+
+    return AppInkWell(
+      onTap: isDisable ? null : onTap,
+      child: Container(
+        height: height,
+        constraints: AppConst.isLandscape(context)
+            ? BoxConstraints(maxWidth: maxWidth)
+            : null,
+        padding: padding ?? const EdgeInsets.symmetric(horizontal: 47.5),
+        alignment: alignment,
+        decoration: BoxDecoration(
+          color: isFilled
+              ? (isDisable ? disableBackgroundColor : backgroundColor)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(radius),
+          border: Border.all(
+            width: 1.5,
+            color:
+                borderColor ??
+                (isDisable
+                    ? disableBackgroundColor ?? backgroundColor
+                    : backgroundColor),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              Icon(
+                icon,
+                size: iconSize ?? fontSize ?? 20,
+                color: effectiveTextColor,
+              ),
+              SizedBox(width: spacing),
+            ],
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: AppTextStyle.title20(
+                color: effectiveTextColor,
+              ).copyWith(fontSize: fontSize),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class AppSwitch extends StatelessWidget {
   const AppSwitch({
     super.key,

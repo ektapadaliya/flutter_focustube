@@ -4,8 +4,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
+import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/push_notification/push_notification.dart';
+import 'package:focus_tube_flutter/view/home/home_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/filter_pop_up.dart';
@@ -19,25 +21,35 @@ class HomeRoot extends StatefulWidget {
   State<HomeRoot> createState() => HomeRootState();
 }
 
+GlobalKey<HomeRootState> homeRootKey = GlobalKey<HomeRootState>();
+
 class HomeRootState extends State<HomeRoot> {
   @override
   void initState() {
     super.initState();
-    PushNotificationsManager.shared.firebaseCloudMessaging_Listeners();
-    FirebaseMessaging.instance.subscribeToTopic(pushNotificationChannel);
-    FirebaseMessaging.instance.getInitialMessage().then((
-      RemoteMessage? message,
-    ) async {
-      if (message?.data != null) {
-        openApp(message!.data);
-      }
-    });
+    if (controller<UserController>().user != null) {
+      PushNotificationsManager.shared.firebaseCloudMessaging_Listeners();
+      FirebaseMessaging.instance.subscribeToTopic(pushNotificationChannel);
+      FirebaseMessaging.instance.getInitialMessage().then((
+        RemoteMessage? message,
+      ) async {
+        if (message?.data != null) {
+          openApp(message!.data);
+        }
+      });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) async {
-      if (message?.data != null) {
-        openApp(message!.data);
-      }
-    });
+      FirebaseMessaging.onMessageOpenedApp.listen((
+        RemoteMessage? message,
+      ) async {
+        if (message?.data != null) {
+          openApp(message!.data);
+        }
+      });
+    }
+  }
+
+  void jumpToPage(index) {
+    widget.navigationShell.goBranch(index);
   }
 
   @override
@@ -81,9 +93,7 @@ class HomeRootState extends State<HomeRoot> {
       body: widget.navigationShell,
       bottomNavigationBar: _HomeBottomNavigationBar(
         currentIndex: currentIndex,
-        onTap: (index) {
-          widget.navigationShell.goBranch(index);
-        },
+        onTap: jumpToPage,
       ),
     );
   }
@@ -118,7 +128,7 @@ class _HomeBottomNavigationBar extends StatelessWidget {
               5,
               (index) => Expanded(
                 child: Center(
-                  child: _buildBottomNavigationBarItem(index: index),
+                  child: _buildBottomNavigationBarItem(context, index: index),
                 ),
               ),
             ),
@@ -128,10 +138,17 @@ class _HomeBottomNavigationBar extends StatelessWidget {
     );
   }
 
-  _buildBottomNavigationBarItem({required int index}) {
+  _buildBottomNavigationBarItem(context, {required int index}) {
     bool isSelected = index == currentIndex;
     return AppInkWell(
-      onTap: () => onTap(index),
+      onTap: () {
+        controller<UserController>().showLoginDialog(
+          context,
+          onSucess: () {
+            onTap(index);
+          },
+        );
+      },
 
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -191,23 +208,43 @@ class HomePopupMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppPopupOverlay(
-      items: ["playlist", /* "my_subjects", */ "bookmarks", "history"],
+      items: [
+        "playlist",
+        /* "my_subjects", */ "bookmarks",
+        "history",
+        "recommended",
+        "popular",
+      ],
       itemBuilder: (String item) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SvgPicture.asset(popUpImages(item), height: 20),
+          SvgPicture.asset(
+            popUpImages(item),
+            height: 20,
+            colorFilter: (item == "recommended" || item == "popular")
+                ? ColorFilter.mode(AppColor.profileBackground, BlendMode.srcIn)
+                : null,
+          ),
           SizedBox(width: 5),
           Text(popUpLable(item), style: AppTextStyle.body16()),
         ],
       ),
       onItemPressed: (String item) {
-        if (item == "bookmarks" || item == "history") {
-          videos.go(context, id: item);
-        } /* else if (item == "my_subjects") {
+        controller<UserController>().showLoginDialog(
+          context,
+          onSucess: () {
+            if (item == "bookmarks" ||
+                item == "history" ||
+                item == "recommended" ||
+                item == "popular") {
+              videos.go(context, id: item);
+            } /* else if (item == "my_subjects") {
           mySubjects.go(context);
         } */ else if (item == "playlist") {
-          playlists.go(context);
-        }
+              playlists.go(context);
+            }
+          },
+        );
       },
       child: Icon(Icons.more_vert),
     );
@@ -217,8 +254,10 @@ class HomePopupMenu extends StatelessWidget {
     return switch (value) {
       "playlist" => AppImage.userPlaylistIcon,
       "my_subjects" => AppImage.subjectIcon,
+      "recommended" => AppImage.videoIcon,
+      "popular" => AppImage.videoIcon,
       "bookmarks" => AppImage.bookmarkIcon,
-      //"setting" => AppImage.settingIcon,
+      "setting" => AppImage.settingIcon,
       "history" => AppImage.historyIcon,
       _ => "",
     };
@@ -228,10 +267,33 @@ class HomePopupMenu extends StatelessWidget {
     return switch (value) {
       "playlist" => "Playlists",
       "my_subjects" => "My Subjects",
+      "recommended" => "Recommended",
+      "popular" => "Popular",
       "bookmarks" => "Bookmarks",
-      //"setting" => "Settings",
+      "setting" => "Settings",
       "history" => "My History",
       _ => "",
     };
+  }
+}
+
+class GuestVC extends StatelessWidget {
+  static const id = "/guest";
+  const GuestVC({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScreenBackground(
+      bottomNavigationBar: _HomeBottomNavigationBar(
+        onTap: (value) {
+          controller<UserController>().showLoginDialog(
+            context,
+            onSucess: () {},
+          );
+        },
+        currentIndex: 0,
+      ),
+      body: HomeVC(isGuest: true),
+    );
   }
 }

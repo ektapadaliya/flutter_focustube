@@ -4,3 +4,40 @@ id: info@philosophystudent.org
 pass: Ayalididitagain6618@
 
 //Create mockup after complete apis
+
+
+
+
+Task No. 3
+
+Issue & Proposed Changes:
+Currently, the homepage includes Bookmarks, Recommended, and Popular. If we remove Recommended and Popular, the homepage becomes identical to the Bookmarks page.
+
+Proposed solution:
+
+Move Popular to the menu dropdown
+Remove the Bookmarks section from the homepage to avoid duplication
+
+==============================================
+
+Task No. 5
+
+Subscription pricing: $5.99 per month or $59.99 per year.
+
+==============================================
+
+
+Task No. 6
+
+Could you please share the updated design and the text you’d like to use for the single-page tutorial? Once we have that, we can implement it accordingly.
+
+==============================================
+
+Task No. 16
+
+Both limits—video count and total duration—should be enforced independently. The restriction should apply as soon as either of the limits is reached.
+
+For example:
+
+If a user watches 3 videos but the total duration reaches 45 minutes, they should be restricted due to the time limit.
+If a user watches 6 videos but the total duration is only 32 minutes, they should still be restricted due to the video count limit.

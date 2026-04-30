@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/widget/general_dialog.dart';
 import 'package:get/get.dart';
 
 import '../model/user_model.dart';
@@ -10,6 +13,9 @@ class UserController extends GetxController {
   static const _uuidPreferenceKey = "uuid";
   static const _userPreferenceKey = "user";
   static const _tokenPreferenceKey = "token";
+
+  static const _remberMeKey = "rember_me";
+  static const _loginCredKey = "login_cred";
 
   static String? _xAPIKey;
   String? get xAPIKey => _xAPIKey;
@@ -22,6 +28,44 @@ class UserController extends GetxController {
 
   static UserModel? _user;
   UserModel? get user => _user;
+
+  //Set RemberMe
+  void setRemberMe() {
+    SharedPreferenceService.instance.setDataToPreference("true", _remberMeKey);
+  }
+
+  //Get RemberMe
+  Future<bool> getRemberMe() async {
+    var data = await SharedPreferenceService.instance.getDataFromPrefrence(
+      _remberMeKey,
+    );
+    return data == "true";
+  }
+
+  //Set RemberMe
+  void setLoginCred(String email, String password) {
+    SharedPreferenceService.instance.setDataToPreference(
+      json.encode({'email': email, 'password': password}),
+      _loginCredKey,
+    );
+  }
+
+  //Get RemberMe
+  Future<Map<String, String>?> getLoginCred() async {
+    var data = await SharedPreferenceService.instance.getDataFromPrefrence(
+      _loginCredKey,
+    );
+    if (data != null) {
+      return Map<String, String>.from(json.decode(data));
+    }
+    return null;
+  }
+
+  //Clear RemberMe
+  void clearRemberMe() {
+    SharedPreferenceService.instance.removeDataFromPrefrence(_remberMeKey);
+    SharedPreferenceService.instance.removeDataFromPrefrence(_loginCredKey);
+  }
 
   //Set XAPIKey
   void setXAPIKey(String xAPIKey) {
@@ -118,5 +162,25 @@ class UserController extends GetxController {
     SharedPreferenceService.instance.removeDataFromPrefrence(
       _tokenPreferenceKey,
     );
+  }
+
+  void showLoginDialog(context, {required VoidCallback onSucess}) {
+    if (user != null) {
+      onSucess.call();
+    } else {
+      generalDialog(
+        context,
+        title: "Login Required",
+        message: "Please log in to continue.",
+        submitText: "Log In",
+        onSubmit: () {
+          Navigator.pop(context, true);
+        },
+      ).then((value) {
+        if (value == true) {
+          signIn.off(context);
+        }
+      });
+    }
   }
 }
