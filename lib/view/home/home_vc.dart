@@ -440,7 +440,7 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
               buildNavigator(
                 label: "⚙️ Setting",
                 message:
-                    "Profile · NoNficaNons · Security. Your space, your rules.",
+                    "Profile · Notifications · Security. Your space, your rules.",
                 onTap: () {
                   settings.go(context);
                 },
@@ -456,18 +456,24 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                 message:
                     "FocusTube's hand-picked channels — the best of the best.",
                 onTap: () {
-                  controller<ChannelsVCController>().jumpToPage(2);
+                  controller<ChannelsVCController>().selectedIndex.value = 2;
                   homeRootKey.currentState?.jumpToPage(3);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    controller<ChannelsVCController>().jumpToPage(2);
+                  });
                 },
               ),
               SizedBox(height: 15),
               buildNavigator(
                 label: "🎈 KidsTube",
                 message:
-                    "Hand-picked channels for kids. Safe, fun, and screen-Nme friendly.",
+                    "Hand-picked channels for kids. Safe, fun, and screen-time friendly.",
                 onTap: () {
-                  controller<ChannelsVCController>().jumpToPage(4);
+                  controller<ChannelsVCController>().selectedIndex.value = 4;
                   homeRootKey.currentState?.jumpToPage(3);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    controller<ChannelsVCController>().jumpToPage(4);
+                  });
                 },
               ),
               SizedBox(height: 15),
@@ -476,8 +482,11 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                 message:
                     "Curated channels for learners and academics. Deep dives, done right.",
                 onTap: () {
-                  controller<ChannelsVCController>().jumpToPage(3);
+                  controller<ChannelsVCController>().selectedIndex.value = 3;
                   homeRootKey.currentState?.jumpToPage(3);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    controller<ChannelsVCController>().jumpToPage(3);
+                  });
                 },
               ),
               SizedBox(height: 40),

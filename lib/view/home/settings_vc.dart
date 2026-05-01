@@ -153,8 +153,8 @@ class _SettingsVCState extends State<SettingsVC> {
                       title: "Logout",
                       message: "Are you sure you want to log out?",
                       submitText: "Logout",
-                      onSubmit: () {
-                        context.pop(true);
+                      onSubmit: (dialogContext) {
+                        dialogContext.pop(true);
                       },
                     );
                     if (result) {
@@ -173,8 +173,8 @@ class _SettingsVCState extends State<SettingsVC> {
                       message: "Are you sure you want to Delete your account?",
                       submitText: "Delete",
                       submitColor: AppColor.red,
-                      onSubmit: () {
-                        context.pop(true);
+                      onSubmit: (dialogContext) {
+                        dialogContext.pop(true);
                       },
                     );
                     if (result) {

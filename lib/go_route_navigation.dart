@@ -216,11 +216,7 @@ final AppNavigationModel home = AppNavigationModel(
   path: HomeVC.id,
   builder: (context, state) => const HomeVC(),
 );
-final AppNavigationModel guest = AppNavigationModel(
-  label: "Home",
-  path: GuestVC.id,
-  builder: (context, state) => const GuestVC(),
-);
+
 final AppNavigationModel search = AppNavigationModel(
   label: "Search",
   path: SearchVC.id,
@@ -391,12 +387,12 @@ List<AppNavigationModel> authNavigation = [
   forgotPassword,
   forgotPasswordVerification,
   resetPassword,
-  guest,
 ];
+List<AppNavigationModel> _authAccess = [...authNavigation, home];
 final GoRouter router = GoRouter(
   routerNeglect: true,
   navigatorKey: navigationKey,
-  initialLocation: guest.path,
+  initialLocation: home.path,
   routes: [
     ...[
       ...authNavigation, emailVerification, content,
@@ -447,17 +443,17 @@ final GoRouter router = GoRouter(
   ],
   redirect: (context, state) {
     var authCtrl = controller<UserController>();
-    var interestCtrl = controller<InterestController>();
+    //var interestCtrl = controller<InterestController>();
     if (authCtrl.user == null) {
-      if (authNavigation.where((e) => e.path == state.fullPath).isNotEmpty) {
+      if (_authAccess.where((e) => e.path == state.fullPath).isNotEmpty) {
         return state.path;
       }
       return onboarding.path;
     } else if (authCtrl.user?.emailActive != "y") {
       return emailVerification.path;
-    } else if (interestCtrl.userInterests.isEmpty) {
+    } /* else if (interestCtrl.userInterests.isEmpty) {
       return chooseYourInteres.path;
-    } else if ((int.tryParse(
+    } */ else if ((int.tryParse(
               authCtrl.user?.preference?.dailyVideoLimit ?? "0",
             ) ??
             0) ==

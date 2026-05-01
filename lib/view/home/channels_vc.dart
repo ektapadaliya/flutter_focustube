@@ -6,6 +6,8 @@ import 'package:focus_tube_flutter/controller/channels_vc_controller.dart';
 import 'package:focus_tube_flutter/view/channels/youtube_channel_vc.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:get/get.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import '../channels/channel_grouplist_vc.dart';
 import '../channels/channel_list_vc.dart';
 
 class ChannelsVC extends StatefulWidget {
@@ -18,6 +20,7 @@ class ChannelsVC extends StatefulWidget {
 
 class _ChannelsVCState extends State<ChannelsVC> {
   late ChannelsVCController channelVController;
+
   @override
   void initState() {
     channelVController = controller<ChannelsVCController>();
@@ -39,17 +42,17 @@ class _ChannelsVCState extends State<ChannelsVC> {
               ).copyWith(top: 15),
               child: SizedBox(
                 height: 40,
-                child: ListView.separated(
-                  controller: channelVController.categoryScrollController,
+                child: ScrollablePositionedList.separated(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 5,
+                  itemScrollController:
+                      channelVController.categoryScrollController,
+                  itemPositionsListener:
+                      channelVController.itemPositionsListener,
+                  itemCount: ChannelsVCController.categoryCount,
                   separatorBuilder: (_, __) => const SizedBox(width: 10),
-                  itemBuilder: (_, index) => Container(
-                    key: channelVController.categoryKeys[index],
-                    child: _CategoryTile(
-                      index: index,
-                      controller: channelVController,
-                    ),
+                  itemBuilder: (_, index) => _CategoryTile(
+                    index: index,
+                    controller: channelVController,
                   ),
                 ),
               ),
@@ -60,7 +63,7 @@ class _ChannelsVCState extends State<ChannelsVC> {
                 controller: channelVController.pageController,
                 children: [
                   YoutubeChannelVC(isFirstTime: true),
-                  ChannelListVC(tag: "channel-me"),
+                  ChannelGroupListVC(tag: "channel-me"),
                   ChannelListVC(tag: "channel-curated"),
                   ChannelListVC(tag: "channel-scholartube"),
                   Container(),
@@ -82,29 +85,30 @@ class _CategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isSelected = controller.selectedIndex == index;
-
-    return AppInkWell(
-      onTap: () => controller.jumpToPage(index),
-      child: Container(
-        height: 40,
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          color: isSelected ? AppColor.primary : null,
-          border: Border.all(
-            color: isSelected ? AppColor.primary : AppColor.gray,
+    return Obx(() {
+      final isSelected = controller.selectedIndex.value == index;
+      return AppInkWell(
+        onTap: () => controller.jumpToPage(index),
+        child: Container(
+          height: 40,
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            color: isSelected ? AppColor.primary : null,
+            border: Border.all(
+              color: isSelected ? AppColor.primary : AppColor.gray,
+            ),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            _label(index),
+            style: AppTextStyle.title16(
+              color: isSelected ? AppColor.white : AppColor.gray,
+            ),
           ),
         ),
-        alignment: Alignment.center,
-        child: Text(
-          _label(index),
-          style: AppTextStyle.title16(
-            color: isSelected ? AppColor.white : AppColor.gray,
-          ),
-        ),
-      ),
-    );
+      );
+    });
   }
 
   String _label(int index) => switch (index) {

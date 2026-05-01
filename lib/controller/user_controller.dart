@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/general_dialog.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 import '../model/user_model.dart';
 import '../service/shared_preference_service.dart';
@@ -28,6 +29,14 @@ class UserController extends GetxController {
 
   static UserModel? _user;
   UserModel? get user => _user;
+
+  static Duration _videoMinuteLimit = Duration(seconds: 0);
+  Duration get videoMinuteLimit => _videoMinuteLimit;
+
+  void setVideoMinuteLimit(Duration limit) {
+    _videoMinuteLimit = limit;
+    update();
+  }
 
   //Set RemberMe
   void setRemberMe() {
@@ -164,7 +173,7 @@ class UserController extends GetxController {
     );
   }
 
-  void showLoginDialog(context, {required VoidCallback onSucess}) {
+  void showLoginDialog(BuildContext context, {required VoidCallback onSucess}) {
     if (user != null) {
       onSucess.call();
     } else {
@@ -173,11 +182,11 @@ class UserController extends GetxController {
         title: "Login Required",
         message: "Please log in to continue.",
         submitText: "Log In",
-        onSubmit: () {
-          Navigator.pop(context, true);
+        onSubmit: (dialogContext) {
+          dialogContext.pop(true);
         },
       ).then((value) {
-        if (value == true) {
+        if (value == true || !context.canPop()) {
           signIn.off(context);
         }
       });

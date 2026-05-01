@@ -15,20 +15,20 @@ Future<dynamic> generalDialog(
   bool barrierDismissible = true,
   String submitText = "Ok",
   String cancelText = "Cancel",
-  void Function()? onSubmit,
-  void Function()? onCancel,
+  void Function(BuildContext)? onSubmit,
+  void Function(BuildContext)? onCancel,
   Color? submitColor,
 }) async {
   return await showDialog(
     barrierDismissible: barrierDismissible,
     context: context,
-    builder: (context) {
+    builder: (dialogContext) {
       Text titleText = Text(title, style: AppTextStyle.title20());
       Text messageText = Text(message);
       List<Widget> actions = [
         if (onSubmit != null)
           TextButton(
-            onPressed: onSubmit,
+            onPressed: () => onSubmit(dialogContext),
             child: Text(
               submitText,
               style: AppTextStyle.title16(color: submitColor),
@@ -37,9 +37,9 @@ Future<dynamic> generalDialog(
         TextButton(
           onPressed: () {
             if (onCancel != null) {
-              onCancel();
+              onCancel(dialogContext);
             } else {
-              context.pop();
+              dialogContext.pop();
             }
           },
           child: Text(cancelText, style: AppTextStyle.title16()),

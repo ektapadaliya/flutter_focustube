@@ -201,13 +201,13 @@ class YoutubeApiConst {
           .map((e) => YoutubeChannelModel.fromJson(e))
           .toList();
       return {"channels": channels, "nextPageToken": data['nextPageToken']};
-    } else {
+    } /* else {
       await AppTostMessage.snackBarMessage(
         context,
         message: "Failed to load channels",
         isError: true,
       );
-    }
+    } */
     return null;
   }
 

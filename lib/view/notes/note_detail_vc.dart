@@ -58,8 +58,8 @@ class _NoteDetailVCState extends State<NoteDetailVC> {
                     context,
                     title: "Delete note?",
                     message: "Are you sure you want to delete this note?",
-                    onSubmit: () {
-                      context.pop(true);
+                    onSubmit: (dialogContext) {
+                      dialogContext.pop(true);
                     },
                     submitText: "Delete",
                     submitColor: AppColor.red,

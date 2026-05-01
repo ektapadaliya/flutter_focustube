@@ -31,7 +31,7 @@ class ImageService {
         generalDialog(
           context,
           submitText: "Settings",
-          onSubmit: () {
+          onSubmit: (dialogContext) {
             openAppSettings();
           },
           title: "$title Permission",

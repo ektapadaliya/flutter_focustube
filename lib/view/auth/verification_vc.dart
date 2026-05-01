@@ -210,7 +210,7 @@ class _VerificationVCState extends State<VerificationVC> {
                                           submitColor: AppColor.red,
                                           submitText: "Logout",
 
-                                          onSubmit: () {
+                                          onSubmit: (dialogContext) {
                                             controller<UserController>()
                                                 .clear();
                                             signUp.off(context);
@@ -265,7 +265,8 @@ class _VerificationVCState extends State<VerificationVC> {
       );
       loaderController.setLoading(false);
       if (isVerified) {
-        chooseYourInteres.off(context);
+        dailyLimit.off(context);
+        //chooseYourInteres.off(context);
       }
     }
   }

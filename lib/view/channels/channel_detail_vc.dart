@@ -7,6 +7,8 @@ import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/controller/youtube_playlist_video_controller.dart';
 import 'package:focus_tube_flutter/model/channel_model.dart';
+import 'package:focus_tube_flutter/view/dialog/add_edit_group_vc.dart';
+import 'package:focus_tube_flutter/view/dialog/save_groplist_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
@@ -83,7 +85,25 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
     return AppLoader(
       loaderController: loaderController,
       child: ScreenBackground(
-        appBar: customAppBar(context, title: "Channel details"),
+        appBar: customAppBar(
+          context,
+          title: "Channel details",
+          actions: [
+            if (widget.tag == "channel-youtube")
+              Padding(
+                padding: const EdgeInsets.only(right: 30),
+                child: AppInkWell(
+                  onTap: () async {
+                    var value = await showDialog(
+                      context: context,
+                      builder: (context) => AddEditGroupListVC(),
+                    );
+                  },
+                  child: Icon(Icons.add, size: 25, color: AppColor.primary),
+                ),
+              ),
+          ],
+        ),
         body: SafeArea(
           child: channel != null
               ? Column(
@@ -132,23 +152,28 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                                       radius: 7,
                                       alignment: null,
                                       onTap: () async {
-                                        loaderController.setLoading(true);
-                                        var isSuccess = await ApiFunctions
-                                            .instance
-                                            .channelAdd(
-                                              context,
-                                              youtubeId:
-                                                  channel?.youtubeId ?? "",
-                                              title: channel?.title ?? "",
-                                              imageUrl: channel?.imageUrl,
-                                              description: channel?.description,
-                                              followers: channel?.followers,
-                                            );
-                                        if (isSuccess) {
-                                          showAddChannel = false;
-                                          setState(() {});
-                                        }
-                                        loaderController.setLoading(false);
+                                        var result = await showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              SaveGroplistVC(),
+                                        );
+                                        // loaderController.setLoading(true);
+                                        // var isSuccess = await ApiFunctions
+                                        //     .instance
+                                        //     .channelAdd(
+                                        //       context,
+                                        //       youtubeId:
+                                        //           channel?.youtubeId ?? "",
+                                        //       title: channel?.title ?? "",
+                                        //       imageUrl: channel?.imageUrl,
+                                        //       description: channel?.description,
+                                        //       followers: channel?.followers,
+                                        //     );
+                                        // if (isSuccess) {
+                                        //   showAddChannel = false;
+                                        //   setState(() {});
+                                        // }
+                                        // loaderController.setLoading(false);
                                       },
                                       backgroundColor: AppColor.primary,
                                       height: 32,

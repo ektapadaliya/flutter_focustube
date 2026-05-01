@@ -276,24 +276,3 @@ class HomePopupMenu extends StatelessWidget {
     };
   }
 }
-
-class GuestVC extends StatelessWidget {
-  static const id = "/guest";
-  const GuestVC({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ScreenBackground(
-      bottomNavigationBar: _HomeBottomNavigationBar(
-        onTap: (value) {
-          controller<UserController>().showLoginDialog(
-            context,
-            onSucess: () {},
-          );
-        },
-        currentIndex: 0,
-      ),
-      body: HomeVC(isGuest: true),
-    );
-  }
-}

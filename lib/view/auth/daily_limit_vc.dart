@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
@@ -34,71 +35,171 @@ class _DailyLimitVCState extends State<DailyLimitVC> {
     text:
         controller<UserController>().user?.preference?.dailyVideoLimit ?? "10",
   );
+  TextEditingController videoMinuteController = TextEditingController(
+    text: "50",
+  );
   LoaderController loaderController = controller<LoaderController>(
     tag: "/daily-limit",
   );
+
+  bool countLimitEnabled = true;
+  bool minuteLimitEnabled = true;
   @override
   Widget build(BuildContext context) {
     var child = ExpandedSingleChildScrollView(
       padding: widget.isFromGoal
           ? const EdgeInsets.only(top: 20)
           : const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-      child: Column(
-        children: [
-          Center(
-            child: Container(
-              height: 140,
-              constraints: BoxConstraints(maxWidth: 390),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
-                image: DecorationImage(
-                  image: AssetImage(AppImage.videoLimitBackground),
-                  fit: BoxFit.fill,
-                ),
-              ),
-              alignment: Alignment.center,
-              child: Center(
-                child: TextFormField(
-                  autofocus: true,
-                  controller: videoSelectionController,
-                  expands: false,
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.done,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    isDense: true,
-                  ),
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  style: AppTextStyle.title40(color: AppColor.white),
-                  cursorColor: AppColor.white,
-                ),
-              ),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 450),
+        child: Column(
+          children: [
+            LimitCard(
+              title: "Video Count Limit",
+              subtitle: "Limit how many videos you can watch per day",
+              isEnabled: countLimitEnabled,
+              onToggle: (value) {
+                setState(() {
+                  countLimitEnabled = value;
+                });
+              },
+              controller: videoSelectionController,
+              backgroundImage: AppImage.videoLimitBackground,
             ),
-          ),
-          SizedBox(height: 20),
-          Text(
-            "Enter the maximum amount of videos you want to watch per day",
-            style: AppTextStyle.title20(),
-          ),
+            SizedBox(height: 20),
+            LimitCard(
+              title: "Video Time Limit",
+              subtitle: "Limit how much time you can spend watching videos",
+              isEnabled: minuteLimitEnabled,
+              onToggle: (value) {
+                setState(() {
+                  minuteLimitEnabled = value;
+                });
+              },
+              controller: videoMinuteController,
+              backgroundImage: AppImage.videoLimitBackground,
+            ),
 
-          Expanded(child: Container()),
-          SizedBox(height: 20),
-          Text(
-            "You can change this anytime in Settings.",
-            style: AppTextStyle.body16(color: AppColor.gray),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: widget.isFromGoal ? 15 : 30,
+            // Column(
+            //   children: [
+            //     Container(
+            //       decoration: BoxDecoration(
+            //         border: Border.all(color: AppColor.borderColor, width: 1),
+            //         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            //       ),
+            //       padding: EdgeInsets.all(16),
+
+            //       child: Row(
+            //         children: [
+            //           Expanded(
+            //             child: Column(
+            //               crossAxisAlignment: CrossAxisAlignment.start,
+            //               children: [
+            //                 Text(
+            //                   "Video Count Limit",
+            //                   style: AppTextStyle.title16(),
+            //                 ),
+            //                 Text(
+            //                   "Limit how many videos you can watch per day",
+            //                   style: AppTextStyle.body12(color: AppColor.gray),
+            //                 ),
+            //               ],
+            //             ),
+            //           ),
+            //           AppSwitch(onChanged: (value) {}, isSelected: true),
+            //         ],
+            //       ),
+            //     ),
+
+            //     Container(
+            //       height: 140,
+            //       constraints: BoxConstraints(maxWidth: 390),
+            //       decoration: BoxDecoration(
+            //         borderRadius: BorderRadius.vertical(
+            //           bottom: Radius.circular(24),
+            //         ),
+            //         image: DecorationImage(
+            //           image: AssetImage(AppImage.videoLimitBackground),
+            //           fit: BoxFit.fill,
+            //         ),
+            //       ),
+            //       alignment: Alignment.center,
+            //       //     child: Center(
+            //       child: TextFormField(
+            //         autofocus: true,
+            //         controller: videoSelectionController,
+            //         expands: false,
+            //         keyboardType: TextInputType.number,
+            //         textInputAction: TextInputAction.done,
+            //         textAlign: TextAlign.center,
+            //         decoration: InputDecoration(
+            //           border: InputBorder.none,
+            //           isDense: true,
+            //         ),
+            //         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            //         style: AppTextStyle.title40(color: AppColor.white),
+            //         cursorColor: AppColor.white,
+            //       ),
+            //     ),
+            //   ],
+            // ),
+
+            // Center(
+            //   child: Container(
+            //     height: 140,
+            //     constraints: BoxConstraints(maxWidth: 390),
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(24),
+            //       image: DecorationImage(
+            //         image: AssetImage(AppImage.videoLimitBackground),
+            //         fit: BoxFit.fill,
+            //       ),
+            //     ),
+            //     alignment: Alignment.center,
+            //     child: Center(
+            //       child: TextFormField(
+            //         autofocus: true,
+            //         controller: videoSelectionController,
+            //         expands: false,
+            //         keyboardType: TextInputType.number,
+            //         textInputAction: TextInputAction.done,
+            //         textAlign: TextAlign.center,
+            //         decoration: InputDecoration(
+            //           border: InputBorder.none,
+            //           isDense: true,
+            //         ),
+            //         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            //         style: AppTextStyle.title40(color: AppColor.white),
+            //         cursorColor: AppColor.white,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            Expanded(child: Container()),
+            SizedBox(height: 20),
+            Text(
+              "Enter the maximum number of videos or minutes you want to watch each day.",
+              style: AppTextStyle.title20(),
+              textAlign: TextAlign.center,
             ),
-            child: AppButton(
-              label: widget.isFromEdit ? "Save" : "Continue",
-              backgroundColor: AppColor.primary,
-              onTap: updateLimit,
+
+            SizedBox(height: 20),
+            Text(
+              "You can change this anytime in Settings.",
+              style: AppTextStyle.body16(color: AppColor.gray),
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: widget.isFromGoal ? 15 : 30,
+              ),
+              child: AppButton(
+                label: widget.isFromEdit ? "Save" : "Continue",
+                backgroundColor: AppColor.primary,
+                onTap: updateLimit,
+              ),
+            ),
+          ],
+        ),
       ),
     );
     return AppLoader(
@@ -190,6 +291,94 @@ class VideoSelectionTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class LimitCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final bool isEnabled;
+  final ValueChanged<bool> onToggle;
+
+  final TextEditingController controller;
+  final String backgroundImage;
+
+  const LimitCard({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.isEnabled,
+    required this.onToggle,
+    required this.controller,
+    required this.backgroundImage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        /// Top Section (Header)
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColor.borderColor, width: 1),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              /// Title + Subtitle
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: AppTextStyle.title16()),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: AppTextStyle.body12(color: AppColor.gray),
+                    ),
+                  ],
+                ),
+              ),
+
+              /// Toggle
+              //AppSwitch(onChanged: onToggle, isSelected: isEnabled),
+            ],
+          ),
+        ),
+
+        /// Bottom Section (Input)
+        Container(
+          height: 140,
+
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(24),
+            ),
+            image: DecorationImage(
+              image: AssetImage(backgroundImage),
+              fit: BoxFit.fill,
+            ),
+          ),
+          alignment: Alignment.center,
+          child: TextFormField(
+            controller: controller,
+            enabled: isEnabled, // 🔥 disables input when off
+            autofocus: false,
+            keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.done,
+            textAlign: TextAlign.center,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              isDense: true,
+            ),
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            style: AppTextStyle.title40(color: AppColor.white),
+            cursorColor: AppColor.white,
+          ),
+        ),
+      ],
     );
   }
 }
