@@ -67,4 +67,7 @@ class ApiUtils {
   static const setDeviceToken = "${baseUrl}set-device-token";
   static const pushNotification = "${baseUrl}push-notification";
   static const getDailyLimit = "${baseUrl}get-daily-limit";
+
+  static const channelGroupCreate = "${baseUrl}channel/group/create";
+  static const channelGroupList = "${baseUrl}channel/group/list";
 }

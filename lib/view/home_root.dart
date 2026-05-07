@@ -142,12 +142,16 @@ class _HomeBottomNavigationBar extends StatelessWidget {
     bool isSelected = index == currentIndex;
     return AppInkWell(
       onTap: () {
-        controller<UserController>().showLoginDialog(
-          context,
-          onSucess: () {
-            onTap(index);
-          },
-        );
+        if (index == 2 || index == 4) {
+          controller<UserController>().showLoginDialog(
+            context,
+            onSucess: () {
+              onTap(index);
+            },
+          );
+        } else {
+          onTap(index);
+        }
       },
 
       child: Column(

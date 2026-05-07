@@ -31,19 +31,27 @@ class DailyLimitVC extends StatefulWidget {
 }
 
 class _DailyLimitVCState extends State<DailyLimitVC> {
-  TextEditingController videoSelectionController = TextEditingController(
-    text:
-        controller<UserController>().user?.preference?.dailyVideoLimit ?? "10",
-  );
-  TextEditingController videoMinuteController = TextEditingController(
-    text: "50",
-  );
+  var userController = controller<UserController>();
+  late final TextEditingController videoSelectionController;
+  late final TextEditingController videoMinuteController;
   LoaderController loaderController = controller<LoaderController>(
     tag: "/daily-limit",
   );
 
   bool countLimitEnabled = true;
   bool minuteLimitEnabled = true;
+
+  @override
+  void initState() {
+    videoSelectionController = TextEditingController(
+      text: userController.user?.preference?.dailyVideoLimit ?? "10",
+    );
+    videoMinuteController = TextEditingController(
+      text: userController.user?.preference?.dailyVideoTimeLimit ?? "50",
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var child = ExpandedSingleChildScrollView(
@@ -233,11 +241,27 @@ class _DailyLimitVCState extends State<DailyLimitVC> {
         isError: true,
       );
       return;
+    }
+    if (videoMinuteController.text.isEmpty) {
+      await AppTostMessage.snackBarMessage(
+        context,
+        message: "Please enter daily time limit",
+        isError: true,
+      );
+      return;
+    } else if (int.tryParse(videoMinuteController.text) == null) {
+      await AppTostMessage.snackBarMessage(
+        context,
+        message: "Please enter valid daily time limit",
+        isError: true,
+      );
+      return;
     } else {
       loaderController.setLoading(true);
       bool isUpdated = await ApiFunctions.instance.updateDailyLimit(
         context,
-        limit: int.parse(videoSelectionController.text),
+        videoLimit: int.parse(videoSelectionController.text),
+        timeLimit: int.parse(videoMinuteController.text),
       );
       loaderController.setLoading(false);
       if (isUpdated && (!widget.isFromGoal)) {

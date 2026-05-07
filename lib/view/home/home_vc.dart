@@ -345,6 +345,7 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                 onTap: () {
                   homeRootKey.currentState?.jumpToPage(1);
                 },
+                isRestricted: false,
               ),
               SizedBox(height: 15),
               buildNavigator(
@@ -362,6 +363,7 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                 onTap: () {
                   homeRootKey.currentState?.jumpToPage(3);
                 },
+                isRestricted: false,
               ),
               SizedBox(height: 15),
               buildNavigator(
@@ -417,6 +419,7 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                 onTap: () {
                   videos.go(context, id: "recommended");
                 },
+                isRestricted: false,
               ),
               SizedBox(height: 15),
               buildNavigator(
@@ -425,6 +428,7 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                 onTap: () {
                   videos.go(context, id: "popular");
                 },
+                isRestricted: false,
               ),
               SizedBox(height: 15),
               Text(
@@ -456,12 +460,12 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                 message:
                     "FocusTube's hand-picked channels — the best of the best.",
                 onTap: () {
-                  controller<ChannelsVCController>().selectedIndex.value = 2;
                   homeRootKey.currentState?.jumpToPage(3);
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    controller<ChannelsVCController>().jumpToPage(2);
+                    channelTabScrollController.jumpToPage(2);
                   });
                 },
+                isRestricted: false,
               ),
               SizedBox(height: 15),
               buildNavigator(
@@ -469,12 +473,12 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                 message:
                     "Hand-picked channels for kids. Safe, fun, and screen-time friendly.",
                 onTap: () {
-                  controller<ChannelsVCController>().selectedIndex.value = 4;
                   homeRootKey.currentState?.jumpToPage(3);
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    controller<ChannelsVCController>().jumpToPage(4);
+                    channelTabScrollController.jumpToPage(4);
                   });
                 },
+                isRestricted: false,
               ),
               SizedBox(height: 15),
               buildNavigator(
@@ -482,12 +486,12 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                 message:
                     "Curated channels for learners and academics. Deep dives, done right.",
                 onTap: () {
-                  controller<ChannelsVCController>().selectedIndex.value = 3;
                   homeRootKey.currentState?.jumpToPage(3);
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    controller<ChannelsVCController>().jumpToPage(3);
+                    channelTabScrollController.jumpToPage(3);
                   });
                 },
+                isRestricted: false,
               ),
               SizedBox(height: 40),
             ],
@@ -502,6 +506,7 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
     required String message,
     Color backgroundColor = AppColor.primary,
     void Function()? onTap,
+    bool isRestricted = true,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -513,10 +518,14 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
           height: 48,
           maxWidth: 450,
           onTap: () {
-            controller<UserController>().showLoginDialog(
-              context,
-              onSucess: onTap ?? () {},
-            );
+            if (isRestricted) {
+              controller<UserController>().showLoginDialog(
+                context,
+                onSucess: onTap ?? () {},
+              );
+            } else {
+              onTap?.call();
+            }
           },
           alignment: Alignment.centerLeft,
           fontSize: 17,
@@ -534,7 +543,6 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
     );
   }
 
-  /*  */
   @override
   bool get wantKeepAlive => true;
 }

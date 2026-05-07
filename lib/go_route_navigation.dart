@@ -388,7 +388,12 @@ List<AppNavigationModel> authNavigation = [
   forgotPasswordVerification,
   resetPassword,
 ];
-List<AppNavigationModel> _authAccess = [...authNavigation, home];
+List<AppNavigationModel> _authAccess = [
+  ...authNavigation,
+  home,
+  search,
+  channels,
+];
 final GoRouter router = GoRouter(
   routerNeglect: true,
   navigatorKey: navigationKey,
@@ -448,7 +453,7 @@ final GoRouter router = GoRouter(
       if (_authAccess.where((e) => e.path == state.fullPath).isNotEmpty) {
         return state.path;
       }
-      return onboarding.path;
+      return signIn.path;
     } else if (authCtrl.user?.emailActive != "y") {
       return emailVerification.path;
     } /* else if (interestCtrl.userInterests.isEmpty) {

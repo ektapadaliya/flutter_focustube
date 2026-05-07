@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
+import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
@@ -26,14 +27,16 @@ class ChannelTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppInkWell(
       onTap: () {
-        if (tag == "channel-youtube") {
-          youtubeChannelDetail.go(context, id: channelId);
-        } else if (tag == "channel-me") {
-          channelMeDetail.go(context, id: channelId);
-        } else if (tag == "channel-curated") {
-          channelCuratedDetail.go(context, id: channelId);
-        } else if (tag == "channel-scholartube") {
-          channelScholartubeDetail.go(context, id: channelId);
+        if (controller<UserController>().user != null) {
+          if (tag == "channel-youtube") {
+            youtubeChannelDetail.go(context, id: channelId);
+          } else if (tag == "channel-me") {
+            channelMeDetail.go(context, id: channelId);
+          } else if (tag == "channel-curated") {
+            channelCuratedDetail.go(context, id: channelId);
+          } else if (tag == "channel-scholartube") {
+            channelScholartubeDetail.go(context, id: channelId);
+          }
         }
       },
 

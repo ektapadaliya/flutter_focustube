@@ -30,14 +30,6 @@ class UserController extends GetxController {
   static UserModel? _user;
   UserModel? get user => _user;
 
-  static Duration _videoMinuteLimit = Duration(seconds: 0);
-  Duration get videoMinuteLimit => _videoMinuteLimit;
-
-  void setVideoMinuteLimit(Duration limit) {
-    _videoMinuteLimit = limit;
-    update();
-  }
-
   //Set RemberMe
   void setRemberMe() {
     SharedPreferenceService.instance.setDataToPreference("true", _remberMeKey);
@@ -186,7 +178,7 @@ class UserController extends GetxController {
           dialogContext.pop(true);
         },
       ).then((value) {
-        if (value == true || !context.canPop()) {
+        if (value == true) {
           signIn.off(context);
         }
       });

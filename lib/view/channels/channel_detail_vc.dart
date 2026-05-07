@@ -9,12 +9,14 @@ import 'package:focus_tube_flutter/controller/youtube_playlist_video_controller.
 import 'package:focus_tube_flutter/model/channel_model.dart';
 import 'package:focus_tube_flutter/view/dialog/add_edit_group_vc.dart';
 import 'package:focus_tube_flutter/view/dialog/save_groplist_vc.dart';
+import 'package:focus_tube_flutter/view/videos/youtube_shorts_video_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/channel_widgets.dart';
 import 'package:focus_tube_flutter/widget/image_classes.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
+import 'package:get/get.dart';
 import '../videos/youtube_playlist_video_vc.dart';
 
 class ChannelDetailVC extends StatefulWidget {
@@ -89,19 +91,27 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
           context,
           title: "Channel details",
           actions: [
-            if (widget.tag == "channel-youtube")
-              Padding(
-                padding: const EdgeInsets.only(right: 30),
-                child: AppInkWell(
-                  onTap: () async {
-                    var value = await showDialog(
-                      context: context,
-                      builder: (context) => AddEditGroupListVC(),
+            /*    if (widget.tag == "channel-youtube") */
+            Padding(
+              padding: const EdgeInsets.only(right: 30),
+              child: AppInkWell(
+                onTap: () async {
+                  var value = await showDialog(
+                    context: context,
+                    builder: (context) => AddEditGroupListVC(),
+                  );
+                  if (value is String && value.trim().isNotEmpty) {
+                    loaderController.setLoading(true);
+                    await ApiFunctions.instance.groupCreate(
+                      context,
+                      title: value.capitalizeFirst!,
                     );
-                  },
-                  child: Icon(Icons.add, size: 25, color: AppColor.primary),
-                ),
+                    loaderController.setLoading(false);
+                  }
+                },
+                child: Icon(Icons.add, size: 25, color: AppColor.primary),
               ),
+            ),
           ],
         ),
         body: SafeArea(
@@ -202,6 +212,7 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                       unselectedLabelColor: AppColor.gray,
                       tabs: [
                         Tab(text: "Videos"),
+                        //Tab(text: "Shorts"),
                         Tab(text: "About"),
                       ],
                     ),
@@ -222,6 +233,19 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                               },
                             ),
                           ),
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(
+                          //     horizontal: 15,
+                          //     vertical: 15,
+                          //   ),
+                          //   child: YoutubeShortPlayListVideoVC(
+                          //     tag: "channel-shorts",
+                          //     platListId: channel?.youtubePlaylistId,
+                          //     isLoading: (isLoading) {
+                          //       changeYoutubeLoader(isLoading);
+                          //     },
+                          //   ),
+                          // ),
                           ChannelAbout(description: channel?.description ?? ""),
                         ],
                       ),

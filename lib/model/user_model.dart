@@ -65,6 +65,7 @@ class Preference {
   String? userId;
   String? notification;
   String? dailyVideoLimit;
+  String? dailyVideoTimeLimit;
   int? createdAt;
 
   Preference({
@@ -72,6 +73,7 @@ class Preference {
     this.userId,
     this.notification,
     this.dailyVideoLimit,
+    this.dailyVideoTimeLimit,
     this.createdAt,
   });
 
@@ -80,6 +82,7 @@ class Preference {
     userId = json['user_id'];
     notification = json['notification'];
     dailyVideoLimit = json['daily_video_limit'];
+    dailyVideoTimeLimit = json['daily_video_time_limit'];
     createdAt = json['created_at'];
   }
 
@@ -89,6 +92,7 @@ class Preference {
     data['user_id'] = userId;
     data['notification'] = notification;
     data['daily_video_limit'] = dailyVideoLimit;
+    data['daily_video_time_limit'] = dailyVideoTimeLimit;
     data['created_at'] = createdAt;
     return data;
   }

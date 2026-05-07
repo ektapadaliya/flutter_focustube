@@ -221,7 +221,9 @@ class _YoutubeChannelVCState extends State<YoutubeChannelVC>
     changeYoutubeLoader(false);
     if (value != null) {
       youtubeChannelController.addChannels(value['channels']);
-      youtubeChannelController.setNextPageToken(value['nextPageToken']);
+      if (value['nextPageToken'] != null) {
+        youtubeChannelController.setNextPageToken(value['nextPageToken']);
+      }
     }
   }
 

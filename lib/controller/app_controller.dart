@@ -15,6 +15,8 @@ import 'note_controller.dart';
 import 'daily_goal_video_list_controller.dart';
 import 'channel_controller.dart';
 import 'channels_vc_controller.dart';
+import 'shorts_controller.dart';
+import 'group_channel_controller.dart';
 
 export 'daily_goal_controller.dart';
 export 'playlist_controller.dart';
@@ -30,14 +32,16 @@ export 'note_controller.dart';
 export 'daily_goal_video_list_controller.dart';
 export 'channel_controller.dart';
 export 'channels_vc_controller.dart';
+export 'shorts_controller.dart';
+export 'group_channel_controller.dart';
 
-T controller<T>({String? tag}) {
+T controller<T>({String? tag, dynamic data}) {
   return Get.isRegistered<T>(tag: tag)
       ? Get.find<T>(tag: tag)
-      : _putController<T>(tag: tag);
+      : _putController<T>(tag: tag, data: data);
 }
 
-_putController<T>({String? tag}) {
+_putController<T>({String? tag, dynamic data}) {
   switch (T) {
     case const (UserController):
       return Get.put(UserController(), tag: tag);
@@ -67,8 +71,13 @@ _putController<T>({String? tag}) {
       return Get.put(DailyGoalVideoController(), tag: tag);
     case const (ChannelController):
       return Get.put(ChannelController(tag), tag: tag);
-    case const (ChannelsVCController):
-      return Get.put(ChannelsVCController(), tag: tag);
+    case const (ShortsController):
+      return Get.put(ShortsController(), tag: tag);
+    case const (GroupChannelController):
+      return Get.put(GroupChannelController(tag), tag: tag);
+    case const (TabScrollController):
+      return Get.put(TabScrollController(data), tag: tag);
+
     default:
       return null;
   }

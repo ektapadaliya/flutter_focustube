@@ -7,6 +7,7 @@ class VideoModel {
   String? youtubeId;
   String? title;
   String? playlistId;
+  int? videoTime;
   int? videoViews;
   bool? isBookmark;
   bool? isFeedback;
@@ -20,6 +21,7 @@ class VideoModel {
     this.subjectId,
     this.subSubjectId,
     this.playlistId,
+    this.videoTime,
     this.youtubeId,
     this.title,
     this.videoViews,
@@ -36,6 +38,7 @@ class VideoModel {
     subjectId = json['subject_id'];
     subSubjectId = json['sub_subject_id'];
     youtubeId = json['youtube_id'];
+    videoTime = json['video_time'];
     playlistId = json['playlist_id'];
     title = json['title'];
     videoViews = json['video_views'];
@@ -52,6 +55,7 @@ class VideoModel {
     data['channel_name'] = channelName;
     data['subject_id'] = subjectId;
     data['sub_subject_id'] = subSubjectId;
+    data['video_time'] = videoTime;
     data['youtube_id'] = youtubeId;
     data['playlist_id'] = playlistId;
     data['title'] = title;

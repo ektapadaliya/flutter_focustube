@@ -331,12 +331,16 @@ class ApiFunctions {
   //Update Daily Limit
   Future<bool> updateDailyLimit(
     BuildContext context, {
-    required int limit,
+    required int timeLimit,
+    required int videoLimit,
   }) async {
     try {
       var response = await ApiManager.instance.post(
         ApiUtils.updateDailyLimit,
-        body: {"daily_video_limit": limit.toString()},
+        body: {
+          "daily_video_limit": videoLimit.toString(),
+          "daily_video_time_limit": timeLimit.toString(),
+        },
       );
       if (response.isSuccess) {
         await me(context: context);
@@ -830,6 +834,31 @@ class ApiFunctions {
       }
     } catch (e) {
       debugPrint("Error in playlistCreateEdit: $e");
+    }
+    return null;
+  }
+
+  Future<PlaylistModel?> groupCreate(
+    BuildContext context, {
+
+    required String title,
+  }) async {
+    try {
+      var response = await ApiManager.instance.post<PlaylistModel>(
+        ApiUtils.channelGroupCreate,
+        body: {"title": title},
+      );
+      if (response.isSuccess) {
+        return response.data;
+      } else {
+        AppTostMessage.snackBarMessage(
+          context,
+          message: response.responseMessage,
+          isError: true,
+        );
+      }
+    } catch (e) {
+      debugPrint("Error in groupCreate: $e");
     }
     return null;
   }

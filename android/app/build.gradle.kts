@@ -32,16 +32,26 @@ android {
         versionName = "1.0.0"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("../focustube.jks") 
+            storePassword = "focustube123"
+            keyAlias = "focustube"
+            keyPassword = "focustube123"
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
-            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             isShrinkResources = false
+            isMinifyEnabled = false
         }
     }
 }
+
 
 flutter {
     source = "../.."

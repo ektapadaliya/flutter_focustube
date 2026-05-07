@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-class ChannelsVCController extends GetxController {
-  static const int categoryCount = 5;
+class TabScrollController extends GetxController {
+  TabScrollController(this.categoryCount);
+  final int categoryCount;
 
-  final PageController pageController = PageController(initialPage: 0);
+  late final PageController pageController;
   final ItemScrollController categoryScrollController = ItemScrollController();
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
@@ -13,9 +15,7 @@ class ChannelsVCController extends GetxController {
   final RxInt selectedIndex = 0.obs;
 
   void init() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      pageController.jumpToPage(selectedIndex.value);
-    });
+    pageController = PageController(initialPage: selectedIndex.value);
   }
 
   void jumpToPage(int index) {
@@ -39,3 +39,6 @@ class ChannelsVCController extends GetxController {
     super.onClose();
   }
 }
+
+TabScrollController channelTabScrollController =
+    controller<TabScrollController>(tag: "channel-vc", data: 5);
