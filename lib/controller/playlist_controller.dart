@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 class PlaylistController extends GetxController {
   PlaylistController(this.tag);
   String? tag;
-  List<PlaylistModel> _playList = [];
-  List<PlaylistModel> _searchPlayList = [];
+  final List<PlaylistModel> _playList = [];
+  final List<PlaylistModel> _searchPlayList = [];
   List<PlaylistModel> get playList => (isSearch) ? _searchPlayList : _playList;
 
   String? searchQuery;

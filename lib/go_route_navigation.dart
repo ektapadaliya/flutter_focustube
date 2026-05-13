@@ -8,6 +8,7 @@ import 'package:focus_tube_flutter/view/channels/add_channels_vc.dart';
 import 'package:focus_tube_flutter/view/auth/choose_your_interest_vc.dart';
 import 'package:focus_tube_flutter/view/auth/daily_limit_vc.dart';
 import 'package:focus_tube_flutter/view/channels/channel_detail_vc.dart';
+import 'package:focus_tube_flutter/view/channels/channel_list_vc.dart';
 import 'package:focus_tube_flutter/view/goals/daily_goal_vc.dart';
 import 'package:focus_tube_flutter/view/goals/set_daily_goal_vc.dart';
 import 'package:focus_tube_flutter/view/home_root.dart';
@@ -247,6 +248,14 @@ final AppNavigationModel channelMeDetail = AppNavigationModel(
     tag: "channel-me",
   ),
 );
+final AppNavigationModel channelMeList = AppNavigationModel(
+  label: "My Channel List",
+  path: ChannelListVC.myChannelListId,
+  builder: (context, state) => ChannelListVC(
+    channelGroupId: state.pathParameters['id'] ?? "",
+    tag: "channel-me",
+  ),
+);
 final AppNavigationModel channelCuratedDetail = AppNavigationModel(
   label: "Channel Detail",
   path: "/channels/curated${ChannelDetailVC.id}",
@@ -393,6 +402,7 @@ List<AppNavigationModel> _authAccess = [
   home,
   search,
   channels,
+  videos,
 ];
 final GoRouter router = GoRouter(
   routerNeglect: true,
@@ -425,6 +435,7 @@ final GoRouter router = GoRouter(
       editDailyLimit,
       selectChannels,
       //dailyGoal,
+      channelMeList,
       channelVideoDetail,
       youtubeVideoDetail,
       setDailyGoal,

@@ -1,3 +1,4 @@
+import 'package:focus_tube_flutter/model/channel_group_model.dart';
 import 'package:focus_tube_flutter/model/channel_model.dart';
 import 'package:focus_tube_flutter/model/content_model.dart';
 import 'package:focus_tube_flutter/model/daily_goal_model.dart';
@@ -165,6 +166,8 @@ class AppModelFactory {
 
     register<InterestModel>(InterestModel.fromJson);
     register<UserInterestModel>(UserInterestModel.fromJson);
+    register<ChannelGroupModel>(ChannelGroupModel.fromJson);
+    register<GroupModel>(GroupModel.fromJson);
 
     register<NoteModel>(NoteModel.fromJson);
     register<DailyGoalModel>(DailyGoalModel.fromJson);

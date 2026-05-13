@@ -56,7 +56,7 @@ class HomeRootState extends State<HomeRoot> {
   void didChangeDependencies() {
     precacheImage(AssetImage(AppImage.home), context);
     precacheImage(AssetImage(AppImage.searchSelected), context);
-    precacheImage(AssetImage(AppImage.searchSelected), context);
+    precacheImage(AssetImage(AppImage.subjectSelected), context);
     precacheImage(AssetImage(AppImage.channelsSelected), context);
     precacheImage(AssetImage(AppImage.dailyGoalSelected), context);
     super.didChangeDependencies();
@@ -83,7 +83,12 @@ class HomeRootState extends State<HomeRoot> {
                   padding: const EdgeInsets.only(right: 30),
                   child: AppInkWell(
                     onTap: () {
-                      settings.go(context);
+                      controller<UserController>().showLoginDialog(
+                        context,
+                        onSucess: () {
+                          settings.go(context);
+                        },
+                      );
                     },
                     child: SvgPicture.asset(AppImage.settingIcon, height: 24),
                   ),

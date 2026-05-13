@@ -60,6 +60,7 @@ class ApiUtils {
   static const getMyHistory = "${baseUrl}get-my-history";
 
   static const channelCurated = "${baseUrl}channel/curated";
+  static const channelKidstube = "${baseUrl}channel/kidstube";
   static const channelScholartube = "${baseUrl}channel/scholartube";
   static const channelMe = "${baseUrl}channel/me";
   static const channelAdd = "${baseUrl}channel/add";
@@ -70,4 +71,5 @@ class ApiUtils {
 
   static const channelGroupCreate = "${baseUrl}channel/group/create";
   static const channelGroupList = "${baseUrl}channel/group/list";
+  static const channelGroupListOnly = "${baseUrl}channel/group/list-only";
 }

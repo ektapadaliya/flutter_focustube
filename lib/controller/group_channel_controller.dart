@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 class GroupChannelController extends GetxController {
   GroupChannelController(this.tag);
   String? tag;
-  List<GroupModel> groups = [];
+  List<ChannelGroupModel> groups = [];
 
-  void addGroup(List<GroupModel> groups) {
+  void addGroup(List<ChannelGroupModel> groups) {
     for (var element in groups) {
       var index = this.groups.indexWhere((e) => e.id == element.id);
       if (index == -1) {

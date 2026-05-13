@@ -9,6 +9,7 @@ import 'package:focus_tube_flutter/api/api_utils.dart';
 import 'package:focus_tube_flutter/controller/daily_goal_video_list_controller.dart';
 import 'package:focus_tube_flutter/controller/youtube_playlist_video_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/model/channel_group_model.dart';
 import 'package:focus_tube_flutter/model/daily_goal_model.dart';
 import 'package:focus_tube_flutter/model/daily_goal_video_list_model.dart';
 import 'package:focus_tube_flutter/model/daily_video_limit_model.dart';
@@ -597,6 +598,7 @@ class ApiFunctions {
     required ChannelController controller,
     int page = 1,
     int? perPage,
+    String? channelGroupId,
   }) async {
     try {
       controller.setIsLoading(true);
@@ -605,9 +607,12 @@ class ApiFunctions {
             ? ApiUtils.channelMe
             : controller.tag == "channel-scholartube"
             ? ApiUtils.channelScholartube
+            : controller.tag == "channel-kidstube"
+            ? ApiUtils.channelKidstube
             : ApiUtils.channelCurated,
         body: {
           if (perPage != null) "per_page": perPage.toString(),
+          if (channelGroupId != null) "channel_group_id": channelGroupId,
           "page": page.toString(),
         },
       );
@@ -631,13 +636,48 @@ class ApiFunctions {
     }
   }
 
+  Future<void> channelGroupList(
+    BuildContext context, {
+    required GroupChannelController controller,
+    int page = 1,
+    int? perPage,
+  }) async {
+    try {
+      controller.setIsLoading(true);
+      var response = await ApiManager.instance.post<ChannelGroupModel>(
+        ApiUtils.channelGroupList,
+        body: {
+          if (perPage != null) "per_page": perPage.toString(),
+          "page": page.toString(),
+        },
+      );
+      controller.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            controller.setHasData(false);
+          } else {
+            controller.addGroup(response.data);
+          }
+        } else {
+          controller.setHasData(false);
+        }
+      } else if (response.isError) {
+        controller.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in channelGroupList: $e");
+    }
+  }
+
   Future<bool> channelAdd(
     BuildContext context, {
     required String youtubeId,
     required String title,
     required String? imageUrl,
+    required String channelGroupId,
     String? description,
-
     String? followers,
   }) async {
     try {
@@ -650,6 +690,7 @@ class ApiFunctions {
           if (description != null && description.trim().isNotEmpty)
             "description": description,
           if (followers != null) "followers": followers,
+          "channel_group_id": channelGroupId,
         },
       );
 
@@ -809,6 +850,38 @@ class ApiFunctions {
       }
     } catch (e) {
       debugPrint("Error in getPlaylist: $e");
+    }
+  }
+
+  //Play List
+  Future<void> channelGroupListOnly(
+    BuildContext context, {
+    required GroupListController controller,
+    int page = 1,
+  }) async {
+    try {
+      controller.setIsLoading(true);
+      var response = await ApiManager.instance.post<GroupModel>(
+        ApiUtils.channelGroupListOnly,
+        body: {"page": page.toString()},
+      );
+      controller.setIsLoading(false);
+      if (response.isSuccess) {
+        var data = response.data;
+        if (data is Iterable) {
+          if (data.isEmpty) {
+            controller.setHasData(false);
+          } else {
+            controller.addGroups(response.data);
+          }
+        } else {
+          controller.setHasData(false);
+        }
+      } else if (response.isError) {
+        controller.setHasData(false);
+      }
+    } catch (e) {
+      debugPrint("Error in channelGroupListOnly: $e");
     }
   }
 
@@ -1413,6 +1486,6 @@ class ApiFunctions {
       controller<SubjectVideoController>(tag: tag).clear();
     }
 
-    context?.go(signIn.path);
+    context?.go(home.path);
   }
 }

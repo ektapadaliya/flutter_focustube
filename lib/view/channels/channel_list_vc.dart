@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/api/api_functions.dart';
+import 'package:focus_tube_flutter/widget/app_bar.dart';
 
 import 'package:focus_tube_flutter/widget/channel_widgets.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
@@ -12,8 +13,11 @@ import '../../widget/app_loader.dart';
 import '../../widget/expandable_scollview.dart';
 
 class ChannelListVC extends StatefulWidget {
-  const ChannelListVC({super.key, required this.tag});
+  const ChannelListVC({super.key, required this.tag, this.channelGroupId});
   final String tag;
+  final String? channelGroupId;
+
+  static String myChannelListId = "/channel/group/me/:id";
   @override
   State<ChannelListVC> createState() => _ChannelListVCState();
 }
@@ -64,6 +68,7 @@ class _ChannelListVCState extends State<ChannelListVC>
       context,
       controller: channelController,
       page: page,
+      channelGroupId: widget.channelGroupId,
     );
   }
 
@@ -77,6 +82,9 @@ class _ChannelListVCState extends State<ChannelListVC>
           showLoader: channelController.channels.isEmpty,
           loaderController: channelController.loaderController,
           child: ScreenBackground(
+            appBar: widget.channelGroupId != null
+                ? customAppBar(context, title: "Channels")
+                : null,
             body: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 30,

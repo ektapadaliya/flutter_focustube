@@ -17,6 +17,7 @@ import 'channel_controller.dart';
 import 'channels_vc_controller.dart';
 import 'shorts_controller.dart';
 import 'group_channel_controller.dart';
+import 'group_list_controller.dart';
 
 export 'daily_goal_controller.dart';
 export 'playlist_controller.dart';
@@ -34,6 +35,7 @@ export 'channel_controller.dart';
 export 'channels_vc_controller.dart';
 export 'shorts_controller.dart';
 export 'group_channel_controller.dart';
+export 'group_list_controller.dart';
 
 T controller<T>({String? tag, dynamic data}) {
   return Get.isRegistered<T>(tag: tag)
@@ -75,6 +77,8 @@ _putController<T>({String? tag, dynamic data}) {
       return Get.put(ShortsController(), tag: tag);
     case const (GroupChannelController):
       return Get.put(GroupChannelController(tag), tag: tag);
+    case const (GroupListController):
+      return Get.put(GroupListController(tag), tag: tag);
     case const (TabScrollController):
       return Get.put(TabScrollController(data), tag: tag);
 

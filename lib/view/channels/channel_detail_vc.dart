@@ -6,6 +6,7 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/controller/youtube_playlist_video_controller.dart';
+import 'package:focus_tube_flutter/model/channel_group_model.dart';
 import 'package:focus_tube_flutter/model/channel_model.dart';
 import 'package:focus_tube_flutter/view/dialog/add_edit_group_vc.dart';
 import 'package:focus_tube_flutter/view/dialog/save_groplist_vc.dart';
@@ -91,27 +92,27 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
           context,
           title: "Channel details",
           actions: [
-            /*    if (widget.tag == "channel-youtube") */
-            Padding(
-              padding: const EdgeInsets.only(right: 30),
-              child: AppInkWell(
-                onTap: () async {
-                  var value = await showDialog(
-                    context: context,
-                    builder: (context) => AddEditGroupListVC(),
-                  );
-                  if (value is String && value.trim().isNotEmpty) {
-                    loaderController.setLoading(true);
-                    await ApiFunctions.instance.groupCreate(
-                      context,
-                      title: value.capitalizeFirst!,
+            if (widget.tag == "channel-youtube")
+              Padding(
+                padding: const EdgeInsets.only(right: 30),
+                child: AppInkWell(
+                  onTap: () async {
+                    var value = await showDialog(
+                      context: context,
+                      builder: (context) => AddEditGroupListVC(),
                     );
-                    loaderController.setLoading(false);
-                  }
-                },
-                child: Icon(Icons.add, size: 25, color: AppColor.primary),
+                    if (value is String && value.trim().isNotEmpty) {
+                      loaderController.setLoading(true);
+                      await ApiFunctions.instance.groupCreate(
+                        context,
+                        title: value.capitalizeFirst!,
+                      );
+                      loaderController.setLoading(false);
+                    }
+                  },
+                  child: Icon(Icons.add, size: 25, color: AppColor.primary),
+                ),
               ),
-            ),
           ],
         ),
         body: SafeArea(
@@ -167,23 +168,28 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                                           builder: (context) =>
                                               SaveGroplistVC(),
                                         );
-                                        // loaderController.setLoading(true);
-                                        // var isSuccess = await ApiFunctions
-                                        //     .instance
-                                        //     .channelAdd(
-                                        //       context,
-                                        //       youtubeId:
-                                        //           channel?.youtubeId ?? "",
-                                        //       title: channel?.title ?? "",
-                                        //       imageUrl: channel?.imageUrl,
-                                        //       description: channel?.description,
-                                        //       followers: channel?.followers,
-                                        //     );
-                                        // if (isSuccess) {
-                                        //   showAddChannel = false;
-                                        //   setState(() {});
-                                        // }
-                                        // loaderController.setLoading(false);
+                                        if (result is GroupModel) {
+                                          loaderController.setLoading(true);
+                                          var isSuccess = await ApiFunctions
+                                              .instance
+                                              .channelAdd(
+                                                context,
+                                                youtubeId:
+                                                    channel?.youtubeId ?? "",
+                                                title: channel?.title ?? "",
+                                                imageUrl: channel?.imageUrl,
+                                                description:
+                                                    channel?.description,
+                                                followers: channel?.followers,
+                                                channelGroupId:
+                                                    result.id?.toString() ?? "",
+                                              );
+                                          if (isSuccess) {
+                                            showAddChannel = false;
+                                            setState(() {});
+                                          }
+                                          loaderController.setLoading(false);
+                                        }
                                       },
                                       backgroundColor: AppColor.primary,
                                       height: 32,

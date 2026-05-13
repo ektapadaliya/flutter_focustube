@@ -458,7 +458,7 @@ class YoutubeApiConst {
     final m = int.tryParse(match.group(2) ?? '0') ?? 0;
     final s = int.tryParse(match.group(3) ?? '0') ?? 0;
 
-    return h * 3600 + m * 60 + s;
+    return (h * 3600) + (m * 60) + s;
   }
 
   /// Returns the HQ thumbnail URL for a YouTube video by its [id].

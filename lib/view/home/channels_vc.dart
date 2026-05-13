@@ -93,7 +93,7 @@ class _ChannelsVCState extends State<ChannelsVC> {
                         ),
                       ChannelListVC(tag: "channel-curated"),
                       ChannelListVC(tag: "channel-scholartube"),
-                      Container(),
+                      ChannelListVC(tag: "channel-kidstube"),
                     ],
                   );
                 },

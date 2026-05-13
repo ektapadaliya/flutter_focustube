@@ -27,17 +27,20 @@ class ChannelTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppInkWell(
       onTap: () {
-        if (controller<UserController>().user != null) {
-          if (tag == "channel-youtube") {
-            youtubeChannelDetail.go(context, id: channelId);
-          } else if (tag == "channel-me") {
-            channelMeDetail.go(context, id: channelId);
-          } else if (tag == "channel-curated") {
-            channelCuratedDetail.go(context, id: channelId);
-          } else if (tag == "channel-scholartube") {
-            channelScholartubeDetail.go(context, id: channelId);
-          }
-        }
+        controller<UserController>().showLoginDialog(
+          context,
+          onSucess: () {
+            if (tag == "channel-youtube") {
+              youtubeChannelDetail.go(context, id: channelId);
+            } else if (tag == "channel-me") {
+              channelMeDetail.go(context, id: channelId);
+            } else if (tag == "channel-curated") {
+              channelCuratedDetail.go(context, id: channelId);
+            } else if (tag == "channel-scholartube") {
+              channelScholartubeDetail.go(context, id: channelId);
+            }
+          },
+        );
       },
 
       child: Row(

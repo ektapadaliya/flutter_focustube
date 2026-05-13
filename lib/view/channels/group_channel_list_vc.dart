@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/api/api_functions.dart';
-import 'package:focus_tube_flutter/api/api_manager.dart';
-import 'package:focus_tube_flutter/api/api_utils.dart';
+
 import 'package:focus_tube_flutter/controller/app_controller.dart';
-import 'package:focus_tube_flutter/controller/group_channel_controller.dart';
+import 'package:focus_tube_flutter/go_route_navigation.dart';
+
 import 'package:focus_tube_flutter/model/channel_group_model.dart';
+import 'package:focus_tube_flutter/view/channels/channel_list_vc.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/channel_widgets.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
+import 'package:focus_tube_flutter/widget/video_widgets.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 import 'package:get/get.dart';
 
@@ -65,29 +67,11 @@ class _GroupChannelListVCState extends State<GroupChannelListVC>
   }
 
   Future<void> callApi({int page = 1}) async {
-    try {
-      groupController.setIsLoading(true);
-      final response = await ApiManager.instance.post(
-        ApiUtils.channelGroupList,
-        body: {'page': page.toString()},
-      );
-      groupController.setIsLoading(false);
-      if (response.isSuccess) {
-        final data = response.response?['data'];
-        if (data is List && data.isNotEmpty) {
-          groupController.addGroup(
-            data.map((e) => GroupModel.fromJson(e)).toList(),
-          );
-        } else {
-          groupController.setHasData(false);
-        }
-      } else {
-        groupController.setHasData(false);
-      }
-    } catch (e) {
-      groupController.setIsLoading(false);
-      debugPrint('GroupChannelListVC.callApi error: $e');
-    }
+    await ApiFunctions.instance.channelGroupList(
+      context,
+      controller: groupController,
+      page: page,
+    );
   }
 
   @override
@@ -109,8 +93,7 @@ class _GroupChannelListVCState extends State<GroupChannelListVC>
                 () => RefreshIndicator(
                   onRefresh: onRefresh,
                   child:
-                      (c.groups.isEmpty &&
-                          !c.loaderController.isLoading.value)
+                      (c.groups.isEmpty && !c.loaderController.isLoading.value)
                       ? ExpandedSingleChildScrollView(
                           physics: const AlwaysScrollableScrollPhysics(),
                           child: Center(
@@ -128,8 +111,22 @@ class _GroupChannelListVCState extends State<GroupChannelListVC>
                                 controller: scrollController,
                                 itemCount: c.groups.length,
                                 separatorBuilder: (_, __) => ChannelDivider(),
-                                itemBuilder: (_, index) =>
-                                    _GroupTile(group: c.groups[index]),
+                                itemBuilder: (_, index) {
+                                  final group = c.groups[index];
+                                  if (group.channels == null ||
+                                      group.channels!.isEmpty) {
+                                    return const SizedBox.shrink();
+                                  }
+                                  return _GroupTile(
+                                    group: group,
+                                    onViewMore: () {
+                                      channelMeList.go(
+                                        context,
+                                        id: group.id?.toString(),
+                                      );
+                                    },
+                                  );
+                                },
                               ),
                             ),
                             if (c.loaderController.isLoading.value &&
@@ -159,8 +156,9 @@ class _GroupChannelListVCState extends State<GroupChannelListVC>
 // Single group tile: title + its channels list
 // --------------------------------------------------
 class _GroupTile extends StatelessWidget {
-  const _GroupTile({required this.group});
-  final GroupModel group;
+  const _GroupTile({required this.group, this.onViewMore});
+  final ChannelGroupModel group;
+  final VoidCallback? onViewMore;
 
   @override
   Widget build(BuildContext context) {
@@ -168,36 +166,20 @@ class _GroupTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Group title
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Text(
-            group.title ?? '',
-            style: AppTextStyle.title20(),
+        AppTitle(title: group.title ?? '', onViewMore: onViewMore),
+        const SizedBox(height: 12),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: channels.length,
+          separatorBuilder: (_, __) => ChannelDivider(),
+          itemBuilder: (_, i) => ChannelTile(
+            title: channels[i].title ?? '',
+            channelId: channels[i].youtubeId ?? '',
+            channelImage: channels[i].imageUrl ?? '',
+            tag: 'channel-me',
           ),
         ),
-        // Channels inside the group
-        if (channels.isEmpty)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-              'No channels in this group',
-              style: AppTextStyle.body14(color: AppColor.gray),
-            ),
-          )
-        else
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: channels.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
-            itemBuilder: (_, i) => ChannelTile(
-              title: channels[i].title ?? '',
-              channelId: channels[i].youtubeId ?? '',
-              channelImage: channels[i].imageUrl ?? '',
-              tag: 'channel-me',
-            ),
-          ),
       ],
     );
   }

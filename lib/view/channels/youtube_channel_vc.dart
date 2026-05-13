@@ -4,6 +4,7 @@ import 'package:focus_tube_flutter/api/youtube_api.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
+import 'package:focus_tube_flutter/model/channel_group_model.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/channel_widgets.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,7 @@ import 'package:get/get.dart';
 import '../../const/app_image.dart';
 import '../../widget/app_text_form_field.dart';
 import '../../widget/expandable_scollview.dart';
+import '../dialog/save_groplist_vc.dart';
 
 class YoutubeChannelVC extends StatefulWidget {
   static const id = "/channels";
@@ -142,23 +144,33 @@ class _YoutubeChannelVCState extends State<YoutubeChannelVC>
                                           "",
                                       tag: "channel-youtube",
                                       channelId: channel.id?.channelId ?? "",
-                                      onAddChannel: () {
-                                        ApiFunctions.instance.channelAdd(
-                                          context,
-                                          youtubeId:
-                                              channel.snippet?.channelId ?? "",
-                                          title: channel.snippet?.title ?? "",
-                                          imageUrl:
-                                              channel
-                                                  .snippet
-                                                  ?.thumbnails
-                                                  ?.medium
-                                                  ?.url ??
-                                              "",
-                                          description:
-                                              channel.snippet?.description ??
-                                              "",
+                                      onAddChannel: () async {
+                                        var result = await showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              SaveGroplistVC(),
                                         );
+                                        if (result is GroupModel) {
+                                          ApiFunctions.instance.channelAdd(
+                                            context,
+                                            youtubeId:
+                                                channel.snippet?.channelId ??
+                                                "",
+                                            channelGroupId:
+                                                result.id?.toString() ?? "",
+                                            title: channel.snippet?.title ?? "",
+                                            imageUrl:
+                                                channel
+                                                    .snippet
+                                                    ?.thumbnails
+                                                    ?.medium
+                                                    ?.url ??
+                                                "",
+                                            description:
+                                                channel.snippet?.description ??
+                                                "",
+                                          );
+                                        }
                                       },
                                     ),
                                     if (youtubeChannelController.isLoading &&

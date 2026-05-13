@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
+import 'package:focus_tube_flutter/model/channel_group_model.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'checkbox_tile.dart';
 
@@ -11,9 +12,9 @@ class GropListTile extends StatelessWidget {
     required this.onTap,
     required this.value,
   });
-  final String value;
+  final GroupModel value;
   final bool isSelected;
-  final void Function(String playList) onTap;
+  final void Function(GroupModel group) onTap;
   @override
   Widget build(BuildContext context) {
     return AppInkWell(
@@ -31,9 +32,9 @@ class GropListTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Group", style: AppTextStyle.title20()),
+                  Text(value.title ?? "", style: AppTextStyle.title20()),
                   Text(
-                    "10 videos",
+                    "${value.totalChannels ?? 0} channels",
                     style: AppTextStyle.body14(color: AppColor.gray),
                   ),
                 ],
