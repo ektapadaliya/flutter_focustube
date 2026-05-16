@@ -51,6 +51,12 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     FlutterNativeSplash.remove();
     super.initState();
+    Future.delayed(Duration.zero, () {
+      var key = navigationKey;
+      if (key.currentContext != null) {
+        ApiFunctions.versionCheck(key.currentContext);
+      }
+    });
   }
 
   @override

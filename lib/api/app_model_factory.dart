@@ -1,3 +1,4 @@
+import 'package:focus_tube_flutter/model/app_info_model.dart';
 import 'package:focus_tube_flutter/model/channel_group_model.dart';
 import 'package:focus_tube_flutter/model/channel_model.dart';
 import 'package:focus_tube_flutter/model/content_model.dart';
@@ -156,6 +157,7 @@ class AppModelFactory {
     // register<ProductModel>(ProductModel.fromJson);
 
     // Or use registerAll for bulk registration:
+    register<AppInfo>(AppInfo.fromJson);
     register<UserModel>(UserModel.fromJson);
     register<VideoModel>(VideoModel.fromJson);
     register<ContentModel>(ContentModel.fromJson);

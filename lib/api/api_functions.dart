@@ -26,11 +26,14 @@ import 'package:focus_tube_flutter/service/shared_preference_service.dart';
 import 'package:focus_tube_flutter/service/uuid_service.dart';
 import 'package:focus_tube_flutter/widget/app_tost_message.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../controller/app_controller.dart';
+import '../model/app_info_model.dart';
 import '../model/channel_model.dart';
 import '../model/user_model.dart';
 import '../model/content_model.dart';
+import '../widget/general_dialog.dart';
 import 'api_response_model.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -1435,6 +1438,97 @@ class ApiFunctions {
     } catch (e) {
       debugPrint("Error in getDailyGoal: $e");
     }
+  }
+
+  static versionCheck(context) async {
+    //Get Current installed version of app
+
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    //double currentVersion =
+    double.parse(info.version.trim().replaceAll(".", ""));
+    String appVersion = info.version.trim();
+    var response = await ApiManager.instance.post<AppInfo>(
+      ApiUtils.appInfo,
+      body: {"device": Platform.isIOS ? "i" : "a", "user_type": "u"},
+    );
+    AppInfo? data = response.data;
+
+    if (data != null) {
+      var versions = normalizeVersions(
+        appVersion,
+        data.minVersion ?? "1.0.0",
+        data.currentVersion ?? "1.0.0",
+      );
+      if (versions['min']!.compareTo(versions['app']!) == 1 ||
+          versions['current']!.compareTo(versions['app']!) == 1) {
+        //CHECK ON RELEASE
+        _showVersionDialog(
+          context,
+          data,
+          versions['min']!.compareTo(versions['app']!) == 1,
+        );
+      }
+    }
+  }
+
+  static Map<String, String> normalizeVersions(
+    String app,
+    String min,
+    String current,
+  ) {
+    final versions = {
+      'app': app,
+      'min': min,
+      'current': current,
+    }.map((k, v) => MapEntry(k, v.split('.')));
+    final parts = versions.values.first.length;
+
+    return versions.map(
+      (k, v) => MapEntry(
+        k,
+        List.generate(parts, (i) {
+          final maxLen = versions.values
+              .map((v) => v[i].length)
+              .reduce((a, b) => a > b ? a : b);
+          return v[i].padLeft(maxLen, '0');
+        }).join('.'),
+      ),
+    );
+  }
+
+  static _showVersionDialog(
+    context,
+    AppInfo response,
+    bool isForcefullyUpdate,
+  ) async {
+    String title = "New Update Available";
+    String? message = response.message;
+    String btnLabel = "Update Now";
+    String btnLabelCancel = "Later";
+    await generalDialog(
+      context,
+      barrierDismissible: false,
+      title: title,
+      message: message ?? "",
+      onSubmit: (!isForcefullyUpdate)
+          ? (context) {
+              launchUrl(
+                Uri.parse(response.url ?? ""),
+                mode: LaunchMode.externalApplication,
+              );
+            }
+          : null,
+      submitText: (!isForcefullyUpdate) ? btnLabel : "Ok",
+      onCancel: isForcefullyUpdate
+          ? (context) {
+              launchUrl(
+                Uri.parse(response.url ?? ""),
+                mode: LaunchMode.externalApplication,
+              );
+            }
+          : null,
+      cancelText: (isForcefullyUpdate) ? btnLabel : btnLabelCancel,
+    );
   }
 
   //Logout
