@@ -3,6 +3,7 @@ import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/controller/playlist_controller.dart';
 import 'package:focus_tube_flutter/model/playlist_model.dart';
+import 'package:focus_tube_flutter/view/auth/is_auth.dart';
 import 'package:focus_tube_flutter/view/dialog/add_edit_playlist_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
@@ -41,10 +42,12 @@ class _PlayListDetailVCState extends State<PlayListDetailVC> {
         .first;
 
     super.initState();
-    Future.delayed(Duration.zero, () async {
-      await callApi();
-    });
-    scrollController.addListener(_scrollListener);
+    if (controller<UserController>().user != null) {
+      Future.delayed(Duration.zero, () async {
+        await callApi();
+      });
+      scrollController.addListener(_scrollListener);
+    }
   }
 
   callApi({int page = 1}) async {
@@ -96,60 +99,63 @@ class _PlayListDetailVCState extends State<PlayListDetailVC> {
           loaderController: loaderController,
           child: ScreenBackground(
             appBar: customAppBar(context, title: "Playlist Library"),
-            body: SafeArea(
-              minimum: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              child: Column(
-                children: [
-                  PlayListTile(
-                    onTap: (_) async {
-                      var value = await showDialog(
-                        context: context,
-                        builder: (context) =>
-                            AddEditPlaylistVC(playlist: playlist.title ?? ""),
-                      );
-                      if (value is String && value.trim() != playlist.title) {
-                        var result = await ApiFunctions.instance
-                            .playlistCreateEdit(
-                              context,
-                              id: playlist.id.toString(),
-                              title: value,
-                            );
-                        if (result != null) {
-                          playlist = result;
-                          setState(() {});
-                          playlistController.addPlayList(playlist);
+            body: IsAuth(
+              child: SafeArea(
+                minimum: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                child: Column(
+                  children: [
+                    PlayListTile(
+                      onTap: (_) async {
+                        var value = await showDialog(
+                          context: context,
+                          builder: (context) =>
+                              AddEditPlaylistVC(playlist: playlist.title ?? ""),
+                        );
+                        if (value is String && value.trim() != playlist.title) {
+                          var result = await ApiFunctions.instance
+                              .playlistCreateEdit(
+                                context,
+                                id: playlist.id.toString(),
+                                title: value,
+                              );
+                          if (result != null) {
+                            playlist = result;
+                            setState(() {});
+                            playlistController.addPlayList(playlist);
+                          }
                         }
-                      }
-                    },
-                    value: playlist,
-                    tileType: PlayListTileType.edit,
-                  ),
-                  SizedBox(height: 20),
-                  AppTitle(title: "Videos"),
-                  SizedBox(height: 10),
-                  Expanded(
-                    child: Obx(() {
-                      final isLoading = loaderController.isLoading.value;
-                      return RefreshIndicator(
-                        onRefresh: onRefresh,
-                        child: (videoController.videos.isEmpty && !(isLoading))
-                            ? ExpandedSingleChildScrollView(
-                                physics: AlwaysScrollableScrollPhysics(),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "No videos found",
-                                    style: AppTextStyle.body16(
-                                      color: AppColor.gray,
+                      },
+                      value: playlist,
+                      tileType: PlayListTileType.edit,
+                    ),
+                    SizedBox(height: 20),
+                    AppTitle(title: "Videos"),
+                    SizedBox(height: 10),
+                    Expanded(
+                      child: Obx(() {
+                        final isLoading = loaderController.isLoading.value;
+                        return RefreshIndicator(
+                          onRefresh: onRefresh,
+                          child:
+                              (videoController.videos.isEmpty && !(isLoading))
+                              ? ExpandedSingleChildScrollView(
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "No videos found",
+                                      style: AppTextStyle.body16(
+                                        color: AppColor.gray,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              )
-                            : _buildVideoList(),
-                      );
-                    }),
-                  ),
-                ],
+                                )
+                              : _buildVideoList(),
+                        );
+                      }),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

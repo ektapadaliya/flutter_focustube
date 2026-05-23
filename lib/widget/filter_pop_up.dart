@@ -50,7 +50,7 @@ class _AppPopupOverlayState<T> extends State<AppPopupOverlay<T>> {
               child: CompositedTransformFollower(
                 link: _layerLink,
                 showWhenUnlinked: false,
-                offset: Offset(-117, 40),
+                offset: Offset(-151, 40),
                 child: Material(
                   elevation: 2,
                   color: Colors.transparent,
@@ -126,7 +126,10 @@ class _AppPopupOverlayState<T> extends State<AppPopupOverlay<T>> {
   Widget build(BuildContext context) {
     return CompositedTransformTarget(
       link: _layerLink,
-      child: AppInkWell(onTap: _toggleAppPopupOverlay, child: widget.child),
+      child: GestureDetector(
+        onTap: _toggleAppPopupOverlay,
+        child: widget.child,
+      ),
     );
   }
 }

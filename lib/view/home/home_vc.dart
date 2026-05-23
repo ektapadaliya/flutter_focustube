@@ -302,199 +302,279 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 30).copyWith(top: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Stack(
+        alignment: AlignmentGeometry.topRight,
         children: [
-          Text("FocusTube", style: AppTextStyle.title36()),
-          SizedBox(height: 8),
-          Text(
-            "YouTube. Your way. Finally. ",
-            style: AppTextStyle.title24(color: AppColor.profileBackground),
-          ),
-          Divider(color: AppColor.lightGray.withValues(alpha: .5), height: 60),
-          Wrap(
-            alignment: WrapAlignment.center,
-            runSpacing: 5,
-            spacing: 4.5,
-            children: [
-              "🚫 No rabbit holes.",
-              "🌙 No midnight spirals.",
-              "🤖 No algorithm pulling the strings.",
-              "When a video ends — the app stops.",
-              "No autoplay.",
-              "No \"up next.\" Ever.",
-            ].map((e) => Text(e, style: AppTextStyle.body14())).toList(),
-          ),
-          SizedBox(height: 20),
-          Text(
-            "✨ Watch more of what matters. Stop when you meant to. Actually feel good about it.",
-            style: AppTextStyle.title16(),
-            textAlign: TextAlign.center,
-          ),
-          Divider(color: AppColor.lightGray.withValues(alpha: .5), height: 60),
           Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("Navigate", style: AppTextStyle.title18()),
-              SizedBox(height: 20),
-              buildNavigator(
-                label: "🔍 Explore",
-                message:
-                    "Search your curated world or all of YouTube — you choose the universe.",
-                onTap: () {
-                  homeRootKey.currentState?.jumpToPage(1);
-                },
-                isRestricted: false,
-              ),
-              SizedBox(height: 15),
-              buildNavigator(
-                label: "🗂️ Subjects",
-                message: "Browse your interests by topic and sub-topic.",
-                onTap: () {
-                  homeRootKey.currentState?.jumpToPage(2);
-                },
-              ),
-              SizedBox(height: 15),
-              buildNavigator(
-                label: "📡 Channels",
-                message:
-                    "Your Channels · FocusTube Picks · KidsTube · ScholarTube",
-                onTap: () {
-                  homeRootKey.currentState?.jumpToPage(3);
-                },
-                isRestricted: false,
-              ),
-              SizedBox(height: 15),
-              buildNavigator(
-                label: "🎯 Daily Goals",
-                message:
-                    "Set how many videos you want — and actually stop when you meant to.",
-                onTap: () {
-                  homeRootKey.currentState?.jumpToPage(4);
-                },
-              ),
-              SizedBox(height: 15),
-              buildNavigator(
-                label: "💡 Interests",
-                message:
-                    "Tell us what you love. The app will feel built just for you.",
-                onTap: () {
-                  editYourInterest.go(context);
-                },
-              ),
-              Divider(
-                color: AppColor.lightGray.withValues(alpha: .5),
-                height: 60,
-              ),
-              Text("From the Menu", style: AppTextStyle.title18()),
-              SizedBox(height: 20),
-              buildNavigator(
-                label: "▶️ Playlists",
-                message: "Your saved playlists.",
-                onTap: () {
-                  playlists.go(context);
-                },
-              ),
-              SizedBox(height: 15),
-              buildNavigator(
-                label: "🔖 Bookmarks",
-                message: "Videos saved for later.",
-                onTap: () {
-                  videos.go(context, id: "bookmarks");
-                },
-              ),
-              SizedBox(height: 15),
-              buildNavigator(
-                label: "🕓 History",
-                message: "What you've watched.",
-                onTap: () {
-                  videos.go(context, id: "history");
-                },
-              ),
-              SizedBox(height: 15),
-              buildNavigator(
-                label: "🌟 Recommended",
-                message: "Picks from your channels.",
-                onTap: () {
-                  videos.go(context, id: "recommended");
-                },
-                isRestricted: false,
-              ),
-              SizedBox(height: 15),
-              buildNavigator(
-                label: "🔥 Popular",
-                message: "Trending in your world.",
-                onTap: () {
-                  videos.go(context, id: "popular");
-                },
-                isRestricted: false,
-              ),
-              SizedBox(height: 15),
+              // Text("FocusTube", style: AppTextStyle.title36()),
+              Image.asset(AppImage.appIconDarkTransperent, height: 100),
+              //SizedBox(height: 8),
               Text(
-                "Everything above comes from YOUR channels — not YouTube's.",
-                style: AppTextStyle.body12(
-                  color: AppColor.gray,
-                ).copyWith(fontStyle: FontStyle.italic),
+                "YouTube. Your way. Finally. ",
+                style: AppTextStyle.title24(color: AppColor.lightGray),
               ),
               Divider(
                 color: AppColor.lightGray.withValues(alpha: .5),
                 height: 60,
               ),
-              buildNavigator(
-                label: "⚙️ Setting",
-                message:
-                    "Profile · Notifications · Security. Your space, your rules.",
-                onTap: () {
-                  settings.go(context);
-                },
+              Wrap(
+                alignment: WrapAlignment.center,
+                runAlignment: WrapAlignment.center,
+                runSpacing: 5,
+                spacing: 4.5,
+                children:
+                    [
+                          "🚫 No rabbit holes.",
+                          "🌙 No midnight spirals.",
+                          "🤖 No algorithm pulling the strings.",
+                          "When a video ends — the app stops.",
+                          "No autoplay.",
+                          "No \"up next.\" Ever.",
+                        ]
+                        .map(
+                          (e) => Text(
+                            e,
+                            style: AppTextStyle.body14(color: AppColor.white),
+                          ),
+                        )
+                        .toList(),
               ),
-              Divider(
-                color: AppColor.lightGray.withValues(alpha: .5),
-                height: 60,
-              ),
-              Text("Curated Channels", style: AppTextStyle.title18()),
               SizedBox(height: 20),
-              buildNavigator(
-                label: "🌟 Curated",
-                message:
-                    "FocusTube's hand-picked channels — the best of the best.",
-                onTap: () {
-                  homeRootKey.currentState?.jumpToPage(3);
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    channelTabScrollController.jumpToPage(2);
-                  });
-                },
-                isRestricted: false,
+              Text(
+                "✨ Watch more of what matters. Stop when you meant to. Actually feel good about it.",
+                style: AppTextStyle.title16(color: AppColor.white),
+                textAlign: TextAlign.center,
               ),
-              SizedBox(height: 15),
-              buildNavigator(
-                label: "🎈 KidsTube",
-                message:
-                    "Hand-picked channels for kids. Safe, fun, and screen-time friendly.",
-                onTap: () {
-                  homeRootKey.currentState?.jumpToPage(3);
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    channelTabScrollController.jumpToPage(4);
-                  });
-                },
-                isRestricted: false,
+              Divider(
+                color: AppColor.lightGray.withValues(alpha: .5),
+                height: 60,
               ),
-              SizedBox(height: 15),
-              buildNavigator(
-                label: "🔬 ScholarTube",
-                message:
-                    "Curated channels for learners and academics. Deep dives, done right.",
-                onTap: () {
-                  homeRootKey.currentState?.jumpToPage(3);
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    channelTabScrollController.jumpToPage(3);
-                  });
-                },
-                isRestricted: false,
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Navigate",
+                    style: AppTextStyle.title18(color: AppColor.white),
+                  ),
+                  SizedBox(height: 20),
+                  OptionGridView(
+                    children: [
+                      buildNavigator(
+                        label: "🔍 Explore",
+                        message:
+                            "Search your curated world or all of YouTube — you choose the universe.",
+                        onTap: () {
+                          homeRootKey.currentState?.jumpToPage(1);
+                        },
+                        isRestricted: false,
+                      ),
+                      // SizedBox(height: 15),
+                      buildNavigator(
+                        label: "🗂️ Subjects",
+                        message:
+                            "Browse your interests by topic and sub-topic.",
+                        onTap: () {
+                          homeRootKey.currentState?.jumpToPage(2);
+                        },
+                      ),
+                      // SizedBox(height: 15),
+                      buildNavigator(
+                        label: "📡 Channels",
+                        message:
+                            "Your Channels · FocusTube Picks · KidsTube · ScholarTube",
+                        onTap: () {
+                          homeRootKey.currentState?.jumpToPage(3);
+                        },
+                        isRestricted: false,
+                      ),
+                      // SizedBox(height: 15),
+                      buildNavigator(
+                        label: "🎯 Daily Goals",
+                        message:
+                            "Set how many videos you want — and actually stop when you meant to.",
+                        onTap: () {
+                          homeRootKey.currentState?.jumpToPage(4);
+                        },
+                      ),
+                      //  SizedBox(height: 15),
+                      buildNavigator(
+                        label: "💡 Interests",
+                        message:
+                            "Tell us what you love. The app will feel built just for you.",
+                        onTap: () {
+                          editYourInterest.go(context);
+                        },
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    color: AppColor.lightGray.withValues(alpha: .5),
+                    height: 60,
+                  ),
+                  Text(
+                    "From the Menu",
+                    style: AppTextStyle.title18(color: AppColor.white),
+                  ),
+                  SizedBox(height: 20),
+                  OptionGridView(
+                    children: [
+                      buildNavigator(
+                        label: "▶️ Playlists",
+                        message: "Your saved playlists.",
+                        onTap: () {
+                          playlists.go(context);
+                        },
+                      ),
+
+                      buildNavigator(
+                        label: "🔖 Bookmarks",
+                        message: "Videos saved for later.",
+                        onTap: () {
+                          videos.go(context, id: "bookmarks");
+                        },
+                      ),
+
+                      buildNavigator(
+                        label: "🕓 History",
+                        message: "What you've watched.",
+                        onTap: () {
+                          videos.go(context, id: "history");
+                        },
+                      ),
+
+                      buildNavigator(
+                        label: "🌟 Recommended",
+                        message: "Picks from your channels.",
+                        onTap: () {
+                          videos.go(context, id: "recommended");
+                        },
+                        isRestricted: false,
+                      ),
+
+                      buildNavigator(
+                        label: "🔥 Popular",
+                        message: "Trending in your world.",
+                        onTap: () {
+                          videos.go(context, id: "popular");
+                        },
+                        isRestricted: false,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  Text(
+                    "Everything above comes from YOUR channels — not YouTube's.",
+                    style: AppTextStyle.body14(
+                      color: AppColor.white,
+                    ).copyWith(fontStyle: FontStyle.italic),
+                  ),
+                  Divider(
+                    color: AppColor.lightGray.withValues(alpha: .5),
+                    height: 60,
+                  ),
+                  OptionGridView(
+                    children: [
+                      buildNavigator(
+                        label: "⚙️ Settings",
+                        message:
+                            "Profile · Notifications · Security. Your space, your rules.",
+                        onTap: () {
+                          settings.go(context);
+                        },
+                      ),
+                      Container(),
+                    ],
+                  ),
+                  Divider(
+                    color: AppColor.lightGray.withValues(alpha: .5),
+                    height: 60,
+                  ),
+                  Text(
+                    "Curated Channels",
+                    style: AppTextStyle.title18(color: AppColor.white),
+                  ),
+                  SizedBox(height: 20),
+                  OptionGridView(
+                    children: [
+                      buildNavigator(
+                        label: "🌟 Curated",
+                        message:
+                            "FocusTube's hand-picked channels — the best of the best.",
+                        onTap: () {
+                          homeRootKey.currentState?.jumpToPage(3);
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            channelTabScrollController.jumpToPage(2);
+                          });
+                        },
+                        isRestricted: false,
+                      ),
+
+                      buildNavigator(
+                        label: "🎈 KidsTube",
+                        message:
+                            "Hand-picked channels for kids. Safe, fun, and screen-time friendly.",
+                        onTap: () {
+                          homeRootKey.currentState?.jumpToPage(3);
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            channelTabScrollController.jumpToPage(4);
+                          });
+                        },
+                        isRestricted: false,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  OptionGridView(
+                    children: [
+                      buildNavigator(
+                        label: "🔬 ScholarTube",
+                        message:
+                            "Curated channels for learners and academics. Deep dives, done right.",
+                        onTap: () {
+                          homeRootKey.currentState?.jumpToPage(3);
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            channelTabScrollController.jumpToPage(3);
+                          });
+                        },
+                        isRestricted: false,
+                      ),
+                      Container(),
+                    ],
+                  ),
+                  SizedBox(height: 40),
+                ],
               ),
-              SizedBox(height: 40),
             ],
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 1),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 15),
+                  child: HomePopupMenu(color: AppColor.white),
+                ),
+
+                AppInkWell(
+                  onTap: () {
+                    settings.go(context);
+                  },
+                  child: SvgPicture.asset(
+                    AppImage.settingIcon,
+                    height: 24,
+                    colorFilter: ColorFilter.mode(
+                      AppColor.white,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -511,38 +591,51 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppButton(
+        AppHomeButton(
           label: label,
-          padding: EdgeInsets.symmetric(horizontal: 18),
-          backgroundColor: AppColor.primary,
-          height: 48,
-          maxWidth: 450,
-          onTap: () {
-            if (isRestricted) {
-              controller<UserController>().showLoginDialog(
-                context,
-                onSucess: onTap ?? () {},
-              );
-            } else {
-              onTap?.call();
-            }
-          },
+          padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+          backgroundColor: AppColor.white,
+          height: 90,
+          //maxWidth: 450,
+          onTap: onTap,
           alignment: Alignment.centerLeft,
           fontSize: 17,
+          subLabel: message,
           isFilled: false,
-          radius: 10,
+          //radius: 10,
         ),
-        SizedBox(height: 3),
-        Text(
-          message,
-          style: AppTextStyle.body12(
-            color: AppColor.gray,
-          ).copyWith(fontStyle: FontStyle.italic),
-        ),
+        // SizedBox(height: 3),
+        // Text(
+        //   message,
+        //   style: AppTextStyle.body12(
+        //     color: AppColor.gray,
+        //   ).copyWith(fontStyle: FontStyle.italic),
+        // ),
       ],
     );
   }
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class OptionGridView extends StatelessWidget {
+  const OptionGridView({super.key, required this.children});
+  final List<Widget> children;
+  @override
+  Widget build(BuildContext context) {
+    return GridView(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: MediaQuery.sizeOf(context).width > 450
+            ? MediaQuery.sizeOf(context).width / 2
+            : MediaQuery.sizeOf(context).width,
+        childAspectRatio: MediaQuery.sizeOf(context).width > 450 ? 1 : 4.5,
+        mainAxisExtent: 105,
+        crossAxisSpacing: 10,
+      ),
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: children,
+    );
+  }
 }

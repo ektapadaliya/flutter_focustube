@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/view/auth/daily_limit_vc.dart';
+import 'package:focus_tube_flutter/view/auth/is_auth.dart';
 import 'package:focus_tube_flutter/view/goals/daily_goal_video_vc.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 
@@ -19,31 +20,34 @@ class _DailyGoalVCState extends State<DailyGoalVC> {
   PageController pageController = PageController(initialPage: 1);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 40,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) => buildCategoryTile(index),
-              separatorBuilder: (context, index) => SizedBox(width: 10),
-              itemCount: 3,
+    return IsAuth(
+      message: "To see your daily goals page, please log in",
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 40,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => buildCategoryTile(index),
+                separatorBuilder: (context, index) => SizedBox(width: 10),
+                itemCount: 3,
+              ),
             ),
-          ),
-          Expanded(
-            child: PageView(
-              physics: NeverScrollableScrollPhysics(),
-              controller: pageController,
-              children: [
-                SetDailyGoalVC(isFromNav: true),
-                DailyGoalVideoVC(),
-                DailyLimitVC(isFromGoal: true, isFromEdit: true),
-              ],
+            Expanded(
+              child: PageView(
+                physics: NeverScrollableScrollPhysics(),
+                controller: pageController,
+                children: [
+                  SetDailyGoalVC(isFromNav: true),
+                  DailyGoalVideoVC(),
+                  DailyLimitVC(isFromGoal: true, isFromEdit: true),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -179,7 +179,7 @@ class UserController extends GetxController {
         },
       ).then((value) {
         if (value == true) {
-          signIn.off(context);
+          signIn.go(context);
         }
       });
     }

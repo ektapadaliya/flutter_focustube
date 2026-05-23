@@ -51,12 +51,12 @@ class PopularVideoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppInkWell(
       onTap: () {
-        controller<UserController>().showLoginDialog(
+        /*  controller<UserController>().showLoginDialog(
           context,
-          onSucess: () {
-            videoDetail.go(context, id: video.id.toString());
-          },
-        );
+          onSucess: () { */
+        videoDetail.go(context, id: video.id.toString());
+        /*   },
+        ); */
       },
 
       child: SizedBox(
@@ -141,12 +141,12 @@ class SubjectVideoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppInkWell(
       onTap: () {
-        controller<UserController>().showLoginDialog(
+        /* controller<UserController>().showLoginDialog(
           context,
-          onSucess: () {
-            videoDetail.go(context, id: video.id?.toString());
-          },
-        );
+          onSucess: () { */
+        videoDetail.go(context, id: video.id?.toString());
+        /*  },
+        ); */
       },
 
       child: SizedBox(
@@ -220,12 +220,12 @@ class BookmarkVideoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppInkWell(
       onTap: () {
-        controller<UserController>().showLoginDialog(
+        /* controller<UserController>().showLoginDialog(
           context,
-          onSucess: () {
-            videoDetail.go(context, id: video.id.toString());
-          },
-        );
+          onSucess: () { */
+        videoDetail.go(context, id: video.id.toString());
+        /*  },
+        ); */
       },
 
       child: ConstrainedBox(
@@ -389,18 +389,18 @@ class _YoutubeVideoTileState extends State<YoutubeVideoTile> {
 
   Widget get child => AppInkWell(
     onTap: () {
-      controller<UserController>().showLoginDialog(
+      /*   controller<UserController>().showLoginDialog(
         context,
-        onSucess: () {
-          if (widget.isFromChannel) {
-            channelVideoDetail.go(context, id: widget.videoId);
-          } else if (widget.isFromYoutube) {
-            youtubeVideoDetail.go(context, id: widget.videoId);
-          } else {
-            videoDetail.go(context, id: widget.videoId);
-          }
-        },
-      );
+        onSucess: () { */
+      if (widget.isFromChannel) {
+        channelVideoDetail.go(context, id: widget.videoId);
+      } else if (widget.isFromYoutube) {
+        youtubeVideoDetail.go(context, id: widget.videoId);
+      } else {
+        videoDetail.go(context, id: widget.videoId);
+      }
+      /*  },
+      ); */
     },
 
     child: SizedBox(
@@ -556,15 +556,15 @@ class _VideoTileState extends State<VideoTile> {
 
   Widget get child => AppInkWell(
     onTap: () {
-      controller<UserController>().showLoginDialog(
+      /* controller<UserController>().showLoginDialog(
         context,
-        onSucess: () {
-          if (widget.onVideoSeen != null) {
-            widget.onVideoSeen!();
-          }
-          videoDetail.go(context, id: widget.video.id);
-        },
-      );
+        onSucess: () { */
+      if (widget.onVideoSeen != null) {
+        widget.onVideoSeen!();
+      }
+      videoDetail.go(context, id: widget.video.id);
+      /*  },
+      ); */
     },
     child: SizedBox(
       height: 110,

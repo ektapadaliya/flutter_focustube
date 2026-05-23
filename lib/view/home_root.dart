@@ -54,6 +54,8 @@ class HomeRootState extends State<HomeRoot> {
 
   @override
   void didChangeDependencies() {
+    precacheImage(AssetImage(AppImage.youtubeBackgroundDark), context);
+    precacheImage(AssetImage(AppImage.background), context);
     precacheImage(AssetImage(AppImage.home), context);
     precacheImage(AssetImage(AppImage.searchSelected), context);
     precacheImage(AssetImage(AppImage.subjectSelected), context);
@@ -66,8 +68,9 @@ class HomeRootState extends State<HomeRoot> {
   Widget build(BuildContext context) {
     var currentIndex = widget.navigationShell.currentIndex;
     return ScreenBackground(
+      image: currentIndex == 0 ? AppImage.youtubeBackgroundDark : null,
       appBar: currentIndex == 0
-          ? sizeZeroAppBar(context)
+          ? sizeZeroAppBar(context, brightness: Brightness.dark)
           : customAppBar(
               context,
               centerTitle: true,
@@ -83,12 +86,7 @@ class HomeRootState extends State<HomeRoot> {
                   padding: const EdgeInsets.only(right: 30),
                   child: AppInkWell(
                     onTap: () {
-                      controller<UserController>().showLoginDialog(
-                        context,
-                        onSucess: () {
-                          settings.go(context);
-                        },
-                      );
+                      settings.go(context);
                     },
                     child: SvgPicture.asset(AppImage.settingIcon, height: 24),
                   ),
@@ -147,16 +145,7 @@ class _HomeBottomNavigationBar extends StatelessWidget {
     bool isSelected = index == currentIndex;
     return AppInkWell(
       onTap: () {
-        if (index == 2 || index == 4) {
-          controller<UserController>().showLoginDialog(
-            context,
-            onSucess: () {
-              onTap(index);
-            },
-          );
-        } else {
-          onTap(index);
-        }
+        onTap(index);
       },
 
       child: Column(
@@ -212,8 +201,8 @@ String _selectedItemImage(int index) {
 }
 
 class HomePopupMenu extends StatelessWidget {
-  const HomePopupMenu({super.key});
-
+  const HomePopupMenu({super.key, this.color});
+  final Color? color;
   @override
   Widget build(BuildContext context) {
     return AppPopupOverlay(
@@ -239,23 +228,23 @@ class HomePopupMenu extends StatelessWidget {
         ],
       ),
       onItemPressed: (String item) {
-        controller<UserController>().showLoginDialog(
+        /*   controller<UserController>().showLoginDialog(
           context,
-          onSucess: () {
-            if (item == "bookmarks" ||
-                item == "history" ||
-                item == "recommended" ||
-                item == "popular") {
-              videos.go(context, id: item);
-            } /* else if (item == "my_subjects") {
+          onSucess: () { */
+        if (item == "bookmarks" ||
+            item == "history" ||
+            item == "recommended" ||
+            item == "popular") {
+          videos.go(context, id: item);
+        } /* else if (item == "my_subjects") {
           mySubjects.go(context);
         } */ else if (item == "playlist") {
-              playlists.go(context);
-            }
-          },
-        );
+          playlists.go(context);
+        }
       },
-      child: Icon(Icons.more_vert),
+      /*    );
+      }, */
+      child: Icon(Icons.more_vert, color: color),
     );
   }
 

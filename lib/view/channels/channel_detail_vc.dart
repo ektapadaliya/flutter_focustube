@@ -8,6 +8,7 @@ import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/controller/youtube_playlist_video_controller.dart';
 import 'package:focus_tube_flutter/model/channel_group_model.dart';
 import 'package:focus_tube_flutter/model/channel_model.dart';
+import 'package:focus_tube_flutter/view/auth/is_auth.dart';
 import 'package:focus_tube_flutter/view/dialog/add_edit_group_vc.dart';
 import 'package:focus_tube_flutter/view/dialog/save_groplist_vc.dart';
 import 'package:focus_tube_flutter/view/videos/youtube_shorts_video_vc.dart';
@@ -48,12 +49,14 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
     _tabController = TabController(length: 2, vsync: this);
 
     super.initState();
-    Future.delayed(Duration.zero, () async {
-      await getChannelDetails();
+    if (controller<UserController>().user != null) {
+      Future.delayed(Duration.zero, () async {
+        await getChannelDetails();
 
-      loaderController.setLoading(false);
-      setState(() {});
-    });
+        loaderController.setLoading(false);
+        setState(() {});
+      });
+    }
   }
 
   Future<void> getChannelDetails() async {
@@ -115,150 +118,158 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
               ),
           ],
         ),
-        body: SafeArea(
-          child: channel != null
-              ? Column(
-                  children: [
-                    SizedBox(height: 15),
-                    Container(
-                      height: 140,
-                      padding: EdgeInsetsGeometry.symmetric(horizontal: 30),
-                      child: Row(
-                        children: [
-                          NetworkImageClass(
-                            height: 120,
-                            width: 120,
-                            shape: BoxShape.circle,
-                            image: channel?.imageUrl ?? "",
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.only(
-                                top: 5,
-                                bottom: 5,
-                                left: 15,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  AutoSizeText(
-                                    channel?.title ?? "",
-                                    maxFontSize: 24,
-                                    minFontSize: 18,
-                                    style: AppTextStyle.title24(),
-                                    maxLines: 2,
-                                  ),
-                                  Text(
-                                    "${formattedSubscriberCount(channel?.followers ?? "0")} Followers",
-                                    style: AppTextStyle.body16(
-                                      color: AppColor.gray,
+        body: IsAuth(
+          message: "To see channel details, please log in.",
+          child: SafeArea(
+            child: channel != null
+                ? Column(
+                    children: [
+                      SizedBox(height: 15),
+                      Container(
+                        height: 140,
+                        padding: EdgeInsetsGeometry.symmetric(horizontal: 30),
+                        child: Row(
+                          children: [
+                            NetworkImageClass(
+                              height: 120,
+                              width: 120,
+                              shape: BoxShape.circle,
+                              image: channel?.imageUrl ?? "",
+                            ),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.only(
+                                  top: 5,
+                                  bottom: 5,
+                                  left: 15,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    AutoSizeText(
+                                      channel?.title ?? "",
+                                      maxFontSize: 24,
+                                      minFontSize: 18,
+                                      style: AppTextStyle.title24(),
+                                      maxLines: 2,
                                     ),
-                                  ),
-                                  Expanded(child: Container()),
-                                  if (widget.tag == "channel-youtube" &&
-                                      showAddChannel)
-                                    AppButton(
-                                      label: "Add channel",
-                                      radius: 7,
-                                      alignment: null,
-                                      onTap: () async {
-                                        var result = await showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              SaveGroplistVC(),
-                                        );
-                                        if (result is GroupModel) {
-                                          loaderController.setLoading(true);
-                                          var isSuccess = await ApiFunctions
-                                              .instance
-                                              .channelAdd(
-                                                context,
-                                                youtubeId:
-                                                    channel?.youtubeId ?? "",
-                                                title: channel?.title ?? "",
-                                                imageUrl: channel?.imageUrl,
-                                                description:
-                                                    channel?.description,
-                                                followers: channel?.followers,
-                                                channelGroupId:
-                                                    result.id?.toString() ?? "",
-                                              );
-                                          if (isSuccess) {
-                                            showAddChannel = false;
-                                            setState(() {});
-                                          }
-                                          loaderController.setLoading(false);
-                                        }
-                                      },
-                                      backgroundColor: AppColor.primary,
-                                      height: 32,
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 5,
+                                    Text(
+                                      "${formattedSubscriberCount(channel?.followers ?? "0")} Followers",
+                                      style: AppTextStyle.body16(
+                                        color: AppColor.gray,
                                       ),
-                                      fontSize: 12,
                                     ),
-                                ],
+                                    Expanded(child: Container()),
+                                    if (widget.tag == "channel-youtube" &&
+                                        showAddChannel)
+                                      AppButton(
+                                        label: "Add channel",
+                                        radius: 7,
+                                        alignment: null,
+                                        onTap: () async {
+                                          var result = await showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                SaveGroplistVC(),
+                                          );
+                                          if (result is GroupModel) {
+                                            loaderController.setLoading(true);
+                                            var isSuccess = await ApiFunctions
+                                                .instance
+                                                .channelAdd(
+                                                  context,
+                                                  youtubeId:
+                                                      channel?.youtubeId ?? "",
+                                                  title: channel?.title ?? "",
+                                                  imageUrl: channel?.imageUrl,
+                                                  description:
+                                                      channel?.description,
+                                                  followers: channel?.followers,
+                                                  channelGroupId:
+                                                      result.id?.toString() ??
+                                                      "",
+                                                );
+                                            if (isSuccess) {
+                                              showAddChannel = false;
+                                              setState(() {});
+                                            }
+                                            loaderController.setLoading(false);
+                                          }
+                                        },
+                                        backgroundColor: AppColor.primary,
+                                        height: 32,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 5,
+                                        ),
+                                        fontSize: 12,
+                                      ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 15),
-                    TabBar(
-                      controller: _tabController,
-                      indicatorColor: AppColor.primary,
-                      dividerColor: AppColor.gray,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      overlayColor: WidgetStatePropertyAll(Colors.transparent),
-                      labelStyle: AppTextStyle.title18(),
-                      labelColor: AppColor.primary,
-                      unselectedLabelColor: AppColor.gray,
-                      tabs: [
-                        Tab(text: "Videos"),
-                        //Tab(text: "Shorts"),
-                        Tab(text: "About"),
-                      ],
-                    ),
-                    Expanded(
-                      child: TabBarView(
+                      SizedBox(height: 15),
+                      TabBar(
                         controller: _tabController,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 15,
-                            ),
-                            child: YoutubePlayListVideoVC(
-                              tag: "channel",
-                              channelId: channel?.youtubePlaylistId,
-                              isLoading: (isLoading) {
-                                changeYoutubeLoader(isLoading);
-                              },
-                            ),
-                          ),
-                          // Padding(
-                          //   padding: const EdgeInsets.symmetric(
-                          //     horizontal: 15,
-                          //     vertical: 15,
-                          //   ),
-                          //   child: YoutubeShortPlayListVideoVC(
-                          //     tag: "channel-shorts",
-                          //     platListId: channel?.youtubePlaylistId,
-                          //     isLoading: (isLoading) {
-                          //       changeYoutubeLoader(isLoading);
-                          //     },
-                          //   ),
-                          // ),
-                          ChannelAbout(description: channel?.description ?? ""),
+                        indicatorColor: AppColor.primary,
+                        dividerColor: AppColor.gray,
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        overlayColor: WidgetStatePropertyAll(
+                          Colors.transparent,
+                        ),
+                        labelStyle: AppTextStyle.title18(),
+                        labelColor: AppColor.primary,
+                        unselectedLabelColor: AppColor.gray,
+                        tabs: [
+                          Tab(text: "Videos"),
+                          //Tab(text: "Shorts"),
+                          Tab(text: "About"),
                         ],
                       ),
-                    ),
-                  ],
-                )
-              : Center(child: Container()),
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 15,
+                                vertical: 15,
+                              ),
+                              child: YoutubePlayListVideoVC(
+                                tag: "channel",
+                                channelId: channel?.youtubePlaylistId,
+                                isLoading: (isLoading) {
+                                  changeYoutubeLoader(isLoading);
+                                },
+                              ),
+                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.symmetric(
+                            //     horizontal: 15,
+                            //     vertical: 15,
+                            //   ),
+                            //   child: YoutubeShortPlayListVideoVC(
+                            //     tag: "channel-shorts",
+                            //     platListId: channel?.youtubePlaylistId,
+                            //     isLoading: (isLoading) {
+                            //       changeYoutubeLoader(isLoading);
+                            //     },
+                            //   ),
+                            // ),
+                            ChannelAbout(
+                              description: channel?.description ?? "",
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : Center(child: Container()),
+          ),
         ),
       ),
     );

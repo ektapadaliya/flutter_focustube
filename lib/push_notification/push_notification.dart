@@ -110,7 +110,9 @@ class PushNotificationsManager {
 
     _firebaseMessaging
         .getToken(/* vapidKey: kIsWeb ? webPUSHApiKey : null */)
-        .then((token) async {
+        .then(/* 
+        update-daily-limit
+         */ (token) async {
           if (token != null) {
             debugPrint('PUSH TOKEN : $token');
             ApiFunctions.instance.setDeviceToken(token);

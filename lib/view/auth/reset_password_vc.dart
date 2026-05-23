@@ -13,6 +13,7 @@ import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
+import 'package:go_router/go_router.dart';
 
 class ResetPasswordVC extends StatefulWidget {
   static const id = "/reset-password";
@@ -151,7 +152,7 @@ class _ResetPasswordVCState extends State<ResetPasswordVC> {
                             );
                         loaderController.setLoading(false);
                         if (isResetPasswordSuccess) {
-                          signIn.off(context);
+                          context.pop();
                         }
                       }
                     },
@@ -168,7 +169,7 @@ class _ResetPasswordVCState extends State<ResetPasswordVC> {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 AppNavigationModel.untilFirst(context);
-                                signIn.off(context);
+                                context.pop();
                               },
                             style: AppTextStyle.body16(color: AppColor.primary),
                           ),

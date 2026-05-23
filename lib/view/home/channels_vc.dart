@@ -3,6 +3,7 @@ import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/controller/channels_vc_controller.dart';
+import 'package:focus_tube_flutter/view/auth/is_auth.dart';
 import 'package:focus_tube_flutter/view/channels/youtube_channel_vc.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:get/get.dart';
@@ -31,6 +32,8 @@ class _ChannelsVCState extends State<ChannelsVC> {
     return GetBuilder(
       init: channelTabScrollController,
       builder: (channelTabScrollController) {
+        if (!channelTabScrollController.pageController.hasClients) Container();
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -65,32 +68,12 @@ class _ChannelsVCState extends State<ChannelsVC> {
                     controller: channelTabScrollController.pageController,
                     children: [
                       YoutubeChannelVC(isFirstTime: true),
-                      if (userController.user != null)
-                        GroupChannelListVC(tag: 'channel-groups')
-                      else
-                        Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                "Please login to view your channels",
-                                style: AppTextStyle.title18(
-                                  color: AppColor.gray,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              SizedBox(
-                                width: 200,
-                                child: AppButton(
-                                  backgroundColor: AppColor.primary,
-                                  label: "Login",
 
-                                  onTap: () {},
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                      IsAuth(
+                        message: "To view your channels, please log in.",
+                        child: GroupChannelListVC(tag: 'channel-groups'),
+                      ),
+
                       ChannelListVC(tag: "channel-curated"),
                       ChannelListVC(tag: "channel-scholartube"),
                       ChannelListVC(tag: "channel-kidstube"),

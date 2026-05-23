@@ -3,6 +3,7 @@ import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_text_style.dart';
 import 'package:focus_tube_flutter/controller/app_controller.dart';
+import 'package:focus_tube_flutter/view/auth/is_auth.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_loader.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
@@ -27,10 +28,12 @@ class _VideoListVCState extends State<VideoListVC> {
       tag: getTitleFromControllerTag(widget.tag),
     );
     super.initState();
-    Future.delayed(Duration.zero, () async {
-      await callVideoListApi();
-    });
-    scrollController.addListener(_scrollListener);
+    if (controller<UserController>().user != null) {
+      Future.delayed(Duration.zero, () async {
+        await callVideoListApi();
+      });
+      scrollController.addListener(_scrollListener);
+    }
   }
 
   @override
@@ -71,72 +74,86 @@ class _VideoListVCState extends State<VideoListVC> {
           loaderController: videoController.loaderController,
           child: ScreenBackground(
             appBar: customAppBar(context, title: getTitleFromTag(widget.tag)),
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              child: Obx(
-                () => RefreshIndicator(
-                  onRefresh: onRefresh,
-                  child:
-                      (videoController.videos.isEmpty &&
-                          !(videoController.loaderController.isLoading.value))
-                      ? ExpandedSingleChildScrollView(
-                          physics: AlwaysScrollableScrollPhysics(),
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "No videos found",
-                              style: AppTextStyle.body16(color: AppColor.gray),
-                            ),
-                          ),
-                        )
-                      : Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Expanded(
-                              child: ListView.separated(
-                                controller: scrollController,
-                                itemBuilder: (context, index) => VideoTile(
-                                  video: videoController.videos[index],
-                                  onBookmark: (id) async {
-                                    if (widget.tag == "bookmark" ||
-                                        widget.tag == "bookmarks") {
-                                      videoController.removeVideo(id);
-                                    } else {
-                                      videoController.changeBookmarkStatus(id);
-                                    }
-
-                                    var value = await ApiFunctions.instance
-                                        .bookmarkVideo(context, videoId: id);
-                                    if (widget.tag == "bookmark") {
-                                      controller<VideoController>(
-                                        tag: "${widget.tag}-home",
-                                      ).removeVideo(id);
-                                    } else if (widget.tag == "popular" ||
-                                        widget.tag == "recommended") {
-                                      controller<VideoController>(
-                                        tag: "${widget.tag}-home",
-                                      ).changeBookmarkStatus(id, value: value);
-                                    }
-                                  },
+            body: IsAuth(
+              message:
+                  "To view your ${getTitleFromTag(widget.tag).toLowerCase()} videos, please log in.",
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30,
+                  vertical: 15,
+                ),
+                child: Obx(
+                  () => RefreshIndicator(
+                    onRefresh: onRefresh,
+                    child:
+                        (videoController.videos.isEmpty &&
+                            !(videoController.loaderController.isLoading.value))
+                        ? ExpandedSingleChildScrollView(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "No videos found",
+                                style: AppTextStyle.body16(
+                                  color: AppColor.gray,
                                 ),
-                                separatorBuilder: (context, index) =>
-                                    SizedBox(height: 15),
-                                itemCount: videoController.videos.length,
                               ),
                             ),
-                            if (videoController
-                                    .loaderController
-                                    .isLoading
-                                    .value &&
-                                videoController.videos.isNotEmpty)
-                              Container(
-                                height: 50,
-                                width: MediaQuery.sizeOf(context).width,
-                                alignment: Alignment.center,
-                                child: CircularProgressIndicator(),
+                          )
+                        : Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Expanded(
+                                child: ListView.separated(
+                                  controller: scrollController,
+                                  itemBuilder: (context, index) => VideoTile(
+                                    video: videoController.videos[index],
+                                    onBookmark: (id) async {
+                                      if (widget.tag == "bookmark" ||
+                                          widget.tag == "bookmarks") {
+                                        videoController.removeVideo(id);
+                                      } else {
+                                        videoController.changeBookmarkStatus(
+                                          id,
+                                        );
+                                      }
+
+                                      var value = await ApiFunctions.instance
+                                          .bookmarkVideo(context, videoId: id);
+                                      if (widget.tag == "bookmark") {
+                                        controller<VideoController>(
+                                          tag: "${widget.tag}-home",
+                                        ).removeVideo(id);
+                                      } else if (widget.tag == "popular" ||
+                                          widget.tag == "recommended") {
+                                        controller<VideoController>(
+                                          tag: "${widget.tag}-home",
+                                        ).changeBookmarkStatus(
+                                          id,
+                                          value: value,
+                                        );
+                                      }
+                                    },
+                                  ),
+                                  separatorBuilder: (context, index) =>
+                                      SizedBox(height: 15),
+                                  itemCount: videoController.videos.length,
+                                ),
                               ),
-                          ],
-                        ),
+                              if (videoController
+                                      .loaderController
+                                      .isLoading
+                                      .value &&
+                                  videoController.videos.isNotEmpty)
+                                Container(
+                                  height: 50,
+                                  width: MediaQuery.sizeOf(context).width,
+                                  alignment: Alignment.center,
+                                  child: CircularProgressIndicator(),
+                                ),
+                            ],
+                          ),
+                  ),
                 ),
               ),
             ),

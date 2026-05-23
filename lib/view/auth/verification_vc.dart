@@ -18,6 +18,7 @@ import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/general_dialog.dart';
 import 'package:focus_tube_flutter/widget/otp_field.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class VerificationVC extends StatefulWidget {
@@ -251,7 +252,8 @@ class _VerificationVCState extends State<VerificationVC> {
       );
       loaderController.setLoading(false);
       if (isVerified) {
-        resetPassword.off(
+        context.pop();
+        resetPassword.replace(
           context,
           id: EncryptService.encrypt(
             json.encode({"email": widget.email, "code": verificationCode}),

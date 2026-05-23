@@ -269,6 +269,7 @@ class _DailyLimitVCState extends State<DailyLimitVC> {
           context.pop();
         } else {
           home.off(context);
+          controller<ChannelController>().clear();
         }
       }
     }

@@ -14,6 +14,7 @@ import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
 import 'package:focus_tube_flutter/widget/checkbox_tile.dart';
 import 'package:focus_tube_flutter/widget/expandable_scollview.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginVC extends StatefulWidget {
   static const id = "/sign-in";
@@ -64,7 +65,10 @@ class _LoginVCState extends State<LoginVC> {
     return AppLoader(
       loaderController: loaderController,
       child: ScreenBackground(
-        appBar: customAppBar(context, automaticallyImplyLeading: false),
+        appBar: customAppBar(
+          context,
+          automaticallyImplyLeading: context.canPop(),
+        ),
         body: ExpandedSingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
           child: FormScreenBoundries(
@@ -177,6 +181,7 @@ class _LoginVCState extends State<LoginVC> {
                             emailVerification.off(context);
                           } else {
                             home.off(context);
+                            controller<ChannelController>().clear();
                           }
                         }
                       }
@@ -193,7 +198,7 @@ class _LoginVCState extends State<LoginVC> {
                             text: "Sign up",
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                signUp.off(context);
+                                signUp.go(context);
                               },
                             style: AppTextStyle.body16(),
                           ),

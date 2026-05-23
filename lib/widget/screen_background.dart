@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_const.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
@@ -11,7 +12,9 @@ class ScreenBackground extends StatelessWidget {
     required this.body,
     this.floatingActionButton,
     this.bottomNavigationBar,
+    this.image,
   });
+  final String? image;
   final Widget body;
   final bool noAppBar;
   final PreferredSizeWidget? appBar;
@@ -20,14 +23,18 @@ class ScreenBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(AppImage.background),
-              fit: BoxFit.cover,
+        Opacity(
+          opacity: image != null ? .2 : 1,
+          child: Container(
+            decoration: BoxDecoration(
+              /*  color: image != null ? AppColor.primary : null, */
+              image: DecorationImage(
+                image: AssetImage(image ?? AppImage.background),
+                fit: BoxFit.cover,
+              ),
             ),
+            child: SizedBox.fromSize(size: MediaQuery.sizeOf(context)),
           ),
-          child: SizedBox.fromSize(size: MediaQuery.sizeOf(context)),
         ),
         Scaffold(
           body: body,

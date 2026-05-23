@@ -340,7 +340,7 @@ class _CreateAccountVCState extends State<CreateAccountVC> {
                             text: "Login",
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                signIn.off(context);
+                                signIn.replace(context);
                               },
                             style: AppTextStyle.body16(),
                           ),

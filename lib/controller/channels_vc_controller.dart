@@ -16,6 +16,7 @@ class TabScrollController extends GetxController {
 
   void init() {
     pageController = PageController(initialPage: selectedIndex.value);
+    update();
   }
 
   void jumpToPage(int index) {

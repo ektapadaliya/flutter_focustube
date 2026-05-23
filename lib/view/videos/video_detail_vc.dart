@@ -10,6 +10,7 @@ import 'package:focus_tube_flutter/controller/app_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
 import 'package:focus_tube_flutter/model/daily_video_limit_model.dart';
 import 'package:focus_tube_flutter/model/youtube_playlist_item_model.dart';
+import 'package:focus_tube_flutter/view/auth/is_auth.dart';
 import 'package:focus_tube_flutter/view/dialog/save_playlist_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
@@ -40,6 +41,7 @@ class VideoDetailVC extends StatefulWidget {
 }
 
 class _VideoDetailVCState extends State<VideoDetailVC> {
+  var userController = controller<UserController>();
   YoutubePlayerController? _youtubePlayerController;
   String? title;
   String? thumbnailUrl;
@@ -60,30 +62,32 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
   void initState() {
     isRatedNotifier = ValueNotifier(false);
     super.initState();
-    Future.delayed(Duration.zero, () async {
-      loaderController.setLoading(true);
-      DailyVideoLimitModel? limit = await ApiFunctions.instance.getDailyLimit(
-        context,
-      );
-      reachedLimit =
-          (limit?.dailyViews ?? 0) >=
-          (int.tryParse(limit?.dailyVideoLimit ?? "1") ?? 1);
-      setState(() {});
-      if (!reachedLimit) {
+    if (userController.user != null) {
+      Future.delayed(Duration.zero, () async {
         loaderController.setLoading(true);
-        if (widget.isFromYoutube) {
-          await callYoutubeVideoDetailApi();
-        } else {
-          await callVideoDetailsApi();
-        }
+        DailyVideoLimitModel? limit = await ApiFunctions.instance.getDailyLimit(
+          context,
+        );
         reachedLimit =
-            (limit?.dailyVideoTimeInMin(additionalSec: duration ?? 0) ?? 0) >=
-            (int.tryParse(limit?.dailyVideoTimeLimit ?? "1") ?? 1);
+            (limit?.dailyViews ?? 0) >=
+            (int.tryParse(limit?.dailyVideoLimit ?? "1") ?? 1);
         setState(() {});
+        if (!reachedLimit) {
+          loaderController.setLoading(true);
+          if (widget.isFromYoutube) {
+            await callYoutubeVideoDetailApi();
+          } else {
+            await callVideoDetailsApi();
+          }
+          reachedLimit =
+              (limit?.dailyVideoTimeInMin(additionalSec: duration ?? 0) ?? 0) >=
+              (int.tryParse(limit?.dailyVideoTimeLimit ?? "1") ?? 1);
+          setState(() {});
+          loaderController.setLoading(false);
+        }
         loaderController.setLoading(false);
-      }
-      loaderController.setLoading(false);
-    });
+      });
+    }
   }
 
   Future<void> callYoutubeVideoDetailApi() async {
@@ -194,13 +198,18 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
 
   @override
   Widget build(BuildContext context) {
+    bool isAuth = userController.user != null;
     return AppLoader(
       loaderController: loaderController,
       child: ScreenBackground(
         appBar: customAppBar(
           context,
-          title: reachedLimit ? "Limit Reached" : title,
-          actions: (reachedLimit || widget.isFromYoutube)
+          title: !isAuth
+              ? "Video Details"
+              : reachedLimit
+              ? "Limit Reached"
+              : title,
+          actions: (reachedLimit || widget.isFromYoutube || !isAuth)
               ? null
               : [
                   AppInkWell(
@@ -214,65 +223,68 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
                   ),
                 ],
         ),
-        body: SafeArea(
-          minimum: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-          top: false,
-          child: reachedLimit
-              ? Center(
-                  child: Text(
-                    "You reached your daily video limit",
-                    style: AppTextStyle.body14(color: AppColor.gray),
-                  ),
-                )
-              : widget.isFromYoutube
-              ? ExpandedSingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
+        body: IsAuth(
+          message: "To view video details, please log in.",
+          child: SafeArea(
+            minimum: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+            top: false,
+            child: reachedLimit
+                ? Center(
+                    child: Text(
+                      "You reached your daily video limit",
+                      style: AppTextStyle.body14(color: AppColor.gray),
+                    ),
+                  )
+                : widget.isFromYoutube
+                ? ExpandedSingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
 
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height:
-                            MediaQuery.of(context).orientation ==
-                                Orientation.landscape
-                            ? MediaQuery.of(context).size.height -
-                                  (kToolbarHeight + 70)
-                            : null,
-                        width:
-                            MediaQuery.of(context).orientation ==
-                                Orientation.landscape
-                            ? MediaQuery.of(context).size.width
-                            : null,
-                        child: _buildYoutubePlayer(),
-                      ),
-                      SizedBox(height: 20),
-                      _buildVideoTitle(),
-                      SizedBox(height: 20),
-                      if (youtubeRecomeneded.isNotEmpty)
-                        _buildYoutubeRecomenededList(
-                          youtubeRecomeneded
-                              .where(
-                                (e) =>
-                                    e.snippet?.resourceId?.videoId !=
-                                    widget.videoId,
-                              )
-                              .toList(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height:
+                              MediaQuery.of(context).orientation ==
+                                  Orientation.landscape
+                              ? MediaQuery.of(context).size.height -
+                                    (kToolbarHeight + 70)
+                              : null,
+                          width:
+                              MediaQuery.of(context).orientation ==
+                                  Orientation.landscape
+                              ? MediaQuery.of(context).size.width
+                              : null,
+                          child: _buildYoutubePlayer(),
                         ),
-                    ],
-                  ),
-                )
-              : _youtubePlayerController != null
-              ? SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildYoutubePlayer(),
-                      SizedBox(height: 20),
-                      ..._nonYoutubeWidgets(),
-                    ],
-                  ),
-                )
-              : Container(),
+                        SizedBox(height: 20),
+                        _buildVideoTitle(),
+                        SizedBox(height: 20),
+                        if (youtubeRecomeneded.isNotEmpty)
+                          _buildYoutubeRecomenededList(
+                            youtubeRecomeneded
+                                .where(
+                                  (e) =>
+                                      e.snippet?.resourceId?.videoId !=
+                                      widget.videoId,
+                                )
+                                .toList(),
+                          ),
+                      ],
+                    ),
+                  )
+                : _youtubePlayerController != null
+                ? SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildYoutubePlayer(),
+                        SizedBox(height: 20),
+                        ..._nonYoutubeWidgets(),
+                      ],
+                    ),
+                  )
+                : Container(),
+          ),
         ),
       ),
     );

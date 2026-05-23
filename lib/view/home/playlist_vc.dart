@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/const/app_image.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/view/auth/is_auth.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
 import 'package:focus_tube_flutter/widget/app_text_form_field.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
@@ -35,10 +36,12 @@ class _PlaylistVCState extends State<PlaylistVC> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () async {
-      await callApi();
-    });
-    scrollController.addListener(_scrollListener);
+    if (controller<UserController>().user != null) {
+      Future.delayed(Duration.zero, () async {
+        await callApi();
+      });
+      scrollController.addListener(_scrollListener);
+    }
   }
 
   @override
@@ -91,81 +94,85 @@ class _PlaylistVCState extends State<PlaylistVC> {
               centerTitle: true,
               title: "Playlists",
               actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 30),
-                  child: AppInkWell(
-                    onTap: () async {
-                      var value = await showDialog(
-                        context: context,
-                        builder: (context) => AddEditPlaylistVC(),
-                      );
-                      if (value is String) {
-                        var playList = await ApiFunctions.instance
-                            .playlistCreateEdit(context, title: value);
-                        if (playList != null) {
-                          playlistController.addPlayList(playList);
-                        }
-                      }
-                    },
-                    child: Icon(Icons.add, size: 25, color: AppColor.primary),
-                  ),
-                ),
-              ],
-            ),
-            body: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 30,
-              ).copyWith(top: 15),
-
-              child: Column(
-                children: [
-                  AppTextFormField(
-                    hintText: "Search here...",
-                    controller: searchController,
-                    prefixIcon: Image.asset(AppImage.search, height: 35),
-                    radius: 6,
-                    onFieldSubmitted: (value) async {
-                      if (value.trim().isNotEmpty &&
-                          playlistController.searchQuery != value.trim()) {
-                        playlistController.clearSearch();
-                        playlistController.setSearchQuery(
-                          value.trim().isEmpty ? null : value.trim(),
+                if (controller<UserController>().user != null)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 30),
+                    child: AppInkWell(
+                      onTap: () async {
+                        var value = await showDialog(
+                          context: context,
+                          builder: (context) => AddEditPlaylistVC(),
                         );
-                        await callApi();
-                      } else if (value.trim().isEmpty) {
-                        playlistController.setSearchQuery(null);
-                        playlistController.clearSearch();
-                      }
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  Expanded(
-                    child: Obx(
-                      () => RefreshIndicator(
-                        onRefresh: onRefresh,
-                        child:
-                            (playlistController.playList.isEmpty &&
-                                !(playlistController
-                                    .loaderController
-                                    .isLoading
-                                    .value))
-                            ? ExpandedSingleChildScrollView(
-                                physics: AlwaysScrollableScrollPhysics(),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "No playlist found",
-                                    style: AppTextStyle.body16(
-                                      color: AppColor.gray,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : _buildPlayListListView(),
-                      ),
+                        if (value is String) {
+                          var playList = await ApiFunctions.instance
+                              .playlistCreateEdit(context, title: value);
+                          if (playList != null) {
+                            playlistController.addPlayList(playList);
+                          }
+                        }
+                      },
+                      child: Icon(Icons.add, size: 25, color: AppColor.primary),
                     ),
                   ),
-                ],
+              ],
+            ),
+            body: IsAuth(
+              message: "To view your playlist, please log in.",
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30,
+                ).copyWith(top: 15),
+
+                child: Column(
+                  children: [
+                    AppTextFormField(
+                      hintText: "Search here...",
+                      controller: searchController,
+                      prefixIcon: Image.asset(AppImage.search, height: 35),
+                      radius: 6,
+                      onFieldSubmitted: (value) async {
+                        if (value.trim().isNotEmpty &&
+                            playlistController.searchQuery != value.trim()) {
+                          playlistController.clearSearch();
+                          playlistController.setSearchQuery(
+                            value.trim().isEmpty ? null : value.trim(),
+                          );
+                          await callApi();
+                        } else if (value.trim().isEmpty) {
+                          playlistController.setSearchQuery(null);
+                          playlistController.clearSearch();
+                        }
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    Expanded(
+                      child: Obx(
+                        () => RefreshIndicator(
+                          onRefresh: onRefresh,
+                          child:
+                              (playlistController.playList.isEmpty &&
+                                  !(playlistController
+                                      .loaderController
+                                      .isLoading
+                                      .value))
+                              ? ExpandedSingleChildScrollView(
+                                  physics: AlwaysScrollableScrollPhysics(),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "No playlist found",
+                                      style: AppTextStyle.body16(
+                                        color: AppColor.gray,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : _buildPlayListListView(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

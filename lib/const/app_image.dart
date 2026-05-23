@@ -24,6 +24,8 @@ class AppImage {
   static const background = "assets/background.png";
   static const profileBackground = "assets/profile_background.png";
   static const videoLimitBackground = "assets/video_limit_background.png";
+  static const youtubeBackgroundDark = "assets/youtube_background_dark.png";
+  static const youtubeBackgroundLight = "assets/youtube_background_light.png";
 
   //Placeholder
   static const placeHolder = "assets/place_holder.png";

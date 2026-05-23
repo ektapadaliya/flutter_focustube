@@ -3,6 +3,7 @@ import 'package:focus_tube_flutter/api/api_functions.dart';
 import 'package:focus_tube_flutter/const/app_color.dart';
 import 'package:focus_tube_flutter/controller/subject_video_controller.dart';
 import 'package:focus_tube_flutter/go_route_navigation.dart';
+import 'package:focus_tube_flutter/view/auth/is_auth.dart';
 import 'package:focus_tube_flutter/view/subjects/select_subject_vc.dart';
 import 'package:focus_tube_flutter/widget/app_bar.dart';
 import 'package:focus_tube_flutter/widget/app_button.dart';
@@ -37,38 +38,41 @@ class _SubjectVCState extends State<SubjectVC> {
 
   @override
   Widget build(BuildContext context) {
-    var child = SafeArea(
-      minimum: EdgeInsets.symmetric(
-        horizontal: 30,
-        vertical: widget.isMySubjects ? 15 : 0,
-      ),
-      child: Column(
-        children: [
-          if (!widget.isMySubjects)
-            SizedBox(
-              height: 40,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => buildCategoryTile(index),
-                separatorBuilder: (context, index) => SizedBox(width: 10),
-                itemCount: 3,
+    var child = IsAuth(
+      message: "To select your subjects, please log in.",
+      child: SafeArea(
+        minimum: EdgeInsets.symmetric(
+          horizontal: 30,
+          vertical: widget.isMySubjects ? 15 : 0,
+        ),
+        child: Column(
+          children: [
+            if (!widget.isMySubjects)
+              SizedBox(
+                height: 40,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) => buildCategoryTile(index),
+                  separatorBuilder: (context, index) => SizedBox(width: 10),
+                  itemCount: 3,
+                ),
+              ),
+            Expanded(
+              child: PageView(
+                physics: NeverScrollableScrollPhysics(),
+                controller: pageController,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: SelectSubjectVC(isFromNav: true),
+                  ),
+                  SubjectVideoVC(tag: "my-subject"),
+                  SubjectVideoVC(tag: "subject"),
+                ],
               ),
             ),
-          Expanded(
-            child: PageView(
-              physics: NeverScrollableScrollPhysics(),
-              controller: pageController,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 15),
-                  child: SelectSubjectVC(isFromNav: true),
-                ),
-                SubjectVideoVC(tag: "my-subject"),
-                SubjectVideoVC(tag: "subject"),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
     if (widget.isFromNav) {
