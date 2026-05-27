@@ -57,6 +57,24 @@ class GroupListController extends GetxController {
     update();
   }
 
+  void addAtTopGroup(GroupModel group, {bool addAtTop = false}) {
+    if (isSearch) {
+      var index = _searchGroupList.indexWhere((e) => e.id == group.id);
+      if (index == -1) {
+        _searchGroupList.insert(0, group);
+      } else {
+        _searchGroupList[index] = group;
+      }
+    }
+    var index = _groupList.indexWhere((e) => e.id == group.id);
+    if (index == -1 && !isSearch) {
+      _groupList.insert(0, group);
+    } else if (index != -1) {
+      _groupList[index] = group;
+    }
+    update();
+  }
+
   LoaderController get loaderController =>
       controller<LoaderController>(tag: tag);
 

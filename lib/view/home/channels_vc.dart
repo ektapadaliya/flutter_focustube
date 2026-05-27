@@ -128,7 +128,7 @@ class _CategoryTile extends StatelessWidget {
     1 => "My Channels",
     2 => "Curated Channels",
     3 => "Scholar Tube",
-    4 => "KidsTube",
+    4 => "KidsWatch",
     _ => "",
   };
 }

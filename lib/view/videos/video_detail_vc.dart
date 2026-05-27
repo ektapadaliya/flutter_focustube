@@ -58,6 +58,8 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
   bool reachedLimit = false;
   Duration? _lastPosition;
   int _totalWatchedMilliseconds = 0;
+  bool isVideoEnd = false;
+
   @override
   void initState() {
     isRatedNotifier = ValueNotifier(false);
@@ -321,17 +323,38 @@ class _VideoDetailVCState extends State<VideoDetailVC> {
 
   Widget _buildYoutubePlayer() {
     if (_youtubePlayerController != null) {
-      return YoutubePlayer(
-        controller: _youtubePlayerController!,
+      return Stack(
+        children: [
+          YoutubePlayer(
+            controller: _youtubePlayerController!,
 
-        progressColors: ProgressBarColors(
-          backgroundColor: AppColor.borderColor,
-          bufferedColor: AppColor.gray,
-          playedColor: AppColor.red,
-          handleColor: AppColor.red,
-        ),
-        progressIndicatorColor: AppColor.red,
-        showVideoProgressIndicator: true,
+            progressColors: ProgressBarColors(
+              backgroundColor: AppColor.borderColor,
+              bufferedColor: AppColor.gray,
+              playedColor: AppColor.red,
+              handleColor: AppColor.red,
+            ),
+            onEnded: (value) {
+              isVideoEnd = true;
+              setState(() {});
+            },
+            bufferIndicator: isVideoEnd ? Container() : null,
+            progressIndicatorColor: AppColor.red,
+            showVideoProgressIndicator: true,
+          ),
+          if (isVideoEnd)
+            Positioned.fill(
+              child: AppInkWell(
+                onTap: () {
+                  _youtubePlayerController?.seekTo(Duration(seconds: 0));
+                  _youtubePlayerController?.play();
+                  isVideoEnd = false;
+                  setState(() {});
+                },
+                child: Container(color: AppColor.primary.opacityToAlpha(.1)),
+              ),
+            ),
+        ],
       );
     }
     return SizedBox();

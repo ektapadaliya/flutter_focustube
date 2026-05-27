@@ -914,13 +914,13 @@ class ApiFunctions {
     return null;
   }
 
-  Future<PlaylistModel?> groupCreate(
+  Future<GroupModel?> groupCreate(
     BuildContext context, {
 
     required String title,
   }) async {
     try {
-      var response = await ApiManager.instance.post<PlaylistModel>(
+      var response = await ApiManager.instance.post<GroupModel>(
         ApiUtils.channelGroupCreate,
         body: {"title": title},
       );

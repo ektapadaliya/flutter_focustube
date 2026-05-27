@@ -309,11 +309,11 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Text("FocusTube", style: AppTextStyle.title36()),
-              Image.asset(AppImage.appIconDarkTransperent, height: 100),
+              Image.asset(AppImage.appIconLightTransperent, height: 100),
               //SizedBox(height: 8),
               Text(
                 "YouTube. Your way. Finally. ",
-                style: AppTextStyle.title24(color: AppColor.lightGray),
+                style: AppTextStyle.title24(color: AppColor.gray),
               ),
               Divider(
                 color: AppColor.lightGray.withValues(alpha: .5),
@@ -324,27 +324,19 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                 runAlignment: WrapAlignment.center,
                 runSpacing: 5,
                 spacing: 4.5,
-                children:
-                    [
-                          "🚫 No rabbit holes.",
-                          "🌙 No midnight spirals.",
-                          "🤖 No algorithm pulling the strings.",
-                          "When a video ends — the app stops.",
-                          "No autoplay.",
-                          "No \"up next.\" Ever.",
-                        ]
-                        .map(
-                          (e) => Text(
-                            e,
-                            style: AppTextStyle.body14(color: AppColor.white),
-                          ),
-                        )
-                        .toList(),
+                children: [
+                  "🚫 No rabbit holes.",
+                  "🌙 No midnight spirals.",
+                  "🤖 No algorithm pulling the strings.",
+                  "When a video ends — the app stops.",
+                  "No autoplay.",
+                  "No \"up next.\" Ever.",
+                ].map((e) => Text(e, style: AppTextStyle.body14())).toList(),
               ),
               SizedBox(height: 20),
               Text(
                 "✨ Watch more of what matters. Stop when you meant to. Actually feel good about it.",
-                style: AppTextStyle.title16(color: AppColor.white),
+                style: AppTextStyle.title16(),
                 textAlign: TextAlign.center,
               ),
               Divider(
@@ -355,10 +347,7 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Navigate",
-                    style: AppTextStyle.title18(color: AppColor.white),
-                  ),
+                  Text("Navigate", style: AppTextStyle.title18()),
                   SizedBox(height: 20),
                   OptionGridView(
                     children: [
@@ -384,7 +373,7 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                       buildNavigator(
                         label: "📡 Channels",
                         message:
-                            "Your Channels · FocusTube Picks · KidsTube · ScholarTube",
+                            "Your Channels · FocusTube Picks · KidsWatch · ScholarTube",
                         onTap: () {
                           homeRootKey.currentState?.jumpToPage(3);
                         },
@@ -414,10 +403,7 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                     color: AppColor.lightGray.withValues(alpha: .5),
                     height: 60,
                   ),
-                  Text(
-                    "From the Menu",
-                    style: AppTextStyle.title18(color: AppColor.white),
-                  ),
+                  Text("From the Menu", style: AppTextStyle.title18()),
                   SizedBox(height: 20),
                   OptionGridView(
                     children: [
@@ -467,9 +453,9 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                   SizedBox(height: 15),
                   Text(
                     "Everything above comes from YOUR channels — not YouTube's.",
-                    style: AppTextStyle.body14(
-                      color: AppColor.white,
-                    ).copyWith(fontStyle: FontStyle.italic),
+                    style: AppTextStyle.body14().copyWith(
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                   Divider(
                     color: AppColor.lightGray.withValues(alpha: .5),
@@ -492,10 +478,7 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                     color: AppColor.lightGray.withValues(alpha: .5),
                     height: 60,
                   ),
-                  Text(
-                    "Curated Channels",
-                    style: AppTextStyle.title18(color: AppColor.white),
-                  ),
+                  Text("Curated Channels", style: AppTextStyle.title18()),
                   SizedBox(height: 20),
                   OptionGridView(
                     children: [
@@ -513,7 +496,7 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
                       ),
 
                       buildNavigator(
-                        label: "🎈 KidsTube",
+                        label: "🎈 KidsWatch",
                         message:
                             "Hand-picked channels for kids. Safe, fun, and screen-time friendly.",
                         onTap: () {
@@ -557,21 +540,14 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 15),
-                  child: HomePopupMenu(color: AppColor.white),
+                  child: HomePopupMenu(),
                 ),
 
                 AppInkWell(
                   onTap: () {
                     settings.go(context);
                   },
-                  child: SvgPicture.asset(
-                    AppImage.settingIcon,
-                    height: 24,
-                    colorFilter: ColorFilter.mode(
-                      AppColor.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
+                  child: SvgPicture.asset(AppImage.settingIcon, height: 24),
                 ),
               ],
             ),
@@ -594,7 +570,7 @@ class _HomeVCState extends State<HomeVC> with AutomaticKeepAliveClientMixin {
         AppHomeButton(
           label: label,
           padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-          backgroundColor: AppColor.white,
+          backgroundColor: AppColor.primary,
           height: 90,
           //maxWidth: 450,
           onTap: onTap,

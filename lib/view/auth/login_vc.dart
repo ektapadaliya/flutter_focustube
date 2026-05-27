@@ -131,7 +131,7 @@ class _LoginVCState extends State<LoginVC> {
                         child: AppCheckBoxTile(
                           isSelected: isRemberMe,
                           title: Text(
-                            "Rember me",
+                            "Remember me",
                             style: AppTextStyle.body16(color: AppColor.gray),
                           ),
                           onChanged: (value) {

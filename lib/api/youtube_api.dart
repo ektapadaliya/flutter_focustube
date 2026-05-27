@@ -252,6 +252,8 @@ class YoutubeApiConst {
           query = subjects.map((e) => e.title).toList().join(", ");
         }
       }
+    } else {
+      query = "education, science, history, technology";
     }
 
     final response = await http.get(
@@ -262,7 +264,9 @@ class YoutubeApiConst {
         ),
       ),
     );
-
+    print(
+      "searchChannelUrl: ${Uri.parse(YoutubeApiConst.searchChannelUrl(query: query, nextPageToken: nextPageToken)).toString()}",
+    );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final channels = (data['items'] as List)

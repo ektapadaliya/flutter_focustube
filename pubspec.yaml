@@ -64,6 +64,7 @@ dependencies:
   package_info_plus: ^9.0.0
   scrollable_positioned_list: ^0.3.8
   grouped_list: ^6.0.0
+  youtube_player_iframe: ^6.0.0
 
 dev_dependencies:
   flutter_test:

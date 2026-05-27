@@ -19,6 +19,7 @@ import 'package:focus_tube_flutter/widget/channel_widgets.dart';
 import 'package:focus_tube_flutter/widget/image_classes.dart';
 import 'package:focus_tube_flutter/widget/screen_background.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import '../videos/youtube_playlist_video_vc.dart';
 
 class ChannelDetailVC extends StatefulWidget {
@@ -91,33 +92,7 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
     return AppLoader(
       loaderController: loaderController,
       child: ScreenBackground(
-        appBar: customAppBar(
-          context,
-          title: "Channel details",
-          actions: [
-            if (widget.tag == "channel-youtube")
-              Padding(
-                padding: const EdgeInsets.only(right: 30),
-                child: AppInkWell(
-                  onTap: () async {
-                    var value = await showDialog(
-                      context: context,
-                      builder: (context) => AddEditGroupListVC(),
-                    );
-                    if (value is String && value.trim().isNotEmpty) {
-                      loaderController.setLoading(true);
-                      await ApiFunctions.instance.groupCreate(
-                        context,
-                        title: value.capitalizeFirst!,
-                      );
-                      loaderController.setLoading(false);
-                    }
-                  },
-                  child: Icon(Icons.add, size: 25, color: AppColor.primary),
-                ),
-              ),
-          ],
-        ),
+        appBar: customAppBar(context, title: "Channel details"),
         body: IsAuth(
           message: "To see channel details, please log in.",
           child: SafeArea(
@@ -126,7 +101,9 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                     children: [
                       SizedBox(height: 15),
                       Container(
-                        height: 140,
+                        height: MediaQuery.of(context).size.width > 450
+                            ? 140
+                            : 160,
                         padding: EdgeInsetsGeometry.symmetric(horizontal: 30),
                         child: Row(
                           children: [
@@ -141,7 +118,7 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                                 padding: const EdgeInsets.only(
                                   top: 5,
                                   bottom: 5,
-                                  left: 15,
+                                  left: 10,
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,49 +138,106 @@ class _ChannelDetailVCState extends State<ChannelDetailVC>
                                       ),
                                     ),
                                     Expanded(child: Container()),
-                                    if (widget.tag == "channel-youtube" &&
-                                        showAddChannel)
-                                      AppButton(
-                                        label: "Add channel",
-                                        radius: 7,
-                                        alignment: null,
-                                        onTap: () async {
-                                          var result = await showDialog(
-                                            context: context,
-                                            builder: (context) =>
-                                                SaveGroplistVC(),
-                                          );
-                                          if (result is GroupModel) {
-                                            loaderController.setLoading(true);
-                                            var isSuccess = await ApiFunctions
-                                                .instance
-                                                .channelAdd(
-                                                  context,
-                                                  youtubeId:
-                                                      channel?.youtubeId ?? "",
-                                                  title: channel?.title ?? "",
-                                                  imageUrl: channel?.imageUrl,
-                                                  description:
-                                                      channel?.description,
-                                                  followers: channel?.followers,
-                                                  channelGroupId:
-                                                      result.id?.toString() ??
-                                                      "",
+                                    if (widget.tag == "channel-youtube")
+                                      Wrap(
+                                        runSpacing: 8,
+                                        spacing: 8,
+                                        children: [
+                                          if (showAddChannel)
+                                            AppButton(
+                                              label: "Add channel",
+                                              radius: 7,
+                                              alignment: null,
+                                              onTap: () async {
+                                                context.pop();
+                                                var result = await showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      SaveGroplistVC(
+                                                        loading:
+                                                            loaderController
+                                                                .setLoading,
+                                                      ),
                                                 );
-                                            if (isSuccess) {
-                                              showAddChannel = false;
-                                              setState(() {});
-                                            }
-                                            loaderController.setLoading(false);
-                                          }
-                                        },
-                                        backgroundColor: AppColor.primary,
-                                        height: 32,
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 5,
-                                        ),
-                                        fontSize: 12,
+                                                if (result is GroupModel) {
+                                                  loaderController.setLoading(
+                                                    true,
+                                                  );
+                                                  var isSuccess = await ApiFunctions
+                                                      .instance
+                                                      .channelAdd(
+                                                        context,
+                                                        youtubeId:
+                                                            channel
+                                                                ?.youtubeId ??
+                                                            "",
+                                                        title:
+                                                            channel?.title ??
+                                                            "",
+                                                        imageUrl:
+                                                            channel?.imageUrl,
+                                                        description: channel
+                                                            ?.description,
+                                                        followers:
+                                                            channel?.followers,
+                                                        channelGroupId:
+                                                            result.id
+                                                                ?.toString() ??
+                                                            "",
+                                                      );
+                                                  if (isSuccess) {
+                                                    showAddChannel = false;
+                                                    setState(() {});
+                                                  }
+                                                  loaderController.setLoading(
+                                                    false,
+                                                  );
+                                                }
+                                              },
+                                              backgroundColor: AppColor.primary,
+                                              height: 32,
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 12,
+                                                vertical: 5,
+                                              ),
+                                              fontSize: 12,
+                                            ),
+
+                                          AppButton(
+                                            label: "Add Group",
+                                            radius: 7,
+                                            alignment: null,
+                                            onTap: () async {
+                                              var value = await showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    AddEditGroupListVC(),
+                                              );
+                                              if (value is String &&
+                                                  value.trim().isNotEmpty) {
+                                                loaderController.setLoading(
+                                                  true,
+                                                );
+                                                await ApiFunctions.instance
+                                                    .groupCreate(
+                                                      context,
+                                                      title: value
+                                                          .capitalizeFirst!,
+                                                    );
+                                                loaderController.setLoading(
+                                                  false,
+                                                );
+                                              }
+                                            },
+                                            backgroundColor: AppColor.primary,
+                                            height: 32,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 12,
+                                              vertical: 5,
+                                            ),
+                                            fontSize: 12,
+                                          ),
+                                        ],
                                       ),
                                   ],
                                 ),

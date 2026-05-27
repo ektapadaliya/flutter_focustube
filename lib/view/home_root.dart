@@ -54,7 +54,6 @@ class HomeRootState extends State<HomeRoot> {
 
   @override
   void didChangeDependencies() {
-    precacheImage(AssetImage(AppImage.youtubeBackgroundDark), context);
     precacheImage(AssetImage(AppImage.background), context);
     precacheImage(AssetImage(AppImage.home), context);
     precacheImage(AssetImage(AppImage.searchSelected), context);
@@ -68,7 +67,7 @@ class HomeRootState extends State<HomeRoot> {
   Widget build(BuildContext context) {
     var currentIndex = widget.navigationShell.currentIndex;
     return ScreenBackground(
-      image: currentIndex == 0 ? AppImage.youtubeBackgroundDark : null,
+      // image: currentIndex == 0 ? AppImage.youtubeBackgroundDark : null,
       appBar: currentIndex == 0
           ? sizeZeroAppBar(context, brightness: Brightness.dark)
           : customAppBar(
